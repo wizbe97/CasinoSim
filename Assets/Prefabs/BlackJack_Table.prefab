@@ -333,7 +333,7 @@ GameObject:
   - component: {fileID: 8316828817563782220}
   m_Layer: 10
   m_Name: BlackJack_Table
-  m_TagString: Untagged
+  m_TagString: PlacedObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
