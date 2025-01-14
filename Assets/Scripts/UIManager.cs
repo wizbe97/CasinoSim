@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Events")]
     [SerializeField] private GameEventSO onBalanceChangedEvent;
+    [SerializeField] private GameEventSO onItemPurchasedEvent;
 
     [Header("Game Manager")]
     [SerializeField] private GameManagerSO _gameManager;
@@ -90,8 +91,9 @@ public class UIManager : MonoBehaviour
         {
             _gameManager.playerBalanceManager.DeductBalance(item.Price);
             ResetPanelStates();
-            _placementManager.StartPlacement(item);
+            // _placementManager.StartPlacement(item);
             onBalanceChangedEvent.Raise();
+            onItemPurchasedEvent.Raise(); // spawn the delivery truck
         }
         else
         {

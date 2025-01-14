@@ -22,6 +22,7 @@ public class PlaceableItemSO : ScriptableObject
 
 public enum PlaceableItemType
 {
+    Box,
     Chair,
     Table,
     BlackjackTable,
