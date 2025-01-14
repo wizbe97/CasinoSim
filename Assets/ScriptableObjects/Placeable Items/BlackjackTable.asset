@@ -16,6 +16,6 @@ MonoBehaviour:
     type: 3}
   _placedPrefab: {fileID: 4689101343340229550, guid: 67ccdcf73e49cfa4d998fcae8034e43f,
     type: 3}
-  _itemType: 2
+  _itemType: 3
   _price: 250
   _placementCooldown: 0.25
