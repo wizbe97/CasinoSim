@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cde79f48823e1364990a1bc4e29c5c63, type: 3}
-  m_Name: RouletteWheel
+  m_Name: BlackjackTable
   m_EditorClassIdentifier: 
-  _previewPrefab: {fileID: 7018301139176549534, guid: 6d52141217ef92b4dbd1dd2f878bf986,
+  _previewPrefab: {fileID: 4689101343340229550, guid: d67c71eb112036441a0ba1961baf9289,
     type: 3}
-  _placedPrefab: {fileID: 6382555397596164997, guid: 62be9149e4b5b39448f2fa8c958d1191,
+  _placedPrefab: {fileID: 4689101343340229550, guid: 67ccdcf73e49cfa4d998fcae8034e43f,
     type: 3}
-  _itemType: 3
+  _itemType: 2
+  _price: 250
   _placementCooldown: 0.25

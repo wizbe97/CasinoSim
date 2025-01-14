@@ -9,12 +9,14 @@ public class PlaceableItemSO : ScriptableObject
 
     [Header("Settings")]
     [SerializeField] private PlaceableItemType _itemType;
+    [SerializeField] private int _price;
     [SerializeField] private float _placementCooldown = 0.25f;
 
     public GameObject GetPreviewPrefab() => _previewPrefab;
     public GameObject GetPlacedPrefab() => _placedPrefab;
     public float GetPlacementCooldown() => _placementCooldown;
     public PlaceableItemType ItemType => _itemType;
+    public int Price => _price;
 
 }
 

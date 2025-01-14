@@ -9,6 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 126e497bf5eb33149a635e7b257f1801, type: 3}
-  m_Name: OnStartPlacementEvent
+  m_Script: {fileID: 11500000, guid: d8fcf682bf4bc6546a9f3698ec93cdef, type: 3}
+  m_Name: GameManager
   m_EditorClassIdentifier: 
+  playerBalanceManager: {fileID: 11400000, guid: bd70294796d30744eab88bc0160d6e6b,
+    type: 2}

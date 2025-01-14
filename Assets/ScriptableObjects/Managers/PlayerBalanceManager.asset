@@ -9,6 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 126e497bf5eb33149a635e7b257f1801, type: 3}
-  m_Name: OnFinishPlacementEvent
+  m_Script: {fileID: 11500000, guid: f05846bdcf9da9f479a3d92c67d62834, type: 3}
+  m_Name: PlayerBalanceManager
   m_EditorClassIdentifier: 
+  playerBalance: {fileID: 11400000, guid: 72069a24ee8f8374f9619910bda0f422, type: 2}
+  onBalanceChangedEvent: {fileID: 0}
