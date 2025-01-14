@@ -10,7 +10,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private FirstPersonController _firstPersonController;
     [SerializeField] private PlacementManager _placementManager;
     [SerializeField] private GameObject _reticle;
-    [SerializeField] private  TMP_Text _balanceText;
+    [SerializeField] private TMP_Text _balanceText;
 
     [Header("Events")]
     [SerializeField] private GameEventSO onBalanceChangedEvent;
@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Game Manager")]
     [SerializeField] private GameManagerSO _gameManager;
+    [SerializeField] private DeliveryVehicleManager _deliveryVehicleManager;
 
     private void Start()
     {
@@ -91,15 +92,18 @@ public class UIManager : MonoBehaviour
         {
             _gameManager.playerBalanceManager.DeductBalance(item.Price);
             ResetPanelStates();
-            // _placementManager.StartPlacement(item);
             onBalanceChangedEvent.Raise();
-            onItemPurchasedEvent.Raise(); // spawn the delivery truck
+            onItemPurchasedEvent.Raise();
+            
+            
+            _deliveryVehicleManager.SpawnDeliveryVehicle(item.GetCardboardBoxPrefab());
         }
         else
         {
             Debug.Log("Not enough balance to buy this item.");
         }
     }
+
 
     public void UpdateBalanceUI()
     {

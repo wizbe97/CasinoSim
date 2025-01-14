@@ -16,60 +16,48 @@ public class DeliveryVehicleManager : MonoBehaviour
     [SerializeField] private float _halfwayOffsetX = 17f;
     [SerializeField] private float _boxSpawnHeight = 1f;
 
-    /// <summary>
-    /// Spawns a delivery vehicle and starts its movement process.
-    /// </summary>
-    public void SpawnDeliveryVehicle()
+    public void SpawnDeliveryVehicle(GameObject boxPrefab)
     {
         // Instantiate the delivery vehicle
         GameObject deliveryVehicle = Instantiate(_deliveryVehiclePrefab, _startPosition, Quaternion.identity);
 
-        // Start the movement coroutine
-        StartCoroutine(MoveVehicle(deliveryVehicle));
+        // Start the movement coroutine and pass the cardboard box prefab
+        StartCoroutine(MoveVehicle(deliveryVehicle, boxPrefab));
     }
 
-    /// <summary>
-    /// Moves the delivery vehicle and handles the box spawn and destruction logic.
-    /// </summary>
-    private IEnumerator MoveVehicle(GameObject vehicle)
+    private IEnumerator MoveVehicle(GameObject vehicle, GameObject boxPrefab)
     {
         Vector3 halfwayPoint = Vector3.Lerp(_startPosition, _endPosition, 0.5f);
         bool boxSpawned = false;
 
         while (Vector3.Distance(vehicle.transform.position, _endPosition) > 0.1f)
         {
-            // Move the vehicle toward the end position
             vehicle.transform.position = Vector3.MoveTowards(
                 vehicle.transform.position,
                 _endPosition,
                 _vehicleSpeed * Time.deltaTime
             );
 
-            // Check if the vehicle reaches the halfway point
             if (!boxSpawned && Vector3.Distance(vehicle.transform.position, halfwayPoint) < 0.5f)
             {
-                SpawnCardboardBox(halfwayPoint);
-                boxSpawned = true; // Ensure the box spawns only once
+                SpawnCardboardBox(halfwayPoint, boxPrefab);
+                boxSpawned = true;
             }
 
-            yield return null; // Wait for the next frame
+            yield return null;
         }
 
-        // Destroy the vehicle once it reaches the end position
         Destroy(vehicle);
     }
 
-    /// <summary>
-    /// Spawns the cardboard box at the halfway point with an offset.
-    /// </summary>
-    private void SpawnCardboardBox(Vector3 halfwayPoint)
+    private void SpawnCardboardBox(Vector3 halfwayPoint, GameObject boxPrefab)
     {
         Vector3 boxSpawnPosition = new Vector3(
-            halfwayPoint.x + _halfwayOffsetX, // Apply X offset
-            _boxSpawnHeight,                 // Apply Y height
-            halfwayPoint.z                   // Keep Z coordinate the same
+            halfwayPoint.x + _halfwayOffsetX,
+            _boxSpawnHeight,
+            halfwayPoint.z
         );
 
-        Instantiate(_cardboardBoxPrefab, boxSpawnPosition, Quaternion.identity);
+        Instantiate(boxPrefab, boxSpawnPosition, Quaternion.identity);
     }
 }

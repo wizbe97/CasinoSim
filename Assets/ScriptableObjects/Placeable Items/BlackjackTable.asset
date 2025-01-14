@@ -16,6 +16,8 @@ MonoBehaviour:
     type: 3}
   _placedPrefab: {fileID: 4689101343340229550, guid: 67ccdcf73e49cfa4d998fcae8034e43f,
     type: 3}
+  _cardboardBoxPrefab: {fileID: 6460623043242113392, guid: c9f3084ebc5a087419249a03db5d0d5d,
+    type: 3}
   _itemType: 3
   _price: 250
   _placementCooldown: 0.25

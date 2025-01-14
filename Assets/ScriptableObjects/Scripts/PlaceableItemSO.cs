@@ -6,6 +6,7 @@ public class PlaceableItemSO : ScriptableObject
     [Header("Prefabs")]
     [SerializeField] private GameObject _previewPrefab;
     [SerializeField] private GameObject _placedPrefab;
+    [SerializeField] private GameObject _cardboardBoxPrefab;
 
     [Header("Settings")]
     [SerializeField] private PlaceableItemType _itemType;
@@ -15,6 +16,7 @@ public class PlaceableItemSO : ScriptableObject
     public GameObject GetPreviewPrefab() => _previewPrefab;
     public GameObject GetPlacedPrefab() => _placedPrefab;
     public float GetPlacementCooldown() => _placementCooldown;
+    public GameObject GetCardboardBoxPrefab() => _cardboardBoxPrefab;
     public PlaceableItemType ItemType => _itemType;
     public int Price => _price;
 
