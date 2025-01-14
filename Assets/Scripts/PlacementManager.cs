@@ -18,6 +18,10 @@ public class PlacementManager : MonoBehaviour
     [Header("Available Items")]
     [SerializeField] private PlaceableItemSO[] _placeableItems;
 
+    [Header("Managers")]
+    [SerializeField] private UIManager _uiManager;
+
+
     private GameObject _currentPreview;
     private GameObject _pickedUpObject;
     private PlaceableItemSO _currentItem;
@@ -62,11 +66,14 @@ public class PlacementManager : MonoBehaviour
 
     private void HandleInput()
     {
-        if (Input.GetKeyDown(KeyCode.B) && !_isPlacing)
+        if (Input.GetKeyDown(KeyCode.B))
         {
-            StartPlacement(_placeableItems[0]);
+            if (_uiManager.IsPhonePanelActive())
+                _uiManager.ResetPanelStates();
+            else
+                _uiManager.ShowPhonePanel();
+            return;
         }
-
         if (Input.GetKeyDown(KeyCode.F) && !_isPlacing)
         {
             TryPickUpObject();
