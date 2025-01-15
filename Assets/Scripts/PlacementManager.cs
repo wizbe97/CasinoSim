@@ -27,6 +27,8 @@ public class PlacementManager : MonoBehaviour
     private PlaceableItemSO _currentItem;
     private bool _isPlacing = false;
     private bool _canPlace = false;
+    private GameObject _heldBox;
+
 
     private void Start()
     {
@@ -84,10 +86,20 @@ public class PlacementManager : MonoBehaviour
             RotatePreview();
         }
 
-        if (Input.GetMouseButtonDown(0) && _canPlace && _isPlacing)
+        if (Input.GetMouseButtonDown(0))
         {
-            PlaceObject();
+            if (_canPlace && _isPlacing)
+                PlaceObject();
+            else {
+                InteractWithBox();
+            }
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape) && _isPlacing) // Cancel placement
+        {
+            CancelPlacement();
+        }
+
 
         if (Input.GetKeyDown(KeyCode.Escape) && _isPlacing)
         {
@@ -117,6 +129,38 @@ public class PlacementManager : MonoBehaviour
             _currentPreview = Instantiate(_currentItem.GetPreviewPrefab());
         }
     }
+
+    private void InteractWithBox()
+    {
+        if (_heldBox == null)
+        {
+            // Not holding anything, try to pick up a box
+            Ray ray = _playerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
+
+            if (Physics.Raycast(ray, out RaycastHit hit, _maxPlacementDistance, _placedObjectLayerMask))
+            {
+                // Check if the hit object has the BoxPickup script
+                BoxPickup box = hit.collider.GetComponent<BoxPickup>();
+                if (box != null)
+                {
+                    // Pick up the box
+                    _heldBox = hit.collider.gameObject;
+                    box.Pickup(_playerTransform); // Attach the box to the player
+                }
+            }
+        }
+        else
+        {
+            // Already holding a box, place it down
+            var box = _heldBox.GetComponent<BoxPickup>();
+            if (box != null)
+            {
+                box.Place(); // Detach the box from the player
+                _heldBox = null;
+            }
+        }
+    }
+
 
     private void TryPickUpObject()
     {

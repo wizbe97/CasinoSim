@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 331748631392680088}
   - component: {fileID: 573675836193169853}
   - component: {fileID: 6958838027654845411}
+  - component: {fileID: 3997796816334191608}
   m_Layer: 10
   m_Name: RouletteTableBox
   m_TagString: Untagged
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 17.142181, y: 0.29999998, z: -9.1991}
-  m_LocalScale: {x: 5, y: 3, z: 3}
+  m_LocalScale: {x: 1, y: 3, z: 1.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -133,3 +134,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &3997796816334191608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7289540646007318385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5e044f0974c0a742baf34ecaad93d75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _offset: {x: 0, y: 0.5, z: 2}
+  _rotation: {x: 0, y: 0, z: 0}
