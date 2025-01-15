@@ -20,6 +20,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameManagerSO _gameManager;
     [SerializeField] private DeliveryVehicleManager _deliveryVehicleManager;
 
+    // expose balance changed event
+    public GameEventSO OnBalanceChangedEvent => onBalanceChangedEvent;
+
     private void Start()
     {
         UpdateBalanceUI();

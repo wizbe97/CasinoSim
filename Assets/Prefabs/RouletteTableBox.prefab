@@ -148,3 +148,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _offset: {x: 0, y: 0.5, z: 2}
   _rotation: {x: 0, y: 0, z: 0}
+  _containedItem: {fileID: 11400000, guid: 96c9d80c2d8ec7441a495e391b30bdc9, type: 2}
