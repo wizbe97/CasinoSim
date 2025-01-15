@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -9,7 +10,23 @@ public class UIManager : MonoBehaviour
     [SerializeField] private FirstPersonController _firstPersonController;
     [SerializeField] private PlacementManager _placementManager;
     [SerializeField] private GameObject _reticle;
+    [SerializeField] private TMP_Text _balanceText;
 
+    [Header("Events")]
+    [SerializeField] private GameEventSO onBalanceChangedEvent;
+    [SerializeField] private GameEventSO onItemPurchasedEvent;
+
+    [Header("Game Manager")]
+    [SerializeField] private GameManagerSO _gameManager;
+    [SerializeField] private DeliveryVehicleManager _deliveryVehicleManager;
+
+    // expose balance changed event
+    public GameEventSO OnBalanceChangedEvent => onBalanceChangedEvent;
+
+    private void Start()
+    {
+        UpdateBalanceUI();
+    }
     public void ShowPhonePanel()
     {
         _phonePanel.SetActive(true);
@@ -72,11 +89,27 @@ public class UIManager : MonoBehaviour
         ClosePhonePanel();
     }
 
-    // Shop
-
     public void BuyItem(PlaceableItemSO item)
     {
-        ResetPanelStates();
-        _placementManager.StartPlacement(item);
+        if (_gameManager.playerBalanceManager.CanAfford(item.Price))
+        {
+            _gameManager.playerBalanceManager.DeductBalance(item.Price);
+            ResetPanelStates();
+            onBalanceChangedEvent.Raise();
+            onItemPurchasedEvent.Raise();
+            
+            
+            _deliveryVehicleManager.SpawnDeliveryVehicle(item.GetCardboardBoxPrefab());
+        }
+        else
+        {
+            Debug.Log("Not enough balance to buy this item.");
+        }
+    }
+
+
+    public void UpdateBalanceUI()
+    {
+        _balanceText.text = "Balance: $" + _gameManager.playerBalanceManager.playerBalance.balance;
     }
 }
