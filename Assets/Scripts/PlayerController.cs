@@ -2,100 +2,70 @@
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Movement Settings")]
+    [SerializeField] private float walkSpeed = 5f;
+    [SerializeField] private float sprintSpeed = 7f;
+    [SerializeField] private float maxVelocityChange = 10f;
+
+    [Header("Jump Settings")]
+    [SerializeField] private bool enableJump = true;
+    [SerializeField] private float jumpPower = 5f;
+
+    [Header("Camera Settings")]
+    [SerializeField] private Camera playerCamera;
+    [SerializeField] private float mouseSensitivity = 2f;
+    [SerializeField] private float maxLookAngle = 90f;
+
     private Rigidbody rb;
-    private PlayerInputActions inputActions;
-
-    #region Movement Variables
-
-    public bool playerCanMove = true;
-    public float walkSpeed = 5f;
-    public float maxVelocityChange = 10f;
+    private PlayerInputHandler inputHandler;
 
     private Vector2 moveInput;
-    private Vector3 moveDirection;
-
-    #region Sprint
-    public bool enableSprint = true;
-    public float sprintSpeed = 7f;
-    private bool isSprinting = false;
-    #endregion
-
-    #endregion
-
-    #region Jump
-    public bool enableJump = true;
-    public float jumpPower = 5f;
-    private bool isGrounded = false;
-    #endregion
-
-    #region Crouch
-    public bool enableCrouch = true;
-    public float crouchHeight = 0.75f;
-    public float speedReduction = 0.5f;
-
-    private bool isCrouched = false;
-    private Vector3 originalScale;
-    #endregion
-
-    #region Camera Variables
-    public Camera playerCamera;
-    public float mouseSensitivity = 2f;
-    public float maxLookAngle = 90f;
-
     private Vector2 lookInput;
-    private float yaw = 0.0f;
-    private float pitch = 0.0f;
-    #endregion
+    private bool isJumping = false;
+    private bool isSprinting = false;
+
+    private float yaw = 0f;
+    private float pitch = 0f;
+    private bool isGrounded = false;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        originalScale = transform.localScale;
+        inputHandler = GetComponent<PlayerInputHandler>();
 
         LockCursor();
-
-        inputActions = new PlayerInputActions();
     }
-
-
-    private void LockCursor()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
-
 
     private void OnEnable()
     {
-        inputActions.Player.Enable();
-
-        // Clear input values to avoid startup issues
-        moveInput = Vector2.zero;
-        lookInput = Vector2.zero;
-
-        inputActions.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-        inputActions.Player.Move.canceled += ctx => moveInput = Vector2.zero;
-
-        inputActions.Player.Look.performed += ctx => lookInput = ctx.ReadValue<Vector2>();
-        inputActions.Player.Look.canceled += ctx => lookInput = Vector2.zero;
-
-        inputActions.Player.Jump.performed += ctx => Jump();
-
-        inputActions.Player.Sprint.started += ctx => isSprinting = true;
-        inputActions.Player.Sprint.canceled += ctx => isSprinting = false;
-
-        inputActions.Player.Crouch.performed += ctx => ToggleCrouch();
+        inputHandler.OnJump += HandleJump;
+        inputHandler.OnSprintStart += () => isSprinting = true;
+        inputHandler.OnSprintEnd += () => isSprinting = false;
     }
 
 
     private void OnDisable()
     {
-        inputActions.Player.Disable();
+        inputHandler.OnSprint -= HandleSprint;
+        inputHandler.OnJump -= HandleJump;
     }
 
     private void Update()
     {
-        #region Camera Look
+        moveInput = inputHandler.MoveInput;
+        lookInput = inputHandler.LookInput;
+
+        HandleCameraLook();
+        CheckGround();
+    }
+
+    private void FixedUpdate()
+    {
+        HandleMovement();
+    }
+
+    private void HandleCameraLook()
+    {
         float scaledSensitivity = mouseSensitivity * Time.deltaTime;
         yaw += lookInput.x * scaledSensitivity;
         pitch -= lookInput.y * scaledSensitivity;
@@ -103,34 +73,17 @@ public class PlayerController : MonoBehaviour
 
         transform.eulerAngles = new Vector3(0, yaw, 0);
         playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
-        #endregion
-
-        CheckGround();
     }
 
-
-    private void FixedUpdate()
+    private void HandleMovement()
     {
-        if (playerCanMove)
-        {
-            MovePlayer();
-        }
-    }
+        if (moveInput == Vector2.zero) return;
 
-    private void MovePlayer()
-    {
-        // Calculate movement direction
-        moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
+        Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
         moveDirection = transform.TransformDirection(moveDirection);
 
-        if (isSprinting)
-        {
-            moveDirection *= sprintSpeed;
-        }
-        else
-        {
-            moveDirection *= walkSpeed;
-        }
+        float currentSpeed = isSprinting ? sprintSpeed : walkSpeed;
+        moveDirection *= currentSpeed;
 
         Vector3 velocity = rb.velocity;
         Vector3 velocityChange = moveDirection - velocity;
@@ -139,6 +92,19 @@ public class PlayerController : MonoBehaviour
         velocityChange.y = 0;
 
         rb.AddForce(velocityChange, ForceMode.VelocityChange);
+    }
+
+    private void HandleJump()
+    {
+        if (!enableJump || !isGrounded) return;
+
+        rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
+        isGrounded = false;
+    }
+
+    private void HandleSprint(bool sprinting)
+    {
+        isSprinting = sprinting;
     }
 
     private void CheckGround()
@@ -150,35 +116,9 @@ public class PlayerController : MonoBehaviour
         isGrounded = Physics.Raycast(origin, direction, distance);
     }
 
-    private void Jump()
+    private void LockCursor()
     {
-        if (enableJump && isGrounded)
-        {
-            rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
-            isGrounded = false;
-
-            if (isCrouched)
-            {
-                ToggleCrouch();
-            }
-        }
-    }
-
-    private void ToggleCrouch()
-    {
-        if (!enableCrouch) return;
-
-        if (isCrouched)
-        {
-            transform.localScale = originalScale;
-            walkSpeed /= speedReduction;
-            isCrouched = false;
-        }
-        else
-        {
-            transform.localScale = new Vector3(originalScale.x, crouchHeight, originalScale.z);
-            walkSpeed *= speedReduction;
-            isCrouched = true;
-        }
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 }
