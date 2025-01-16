@@ -17,11 +17,6 @@ public class PlayerInputHandler : MonoBehaviour
     public event InputActionEvent OnCancel;
     public event InputActionEvent OnPhoneMenu;
 
-
-    public delegate void InputActionEventWithBool(bool value);
-    public event InputActionEventWithBool OnSprint;
-
-
     private void Awake()
     {
         inputActions = new PlayerInputActions();

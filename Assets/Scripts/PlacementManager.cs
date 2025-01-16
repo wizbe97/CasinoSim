@@ -25,6 +25,7 @@ public class PlacementManager : MonoBehaviour
     private bool _isPlacing = false;
     private bool _canPlace = false;
 
+
     #region Public Properties
     public bool IsPlacing => _isPlacing;
     public bool CanPlace => _canPlace;
@@ -72,20 +73,29 @@ public class PlacementManager : MonoBehaviour
 
     public void TryPickUpObject()
     {
+        // Cast a ray from the screen position of the reticle
         Ray ray = _playerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
 
+        // Check if the ray hits an object in the placement layer mask
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _placedObjectLayerMask))
         {
             GameObject hitObject = hit.collider.gameObject;
 
+            // Get the PlacedItem component from the object or its parent
             PlacedItem placedItem = hitObject.GetComponentInParent<PlacedItem>();
             if (placedItem != null)
             {
+                // Calculate the distance to the object
                 float distance = Vector3.Distance(_playerTransform.position, placedItem.transform.position);
+
+                // Check if the object is within range and can be picked up
                 if (distance <= _maxPlacementDistance && placedItem.CanBePickedUp())
                 {
+                    // Set the picked-up object and current item
                     _pickedUpObject = placedItem.gameObject;
                     _currentItem = placedItem.GetPlaceableItem();
+
+                    // Start the placement process
                     StartPlacement(_currentItem);
                 }
             }
@@ -226,19 +236,46 @@ public class PlacementManager : MonoBehaviour
         var placedItemScript = placedObject.GetComponent<PlacedItem>();
         placedItemScript.Initialize(_currentItem, _currentItem.GetPlacementCooldown());
 
-        CancelPlacement();
-    }
-
-    public void CancelPlacement()
-    {
+        // Clean up the preview without creating a box
         if (_currentPreview != null)
         {
             Destroy(_currentPreview);
         }
+
+        // Reset state
         _currentPreview = null;
         _currentItem = null;
         _isPlacing = false;
+        _pickedUpObject = null;
     }
+
+    public void CancelPlacement()
+    {
+        // If there is a preview and we're canceling, always create a box
+        if (_currentPreview != null)
+        {
+            GameObject box = Instantiate(_currentItem.GetCardboardBoxPrefab(), _currentPreview.transform.position, Quaternion.identity);
+            if (box != null)
+            {
+                BoxPickup boxPickup = box.GetComponent<BoxPickup>();
+                if (boxPickup != null)
+                {
+                    boxPickup.SetContainedItem(_currentItem);
+                }
+            }
+
+            // Destroy the placement preview
+            Destroy(_currentPreview);
+        }
+
+        // Reset placement state
+        _currentPreview = null;
+        _currentItem = null;
+        _isPlacing = false;
+        _pickedUpObject = null;
+    }
+
+
 
     private PlaceableItemSO FindPlaceableItemSO(PlaceableItemType itemType)
     {

@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnDisable()
     {
-        inputHandler.OnSprint -= HandleSprint;
         inputHandler.OnJump -= HandleJump;
     }
 

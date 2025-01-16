@@ -67,19 +67,33 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandlePickupOrPlace()
     {
-        if (IsLookingAtBox())
+        if (_heldBox != null)
         {
+            // Drop the box in the environment
+            BoxPickup box = _heldBox.GetComponent<BoxPickup>();
+            if (box != null)
+            {
+                box.Place();
+                _heldBox = null;
+            }
+        }
+        else if (IsLookingAtBox())
+        {
+            // Interact with a box in the environment
             InteractWithBox();
         }
         else if (_placementManager.IsPlacing && _placementManager.CanPlace)
         {
+            // Place the currently selected item
             _placementManager.PlaceObject();
         }
         else if (!_placementManager.IsPlacing)
         {
+            // Attempt to pick up an object
             _placementManager.TryPickUpObject();
         }
     }
+
 
     private void HandleBoxOrSell()
     {
@@ -100,11 +114,20 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleCancelPlacement()
     {
-        if (_placementManager.IsPlacing)
+        if (_heldBox != null)
         {
-            _placementManager.CancelPlacement();
+            // Drop the box
+            BoxPickup box = _heldBox.GetComponent<BoxPickup>();
+            if (box != null)
+            {
+                box.Place();
+                _heldBox = null;
+            }
         }
+        else if (_placementManager.IsPlacing)
+            _placementManager.CancelPlacement();
     }
+
     private bool IsLookingAtBox()
     {
         Ray ray = new Ray(_cameraTransform.position, _cameraTransform.forward);
