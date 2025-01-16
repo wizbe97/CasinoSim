@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 moveInput;
     private Vector2 lookInput;
-    private bool isJumping = false;
     private bool isSprinting = false;
 
     private float yaw = 0f;
@@ -77,22 +76,44 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        if (moveInput == Vector2.zero) return;
-
-        Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
-        moveDirection = transform.TransformDirection(moveDirection);
-
-        float currentSpeed = isSprinting ? sprintSpeed : walkSpeed;
-        moveDirection *= currentSpeed;
-
         Vector3 velocity = rb.velocity;
-        Vector3 velocityChange = moveDirection - velocity;
-        velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-        velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-        velocityChange.y = 0;
 
-        rb.AddForce(velocityChange, ForceMode.VelocityChange);
+        if (moveInput != Vector2.zero)
+        {
+            // Calculate move direction and speed
+            Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
+            moveDirection = transform.TransformDirection(moveDirection);
+
+            float currentSpeed = isSprinting ? sprintSpeed : walkSpeed;
+            moveDirection *= currentSpeed;
+
+            // Calculate velocity change
+            Vector3 velocityChange = moveDirection - velocity;
+            velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+            velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+            velocityChange.y = 0;
+
+            // Apply force for movement
+            rb.AddForce(velocityChange, ForceMode.VelocityChange);
+        }
+        else
+        {
+            // Gradually slow down when no input is provided
+            float dampingFactor = 5f; // Adjust this value for faster/slower deceleration
+            Vector3 deceleration = -velocity * dampingFactor * Time.fixedDeltaTime;
+
+            // Ensure we don't apply forces if velocity is already near zero
+            if (velocity.magnitude < 0.1f)
+            {
+                rb.velocity = Vector3.zero;
+            }
+            else
+            {
+                rb.AddForce(deceleration, ForceMode.VelocityChange);
+            }
+        }
     }
+
 
     private void HandleJump()
     {

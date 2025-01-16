@@ -14,7 +14,6 @@ public class UIManager : MonoBehaviour
 
     [Header("Events")]
     [SerializeField] private GameEventSO onBalanceChangedEvent;
-    [SerializeField] private GameEventSO onItemPurchasedEvent;
 
     [Header("Game Manager")]
     [SerializeField] private GameManagerSO _gameManager;
@@ -95,15 +94,9 @@ public class UIManager : MonoBehaviour
         {
             _gameManager.playerBalanceManager.DeductBalance(item.Price);
             ResetPanelStates();
-            onBalanceChangedEvent.Raise();
-            onItemPurchasedEvent.Raise();
-            
+            onBalanceChangedEvent.Raise();            
             
             _deliveryVehicleManager.SpawnDeliveryVehicle(item.GetCardboardBoxPrefab());
-        }
-        else
-        {
-            Debug.Log("Not enough balance to buy this item.");
         }
     }
 
