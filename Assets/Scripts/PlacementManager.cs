@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class PlacementManager : MonoBehaviour
 {
-    [Header("UI and Camera")]
+    [Header("Player References")]
     [SerializeField] private RectTransform _reticleUI;
     [SerializeField] private Camera _playerCamera;
     [SerializeField] private Transform _playerTransform;
+    [SerializeField] private PlayerInteraction _playerInteraction;
 
     [Header("Layer Masks")]
     [SerializeField] private LayerMask _placementLayerMask;
@@ -18,22 +19,35 @@ public class PlacementManager : MonoBehaviour
     [Header("Available Items")]
     [SerializeField] private PlaceableItemSO[] _placeableItems;
 
-    [Header("Managers")]
-    [SerializeField] private UIManager _uiManager;
-    [SerializeField] private GameManagerSO _gameManager;
-
-
     private GameObject _currentPreview;
     private GameObject _pickedUpObject;
     private PlaceableItemSO _currentItem;
     private bool _isPlacing = false;
     private bool _canPlace = false;
-    private GameObject _heldBox;
 
+
+    #region Public Properties
+    public bool IsPlacing => _isPlacing;
+    public bool CanPlace => _canPlace;
+    public Camera PlayerCamera => _playerCamera;
+    public float MaxPlacementDistance => _maxPlacementDistance;
+    public LayerMask PlacedObjectLayerMask => _placedObjectLayerMask;
+    public Transform PlayerTransform => _playerTransform;
+    public RectTransform ReticleUI => _reticleUI;
+
+    #endregion
 
     private void Start()
     {
         InitializePredefinedItems();
+    }
+
+    private void Update()
+    {
+        if (_isPlacing && _currentPreview != null)
+        {
+            UpdatePreviewPosition();
+        }
     }
 
     private void InitializePredefinedItems()
@@ -57,143 +71,38 @@ public class PlacementManager : MonoBehaviour
         }
     }
 
-    private void Update()
+    public void TryPickUpObject()
     {
-        HandleInput();
+        // Cast a ray from the screen position of the reticle
+        Ray ray = _playerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
 
-        if (_isPlacing && _currentPreview != null)
+        // Check if the ray hits an object in the placement layer mask
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _placedObjectLayerMask))
         {
-            UpdatePreviewPosition();
-        }
-    }
+            GameObject hitObject = hit.collider.gameObject;
 
-    private void HandleInput()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            if (_uiManager.IsPhonePanelActive())
-                _uiManager.ResetPanelStates();
-            else
-                _uiManager.ShowPhonePanel();
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            if (_isPlacing && _heldBox == null)
-                RotatePreview();
-            else if (_heldBox != null)
-                OpenHeldBox();
-        }
-
-
-        if (Input.GetMouseButtonDown(0)) // Left-click
-        {
-            // Check if interacting with a box
-            if (IsLookingAtBox())
+            // Get the PlacedItem component from the object or its parent
+            PlacedItem placedItem = hitObject.GetComponentInParent<PlacedItem>();
+            if (placedItem != null)
             {
-                InteractWithBox();
-            }
-            else if (_isPlacing && _canPlace) // Place an item
-            {
-                PlaceObject();
-            }
-            else if (!_isPlacing) // Pick up a table or other placeable item
-            {
-                TryPickUpObject();
-            }
-        }
+                // Calculate the distance to the object
+                float distance = Vector3.Distance(_playerTransform.position, placedItem.transform.position);
 
-
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            if (_heldBox != null) // Player is holding a box
-            {
-                SellItem();
-            }
-            else if (_isPlacing)
-            {
-                BoxCurrentPreview();
-            }
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape) && _isPlacing) // Cancel placement
-        {
-            CancelPlacement();
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.Escape) && _isPlacing)
-        {
-            CancelPlacement();
-        }
-    }
-
-    public void StartPlacement(PlaceableItemSO item)
-    {
-        if (item == null)
-            return;
-
-        _currentItem = item;
-        _isPlacing = true;
-
-        if (_pickedUpObject != null)
-        {
-            _currentPreview = Instantiate(_currentItem.GetPreviewPrefab(), _pickedUpObject.transform.position, _pickedUpObject.transform.rotation);
-            Destroy(_pickedUpObject);
-            _pickedUpObject = null;
-        }
-        else
-        {
-            _currentPreview = Instantiate(_currentItem.GetPreviewPrefab());
-        }
-    }
-
-
-
-    private void InteractWithBox()
-    {
-        if (_heldBox == null)
-        {
-            Ray ray = _playerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
-
-            if (Physics.Raycast(ray, out RaycastHit hit, _maxPlacementDistance, _placedObjectLayerMask))
-            {
-                BoxPickup box = hit.collider.GetComponent<BoxPickup>();
-                if (box != null)
+                // Check if the object is within range and can be picked up
+                if (distance <= _maxPlacementDistance && placedItem.CanBePickedUp())
                 {
-                    _heldBox = hit.collider.gameObject;
-                    box.Pickup(_playerTransform);
+                    // Set the picked-up object and current item
+                    _pickedUpObject = placedItem.gameObject;
+                    _currentItem = placedItem.GetPlaceableItem();
+
+                    // Start the placement process
+                    StartPlacement(_currentItem);
                 }
             }
         }
-        else
-        {
-            BoxPickup box = _heldBox.GetComponent<BoxPickup>();
-            if (box != null)
-            {
-                box.Place();
-                _heldBox = null;
-            }
-        }
     }
 
-    private void OpenHeldBox()
-    {
-        BoxPickup box = _heldBox.GetComponent<BoxPickup>();
-        if (box != null)
-        {
-            PlaceableItemSO itemInside = box.GetContainedItem();
-            if (itemInside != null)
-            {
-                StartPlacement(itemInside);
-                Destroy(_heldBox);
-                _heldBox = null;
-            }
-        }
-    }
-
-    private void BoxCurrentPreview()
+    public void BoxCurrentPreview()
     {
         if (_currentItem == null || _currentPreview == null || !_isPlacing)
             return;
@@ -226,34 +135,31 @@ public class PlacementManager : MonoBehaviour
 
         // Cancel placement mode
         _isPlacing = false;
-
-        // Immediately pick up the box
-        _heldBox = box;
+        _playerInteraction.PickupBox(box);
         boxPickup.Pickup(_playerTransform); // Use the existing logic to attach the box to the player
-        Debug.Log($"Boxed up the item: {_currentItem.name}");
     }
 
-    private void TryPickUpObject()
+
+    public void StartPlacement(PlaceableItemSO item)
     {
-        Ray ray = _playerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
+        if (item == null)
+            return;
 
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _placedObjectLayerMask))
+        _currentItem = item;
+        _isPlacing = true;
+
+        if (_pickedUpObject != null)
         {
-            GameObject hitObject = hit.collider.gameObject;
-
-            PlacedItem placedItem = hitObject.GetComponentInParent<PlacedItem>();
-            if (placedItem != null)
-            {
-                float distance = Vector3.Distance(_playerTransform.position, placedItem.transform.position);
-                if (distance <= _maxPlacementDistance && placedItem.CanBePickedUp())
-                {
-                    _pickedUpObject = placedItem.gameObject;
-                    _currentItem = placedItem.GetPlaceableItem();
-                    StartPlacement(_currentItem);
-                }
-            }
+            _currentPreview = Instantiate(_currentItem.GetPreviewPrefab(), _pickedUpObject.transform.position, _pickedUpObject.transform.rotation);
+            Destroy(_pickedUpObject);
+            _pickedUpObject = null;
+        }
+        else
+        {
+            _currentPreview = Instantiate(_currentItem.GetPreviewPrefab());
         }
     }
+
 
     private void UpdatePreviewPosition()
     {
@@ -312,7 +218,7 @@ public class PlacementManager : MonoBehaviour
         }
     }
 
-    private void RotatePreview()
+    public void RotatePreview()
     {
         if (_currentPreview != null)
         {
@@ -320,7 +226,7 @@ public class PlacementManager : MonoBehaviour
         }
     }
 
-    private void PlaceObject()
+    public void PlaceObject()
     {
         if (!_canPlace || _currentItem == null)
             return;
@@ -330,19 +236,46 @@ public class PlacementManager : MonoBehaviour
         var placedItemScript = placedObject.GetComponent<PlacedItem>();
         placedItemScript.Initialize(_currentItem, _currentItem.GetPlacementCooldown());
 
-        CancelPlacement();
-    }
-
-    private void CancelPlacement()
-    {
+        // Clean up the preview without creating a box
         if (_currentPreview != null)
         {
             Destroy(_currentPreview);
         }
+
+        // Reset state
         _currentPreview = null;
         _currentItem = null;
         _isPlacing = false;
+        _pickedUpObject = null;
     }
+
+    public void CancelPlacement()
+    {
+        // If there is a preview and we're canceling, always create a box
+        if (_currentPreview != null)
+        {
+            GameObject box = Instantiate(_currentItem.GetCardboardBoxPrefab(), _currentPreview.transform.position, Quaternion.identity);
+            if (box != null)
+            {
+                BoxPickup boxPickup = box.GetComponent<BoxPickup>();
+                if (boxPickup != null)
+                {
+                    boxPickup.SetContainedItem(_currentItem);
+                }
+            }
+
+            // Destroy the placement preview
+            Destroy(_currentPreview);
+        }
+
+        // Reset placement state
+        _currentPreview = null;
+        _currentItem = null;
+        _isPlacing = false;
+        _pickedUpObject = null;
+    }
+
+
 
     private PlaceableItemSO FindPlaceableItemSO(PlaceableItemType itemType)
     {
@@ -357,44 +290,5 @@ public class PlacementManager : MonoBehaviour
         return null;
     }
 
-    private void SellItem()
-    {
-        if (_heldBox == null)
-            return;
 
-        // Get the BoxPickup component and the item inside
-        BoxPickup boxPickup = _heldBox.GetComponent<BoxPickup>();
-        if (boxPickup == null)
-            return;
-
-
-        PlaceableItemSO itemInside = boxPickup.GetContainedItem();
-        if (itemInside == null)
-            return;
-
-        // Calculate the sale price (half the buy price)
-        int salePrice = Mathf.FloorToInt(itemInside.Price / 2f);
-
-        // Update the player's balance
-        _gameManager.playerBalanceManager.AddBalance(salePrice);
-        
-        // Destroy the box
-        Destroy(_heldBox);
-        _heldBox = null;
-
-        Debug.Log($"Sold {itemInside.name} for ${salePrice}.");
-    }
-
-    private bool IsLookingAtBox()
-    {
-        Ray ray = _playerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
-
-        if (Physics.Raycast(ray, out RaycastHit hit, _maxPlacementDistance, _placedObjectLayerMask))
-        {
-            // Check if the object hit has a BoxPickup component
-            return hit.collider.GetComponent<BoxPickup>() != null;
-        }
-
-        return false;
-    }
 }

@@ -7,14 +7,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _phonePanel;
     [SerializeField] private GameObject _appPanel;
     [SerializeField] private GameObject _furniturePanel;
-    [SerializeField] private FirstPersonController _firstPersonController;
+    [SerializeField] private PlayerController _playerController;
     [SerializeField] private PlacementManager _placementManager;
     [SerializeField] private GameObject _reticle;
     [SerializeField] private TMP_Text _balanceText;
 
     [Header("Events")]
     [SerializeField] private GameEventSO onBalanceChangedEvent;
-    [SerializeField] private GameEventSO onItemPurchasedEvent;
 
     [Header("Game Manager")]
     [SerializeField] private GameManagerSO _gameManager;
@@ -72,14 +71,14 @@ public class UIManager : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        _firstPersonController.enabled = false;
+        _playerController.enabled = false;
     }
 
     private void HideCursor()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        _firstPersonController.enabled = true;
+        _playerController.enabled = true;
     }
 
     public void ResetPanelStates()
@@ -95,15 +94,9 @@ public class UIManager : MonoBehaviour
         {
             _gameManager.playerBalanceManager.DeductBalance(item.Price);
             ResetPanelStates();
-            onBalanceChangedEvent.Raise();
-            onItemPurchasedEvent.Raise();
-            
+            onBalanceChangedEvent.Raise();            
             
             _deliveryVehicleManager.SpawnDeliveryVehicle(item.GetCardboardBoxPrefab());
-        }
-        else
-        {
-            Debug.Log("Not enough balance to buy this item.");
         }
     }
 
