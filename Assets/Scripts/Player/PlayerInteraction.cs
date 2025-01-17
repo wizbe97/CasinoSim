@@ -1,6 +1,7 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class PlayerInteraction : MonoBehaviour
+public class PlayerInteraction : NetworkBehaviour
 {
     [Header("Interaction Settings")]
     [SerializeField] private float _interactionDistance = 3f;
@@ -15,6 +16,16 @@ public class PlayerInteraction : MonoBehaviour
     private PlayerInputHandler _inputHandler;
     private GameObject _heldBox;
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (IsOwner)
+        {
+            _inputHandler = GetComponent<PlayerInputHandler>();
+            OnEnable();
+        }
+
+    }
 
     private void Awake()
     {
@@ -43,6 +54,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private void TogglePhoneMenu()
     {
+        if (!IsOwner) return;
+        Debug.Log("Toggling phone menu");
+
         if (_uiManager.IsPhonePanelActive())
         {
             _uiManager.ResetPanelStates();
@@ -55,6 +69,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleRotateOrOpenBox()
     {
+        if (!IsOwner) return;
+        Debug.Log("Rotating or opening box");
+
         if (_placementManager.IsPlacing && _heldBox == null)
         {
             _placementManager.RotatePreview();
@@ -67,6 +84,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandlePickupOrPlace()
     {
+        if (!IsOwner) return;
         if (_heldBox != null)
         {
             // Drop the box in the environment
@@ -89,7 +107,7 @@ public class PlayerInteraction : MonoBehaviour
         }
         else if (!_placementManager.IsPlacing)
         {
-            // Attempt to pick up an object
+            Debug.Log("Picking up object");
             _placementManager.TryPickUpObject();
         }
     }
@@ -97,6 +115,8 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleBoxOrSell()
     {
+        if (!IsOwner) return;
+        Debug.Log("Box or sell");
         if (_heldBox != null)
         {
             SellItem();
@@ -109,11 +129,16 @@ public class PlayerInteraction : MonoBehaviour
 
     public void PickupBox(GameObject box)
     {
+        if (!IsOwner) return;
+        Debug.Log("Picking up box");
         _heldBox = box;
     }
 
     private void HandleCancelPlacement()
     {
+        if (!IsOwner) return;
+        Debug.Log("Cancelling placement");
+
         if (_heldBox != null)
         {
             // Drop the box
@@ -142,6 +167,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private void InteractWithBox()
     {
+        if (!IsOwner) return;
+        Debug.Log("Interacting with box");
+
         if (_heldBox == null)
         {
             Ray ray = _placementManager.PlayerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _placementManager.ReticleUI.position));
@@ -169,6 +197,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OpenHeldBox()
     {
+        if (!IsOwner) return;
+        Debug.Log("Opening held box");
+
         BoxPickup box = _heldBox.GetComponent<BoxPickup>();
         if (box != null)
         {
@@ -184,6 +215,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private void SellItem()
     {
+        if (!IsOwner) return;
+        Debug.Log("Selling item");
+
         if (_heldBox == null) return;
 
         BoxPickup box = _heldBox.GetComponent<BoxPickup>();

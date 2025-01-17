@@ -1,6 +1,7 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class PlacementManager : MonoBehaviour
+public class PlacementManager : NetworkBehaviour
 {
     [Header("Player References")]
     [SerializeField] private RectTransform _reticleUI;
@@ -37,6 +38,14 @@ public class PlacementManager : MonoBehaviour
 
     #endregion
 
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        if (!IsHost) return;
+
+        InitializePredefinedItems();
+    }
     private void Start()
     {
         InitializePredefinedItems();
@@ -44,6 +53,8 @@ public class PlacementManager : MonoBehaviour
 
     private void Update()
     {
+        if (!IsHost) return;
+
         if (_isPlacing && _currentPreview != null)
         {
             UpdatePreviewPosition();
@@ -73,12 +84,20 @@ public class PlacementManager : MonoBehaviour
 
     public void TryPickUpObject()
     {
-        // Cast a ray from the screen position of the reticle
-        Ray ray = _playerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
+        Debug.Log("Trying to pick up object");
 
-        // Check if the ray hits an object in the placement layer mask
+        // Use the reticle's position for the raycast
+        Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        Ray ray = _playerCamera.ScreenPointToRay(screenCenter);
+
+
+        // Visualize the raycast
+        Debug.DrawRay(ray.origin, ray.direction * 100f, Color.red, 1f);
+
+        // Perform the raycast
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _placedObjectLayerMask))
         {
+            Debug.Log($"Hit object: {hit.collider.gameObject.name}");
             GameObject hitObject = hit.collider.gameObject;
 
             // Get the PlacedItem component from the object or its parent
@@ -91,19 +110,33 @@ public class PlacementManager : MonoBehaviour
                 // Check if the object is within range and can be picked up
                 if (distance <= _maxPlacementDistance && placedItem.CanBePickedUp())
                 {
-                    // Set the picked-up object and current item
                     _pickedUpObject = placedItem.gameObject;
                     _currentItem = placedItem.GetPlaceableItem();
 
-                    // Start the placement process
                     StartPlacement(_currentItem);
                 }
+                else
+                {
+                    Debug.Log($"Object too far or not ready for pickup. Distance: {distance}");
+                }
             }
+            else
+            {
+                Debug.Log("No PlacedItem component found on hit object.");
+            }
+        }
+        else
+        {
+            Debug.Log("No hit detected.");
         }
     }
 
+
+
     public void BoxCurrentPreview()
     {
+        if (!IsHost) return;
+
         if (_currentItem == null || _currentPreview == null || !_isPlacing)
             return;
 
@@ -142,6 +175,8 @@ public class PlacementManager : MonoBehaviour
 
     public void StartPlacement(PlaceableItemSO item)
     {
+        if (!IsHost) return;
+
         if (item == null)
             return;
 
@@ -163,6 +198,8 @@ public class PlacementManager : MonoBehaviour
 
     private void UpdatePreviewPosition()
     {
+        if (!IsHost) return;
+
         Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position);
         Ray ray = _playerCamera.ScreenPointToRay(screenPosition);
 
@@ -207,6 +244,8 @@ public class PlacementManager : MonoBehaviour
 
     private void UpdatePreviewMaterial(bool isValid)
     {
+        if (!IsHost) return;
+
         if (_currentPreview != null)
         {
             Renderer[] renderers = _currentPreview.GetComponentsInChildren<Renderer>();
@@ -220,6 +259,8 @@ public class PlacementManager : MonoBehaviour
 
     public void RotatePreview()
     {
+        if (!IsHost) return;
+
         if (_currentPreview != null)
         {
             _currentPreview.transform.Rotate(0, 22.5f, 0);
@@ -228,6 +269,8 @@ public class PlacementManager : MonoBehaviour
 
     public void PlaceObject()
     {
+        if (!IsHost) return;
+
         if (!_canPlace || _currentItem == null)
             return;
 
@@ -251,6 +294,8 @@ public class PlacementManager : MonoBehaviour
 
     public void CancelPlacement()
     {
+        if (!IsHost) return;
+
         // If there is a preview and we're canceling, always create a box
         if (_currentPreview != null)
         {

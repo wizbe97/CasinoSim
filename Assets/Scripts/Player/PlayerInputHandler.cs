@@ -1,6 +1,7 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class PlayerInputHandler : MonoBehaviour
+public class PlayerInputHandler : NetworkBehaviour
 {
     private PlayerInputActions inputActions;
 
@@ -24,6 +25,7 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnEnable()
     {
+        if (!IsOwner) return;
         inputActions.Player.Enable();
 
         // Movement
@@ -55,6 +57,15 @@ public class PlayerInputHandler : MonoBehaviour
 
         // Cancel
         inputActions.Player.Cancel.performed += ctx => OnCancel?.Invoke();
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        if (!IsOwner) return;
+        inputActions = new PlayerInputActions();
+        OnEnable();
     }
 
     private void OnDisable()
