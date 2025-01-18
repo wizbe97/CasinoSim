@@ -11,12 +11,51 @@ public class GameManager : MonoBehaviour
     [Header("Spawn Points")]
     [SerializeField] private Transform _playerSpawnPoint;
 
+    [Header("Placeable Items")]
+    [SerializeField] private PlaceableItemSO[] _placeableItems;
+
+
     private void Start()
     {
-        SpawnPlayer();
-        SpawnManagers();
+        // SpawnPlayer();
+        // SpawnManagers();
+        InitializePredefinedItems();
     }
 
+
+    private void InitializePredefinedItems()
+    {
+        GameObject[] predefinedItems = GameObject.FindGameObjectsWithTag("PlacedObject");
+
+        foreach (GameObject item in predefinedItems)
+        {
+            PlacedItem placedItem = item.GetComponent<PlacedItem>();
+            if (placedItem != null && placedItem.GetPlaceableItem() == null)
+            {
+                if (item.name.Contains("BlackJack_Table"))
+                {
+                    placedItem.Initialize(FindPlaceableItemSO(PlaceableItemType.BlackjackTable), 0);
+                }
+                else if (item.name.Contains("Roulette_Table"))
+                {
+                    placedItem.Initialize(FindPlaceableItemSO(PlaceableItemType.RouletteTable), 0);
+                }
+            }
+        }
+    }
+
+    private PlaceableItemSO FindPlaceableItemSO(PlaceableItemType itemType)
+    {
+        foreach (PlaceableItemSO item in _placeableItems)
+        {
+            if (item.ItemType == itemType)
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
     private void SpawnPlayer()
     {
         if (_playerPrefab == null || _playerSpawnPoint == null)

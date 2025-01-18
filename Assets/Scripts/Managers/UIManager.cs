@@ -8,7 +8,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _appPanel;
     [SerializeField] private GameObject _furniturePanel;
     [SerializeField] private PlayerController _playerController;
-    [SerializeField] private PlacementManager _placementManager;
+    // [SerializeField] private PlacementManager _placementManager;
     [SerializeField] private GameObject _reticle;
     [SerializeField] private TMP_Text _balanceText;
 

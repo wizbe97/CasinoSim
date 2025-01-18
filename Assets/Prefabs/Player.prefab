@@ -392,7 +392,7 @@ MonoBehaviour:
   enableJump: 1
   jumpPower: 5
   playerCamera: {fileID: 2784600889428751184}
-  mouseSensitivity: 10
+  mouseSensitivity: 12
   maxLookAngle: 90
 --- !u!114 &5752338930140922161
 MonoBehaviour:
@@ -410,9 +410,18 @@ MonoBehaviour:
   _interactableLayerMask:
     serializedVersion: 2
     m_Bits: 1024
-  _cameraTransform: {fileID: 6100070175161112519}
+  _reticleUI: {fileID: 8131087518738288391}
+  _placementLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
+  _collisionLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  _placedObjectLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  _maxPlacementDistance: 5
   _uiManager: {fileID: 0}
-  _placementManager: {fileID: 0}
   _gameManager: {fileID: 11400000, guid: 62787c92ef19748418e5f39a21f17c45, type: 2}
 --- !u!1 &4260743005893634164
 GameObject:

@@ -43,11 +43,11 @@ public class CardboardBox : MonoBehaviour
         GetComponent<Rigidbody>().isKinematic = false;
     }
 
-    public void OpenBox(PlacementManager placementManager)
+    public void OpenBox(PlayerInteraction playerInteraction)
     {
         if (_isBeingHeld && _item != null)
         {
-            placementManager.StartPlacement(_item);
+            playerInteraction.StartPlacement(_item);
             _item = null; // Empty the box after opening
             Drop();       // Detach the box
             Destroy(gameObject); // Remove the empty box
