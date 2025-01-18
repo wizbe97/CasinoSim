@@ -356,7 +356,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 633035301}
+      - m_Target: {fileID: 393901282}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: BuyItem
         m_Mode: 2
@@ -494,13 +494,15 @@ GameObject:
   - component: {fileID: 393901280}
   - component: {fileID: 393901279}
   - component: {fileID: 393901278}
+  - component: {fileID: 393901282}
+  - component: {fileID: 393901283}
   m_Layer: 5
-  m_Name: PhoneCanvas
+  m_Name: UIManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &393901278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -578,6 +580,7 @@ RectTransform:
   m_Children:
   - {fileID: 504632304}
   - {fileID: 1704220788}
+  - {fileID: 1315757110}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -585,6 +588,58 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &393901282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 393901277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab25b3706b014114b9acecb6cfebe1af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _phonePanel: {fileID: 504632303}
+  _appPanel: {fileID: 1704220787}
+  _furniturePanel: {fileID: 1303768800}
+  _playerController: {fileID: 3402683970082125988}
+  _placementManager: {fileID: 1845107007}
+  _reticle: {fileID: 4796446651975638610}
+  _balanceText: {fileID: 7229357703656966018}
+  onBalanceChangedEvent: {fileID: 11400000, guid: 55cedb9a0d8aa0e4195bce682fdd0f0a,
+    type: 2}
+  _gameManager: {fileID: 11400000, guid: 62787c92ef19748418e5f39a21f17c45, type: 2}
+  _deliveryVehicleManager: {fileID: 1918878880}
+--- !u!114 &393901283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 393901277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c824b3bf941454e438e74abb953066b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventResponsePairs:
+  - gameEvent: {fileID: 11400000, guid: 55cedb9a0d8aa0e4195bce682fdd0f0a, type: 2}
+    response:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 393901282}
+          m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+          m_MethodName: UpdateBalanceUI
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,9 +841,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 633035301}
+      - m_Target: {fileID: 393901282}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: CloseAppPanel
+        m_MethodName: CloseFurniturePanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -919,7 +974,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 633035301}
+      - m_Target: {fileID: 393901282}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: BuyItem
         m_Mode: 2
@@ -1064,7 +1119,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &504632304
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1264,93 +1319,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &633035299
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 633035300}
-  - component: {fileID: 633035301}
-  - component: {fileID: 633035302}
-  m_Layer: 0
-  m_Name: UIManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &633035300
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 633035299}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 840, y: 459.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &633035301
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 633035299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44dfe2ffcc2dc9a4a9a8ce31ebca1768, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _phonePanel: {fileID: 393901277}
-  _appPanel: {fileID: 1704220787}
-  _furniturePanel: {fileID: 1303768800}
-  _playerController: {fileID: 3402683970082125988}
-  _placementManager: {fileID: 1845107005}
-  _reticle: {fileID: 4796446651975638610}
-  _balanceText: {fileID: 7229357703656966018}
-  onBalanceChangedEvent: {fileID: 11400000, guid: 55cedb9a0d8aa0e4195bce682fdd0f0a,
-    type: 2}
-  onItemPurchasedEvent: {fileID: 11400000, guid: 44c413b45f5a96d428eb777281df3293,
-    type: 2}
-  _gameManager: {fileID: 11400000, guid: 62787c92ef19748418e5f39a21f17c45, type: 2}
-  _deliveryVehicleManager: {fileID: 1918878880}
---- !u!114 &633035302
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 633035299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e57d597fec0af64f89af0b1ad5714d9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  eventResponsePairs:
-  - gameEvent: {fileID: 11400000, guid: 55cedb9a0d8aa0e4195bce682fdd0f0a, type: 2}
-    response:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 633035301}
-          m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-          m_MethodName: UpdateBalanceUI
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!1 &737090998
 GameObject:
   m_ObjectHideFlags: 0
@@ -2163,7 +2131,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 633035301}
+      - m_Target: {fileID: 393901282}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ShowFurniturePanel
         m_Mode: 1
@@ -2302,19 +2270,19 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1315757106}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 803636074}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 393901281}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 960, y: 540}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1330709232
 GameObject:
   m_ObjectHideFlags: 0
@@ -3113,7 +3081,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1845107006}
-  - component: {fileID: 1845107005}
+  - component: {fileID: 1845107007}
   m_Layer: 0
   m_Name: PlacementManager
   m_TagString: Untagged
@@ -3121,7 +3089,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1845107005
+--- !u!4 &1845107006
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1845107004}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 27.002682, y: -21.241573, z: -5.1108603}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1845107007
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3130,7 +3113,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1845107004}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 049198e5581dcc949be97ca0b3b8cb9e, type: 3}
+  m_Script: {fileID: 11500000, guid: 319cb316e7d87bd4ea49e9b020a73290, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _reticleUI: {fileID: 8658806027469405731}
@@ -3150,21 +3133,6 @@ MonoBehaviour:
   _placeableItems:
   - {fileID: 11400000, guid: c80c8a5fe7598994689e3f4fc5c1fdff, type: 2}
   - {fileID: 11400000, guid: 96c9d80c2d8ec7441a495e391b30bdc9, type: 2}
---- !u!4 &1845107006
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1845107004}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 27.002682, y: -21.241573, z: -5.1108603}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1874298413
 GameObject:
   m_ObjectHideFlags: 0
@@ -3325,12 +3293,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1918878878}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e99d812fa5bdfa84995bc6a44357defa, type: 3}
+  m_Script: {fileID: 11500000, guid: ab12e9279a01d6f4fa9be00c253ac8f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _deliveryVehiclePrefab: {fileID: 1972843871556964767, guid: 2354b2f5929a71e4a89d07c1a6154415,
+  _deliveryVehiclePrefab: {fileID: 6570804505523997655, guid: df3c8b234348e934ab6d6759f593b08e,
     type: 3}
-  _cardboardBoxPrefab: {fileID: 730456625284304918, guid: 50f4bd9bfb2021540b02fd8833357722,
+  _cardboardBoxPrefab: {fileID: 6460623043242113392, guid: c9f3084ebc5a087419249a03db5d0d5d,
     type: 3}
   _vehicleSpeed: 5
   _startPosition: {x: 21, y: 0, z: -21}
@@ -4423,8 +4391,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1024
   _cameraTransform: {fileID: 3106323689693256341}
-  _uiManager: {fileID: 633035301}
-  _placementManager: {fileID: 1845107005}
+  _uiManager: {fileID: 393901282}
+  _placementManager: {fileID: 1845107007}
   _gameManager: {fileID: 11400000, guid: 62787c92ef19748418e5f39a21f17c45, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
@@ -4439,6 +4407,4 @@ SceneRoots:
   - {fileID: 1829796596}
   - {fileID: 2027213876}
   - {fileID: 393901281}
-  - {fileID: 633035300}
-  - {fileID: 1315757110}
   - {fileID: 1918878881}
