@@ -13,8 +13,8 @@ public class DeliveryVehicleManager : MonoBehaviour
     [SerializeField] private Vector3 _endPosition = new Vector3(21, -6, 20);
 
     [Header("Box Settings")]
-    [SerializeField] private float _halfwayOffsetX = 17f;
-    [SerializeField] private float _boxSpawnHeight = 1f;
+    [SerializeField] private float _halfwayOffsetX = -2f;
+    [SerializeField] private float _boxSpawnHeight = 3f;
 
     public void SpawnDeliveryVehicle(GameObject boxPrefab)
     {
