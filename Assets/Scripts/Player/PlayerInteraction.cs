@@ -6,6 +6,10 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private float _interactionDistance = 3f;
     [SerializeField] private LayerMask _interactableLayerMask;
     [SerializeField] private Transform _cameraTransform;
+    private RectTransform _reticleUI;
+    public RectTransform ReticleUI => _reticleUI;
+
+
 
     [Header("References")]
     [SerializeField] private UIManager _uiManager;
@@ -19,6 +23,11 @@ public class PlayerInteraction : MonoBehaviour
     private void Awake()
     {
         _inputHandler = GetComponent<PlayerInputHandler>();
+        _reticleUI = GetComponentInChildren<RectTransform>(true); // `true` includes inactive children
+        if (_reticleUI == null)
+        {
+            Debug.LogError("Reticle not found! Make sure it exists in the player's hierarchy.");
+        }
     }
 
     private void OnEnable()
@@ -144,7 +153,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (_heldBox == null)
         {
-            Ray ray = _placementManager.PlayerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _placementManager.ReticleUI.position));
+            Ray ray = _placementManager.PlayerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
 
             if (Physics.Raycast(ray, out RaycastHit hit, _placementManager.MaxPlacementDistance, _placementManager.PlacedObjectLayerMask))
             {

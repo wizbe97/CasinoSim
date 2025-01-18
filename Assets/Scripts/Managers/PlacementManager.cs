@@ -3,7 +3,6 @@ using UnityEngine;
 public class PlacementManager : MonoBehaviour
 {
     [Header("Player References")]
-    [SerializeField] private RectTransform _reticleUI;
     [SerializeField] private Camera _playerCamera;
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private PlayerInteraction _playerInteraction;
@@ -33,7 +32,6 @@ public class PlacementManager : MonoBehaviour
     public float MaxPlacementDistance => _maxPlacementDistance;
     public LayerMask PlacedObjectLayerMask => _placedObjectLayerMask;
     public Transform PlayerTransform => _playerTransform;
-    public RectTransform ReticleUI => _reticleUI;
 
     #endregion
 
@@ -74,7 +72,7 @@ public class PlacementManager : MonoBehaviour
     public void TryPickUpObject()
     {
         // Cast a ray from the screen position of the reticle
-        Ray ray = _playerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
+        Ray ray = _playerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _playerInteraction.ReticleUI.position));
 
         // Check if the ray hits an object in the placement layer mask
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _placedObjectLayerMask))
@@ -163,7 +161,7 @@ public class PlacementManager : MonoBehaviour
 
     private void UpdatePreviewPosition()
     {
-        Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position);
+        Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(null, _playerInteraction.ReticleUI.position);
         Ray ray = _playerCamera.ScreenPointToRay(screenPosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _placementLayerMask))
