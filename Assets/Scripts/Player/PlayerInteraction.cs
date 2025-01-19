@@ -18,6 +18,7 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private GameManagerSO _gameManager;
 
     private PlayerInputHandler _inputHandler;
+    private PlayerController _playerController;
     private GameObject _currentPreview;
     private GameObject _pickedUpObject;
     private PlaceableItemSO _currentItem;
@@ -33,12 +34,8 @@ public class PlayerInteraction : MonoBehaviour
     private void Awake()
     {
         _inputHandler = GetComponent<PlayerInputHandler>();
-
-        // Find Reticle dynamically if not set in the inspector
-        if (_reticleUI == null)
-        {
-            _reticleUI = GetComponentInChildren<RectTransform>();
-        }
+        _reticleUI = GetComponentInChildren<RectTransform>();
+        _playerController = GetComponent<PlayerController>();
     }
 
     private void OnEnable()
@@ -71,13 +68,15 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (_uiManager.IsPhonePanelActive())
         {
-            _uiManager.ResetPanelStates();
+            _uiManager.ResetPanelStates(this);
         }
         else
         {
-            _uiManager.ShowPhonePanel();
+            _uiManager.SetCurrentPlayer(this);
+            _uiManager.ShowPhonePanel(this);
         }
     }
+
 
     private void HandleRotateOrOpenBox()
     {
@@ -371,6 +370,30 @@ public class PlayerInteraction : MonoBehaviour
                 box.Place();
                 _heldBox = null;
             }
+        }
+    }
+
+    public void SetReticleVisibility(bool isVisible)
+    {
+        if (_reticleUI != null)
+        {
+            _reticleUI.gameObject.SetActive(isVisible);
+        }
+    }
+
+    public void DisableMovement()
+    {
+        if (_playerController != null)
+        {
+            _playerController.enabled = false;
+        }
+    }
+
+    public void EnableMovement()
+    {
+        if (_playerController != null)
+        {
+            _playerController.enabled = true;
         }
     }
 }

@@ -6,7 +6,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _playerPrefab;
     [SerializeField] private GameObject _uiManagerPrefab;
     [SerializeField] private GameObject _deliveryVehicleManagerPrefab;
-    [SerializeField] private GameObject _placementManagerPrefab;
 
     [Header("Spawn Points")]
     [SerializeField] private Transform _playerSpawnPoint;
@@ -17,8 +16,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // SpawnPlayer();
-        // SpawnManagers();
+        SpawnPlayer();
+        SpawnManagers();
         InitializePredefinedItems();
     }
 
@@ -87,13 +86,5 @@ public class GameManager : MonoBehaviour
             Instantiate(_deliveryVehicleManagerPrefab);
         }
 
-        if (_placementManagerPrefab == null)
-        {
-            Debug.LogError("Placement Manager prefab is not assigned in the GameManager.");
-        }
-        else
-        {
-            Instantiate(_placementManagerPrefab);
-        }
     }
 }

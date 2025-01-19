@@ -7,9 +7,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject _phonePanel;
     [SerializeField] private GameObject _appPanel;
     [SerializeField] private GameObject _furniturePanel;
-    [SerializeField] private PlayerController _playerController;
-    // [SerializeField] private PlacementManager _placementManager;
-    [SerializeField] private GameObject _reticle;
     [SerializeField] private TMP_Text _balanceText;
 
     [Header("Events")]
@@ -19,25 +16,33 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameManagerSO _gameManager;
     [SerializeField] private DeliveryVehicleManager _deliveryVehicleManager;
 
-    // expose balance changed event
-    public GameEventSO OnBalanceChangedEvent => onBalanceChangedEvent;
+
+    private PlayerInteraction _currentPlayer;
+
+    public void SetCurrentPlayer(PlayerInteraction player)
+    {
+        _currentPlayer = player;
+    }
+
+
 
     private void Start()
     {
         UpdateBalanceUI();
     }
-    public void ShowPhonePanel()
+
+    public void ShowPhonePanel(PlayerInteraction player)
     {
         _phonePanel.SetActive(true);
-        _reticle.SetActive(false);
-        ShowCursor();
+        player.SetReticleVisibility(false); // Disable only the triggering player's reticle
+        ShowCursor(player);
     }
 
-    public void ClosePhonePanel()
+    public void ClosePhonePanel(PlayerInteraction player)
     {
         _phonePanel.SetActive(false);
-        _reticle.SetActive(true);
-        HideCursor();
+        player.SetReticleVisibility(true); // Enable only the triggering player's reticle
+        HideCursor(player);
     }
 
     public bool IsPhonePanelActive()
@@ -67,25 +72,11 @@ public class UIManager : MonoBehaviour
         _furniturePanel.SetActive(false);
     }
 
-    private void ShowCursor()
-    {
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-        _playerController.enabled = false;
-    }
-
-    private void HideCursor()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        _playerController.enabled = true;
-    }
-
-    public void ResetPanelStates()
+    public void ResetPanelStates(PlayerInteraction player)
     {
         CloseAppPanel();
         CloseFurniturePanel();
-        ClosePhonePanel();
+        ClosePhonePanel(player);
     }
 
     public void BuyItem(PlaceableItemSO item)
@@ -93,10 +84,19 @@ public class UIManager : MonoBehaviour
         if (_gameManager.playerBalanceManager.CanAfford(item.Price))
         {
             _gameManager.playerBalanceManager.DeductBalance(item.Price);
-            ResetPanelStates();
-            onBalanceChangedEvent.Raise();            
-            
+            onBalanceChangedEvent.Raise();
+
             _deliveryVehicleManager.SpawnDeliveryVehicle(item.GetCardboardBoxPrefab());
+
+            // Use the current player for resetting panel states
+            if (_currentPlayer != null)
+            {
+                ResetPanelStates(_currentPlayer);
+            }
+            else
+            {
+                Debug.LogWarning("Current player is not set!");
+            }
         }
     }
 
@@ -104,5 +104,19 @@ public class UIManager : MonoBehaviour
     public void UpdateBalanceUI()
     {
         _balanceText.text = "Balance: $" + _gameManager.playerBalanceManager.playerBalance.balance;
+    }
+
+    private void ShowCursor(PlayerInteraction player)
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        player.DisableMovement(); // Disable movement for the specific player
+    }
+
+    private void HideCursor(PlayerInteraction player)
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        player.EnableMovement(); // Enable movement for the specific player
     }
 }
