@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class DeliveryVehicleManager : MonoBehaviour
 {
+    public static DeliveryVehicleManager Instance { get; private set; }
+
     [Header("Vehicle Settings")]
     [SerializeField] private GameObject _deliveryVehiclePrefab; // The vehicle prefab
     [SerializeField] private GameObject _cardboardBoxPrefab;    // The box prefab
@@ -15,6 +17,20 @@ public class DeliveryVehicleManager : MonoBehaviour
     [Header("Box Settings")]
     [SerializeField] private float _halfwayOffsetX = -2f;
     [SerializeField] private float _boxSpawnHeight = 3f;
+
+    private void Start()
+    {
+        // Singleton logic
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning($"Duplicate DeliveryVehicleManager detected and destroyed on {gameObject.name}");
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // Optional: Keeps the instance across scene loads if needed
+    }
 
     public void SpawnDeliveryVehicle(GameObject boxPrefab)
     {

@@ -14,7 +14,7 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private float _maxPlacementDistance = 10f;
 
     [Header("References")]
-    [SerializeField] private UIManager _uiManager;
+    [SerializeField] PlayerUI _playerUI;
     [SerializeField] private GameManagerSO _gameManager;
 
     private PlayerInputHandler _inputHandler;
@@ -66,14 +66,13 @@ public class PlayerInteraction : MonoBehaviour
 
     private void TogglePhoneMenu()
     {
-        if (_uiManager.IsPhonePanelActive())
+        if (_playerUI.IsPhonePanelActive())
         {
-            _uiManager.ResetPanelStates(this);
+            _playerUI.ResetPanelStates();
         }
         else
         {
-            _uiManager.SetCurrentPlayer(this);
-            _uiManager.ShowPhonePanel(this);
+            _playerUI.ShowPhonePanel();
         }
     }
 

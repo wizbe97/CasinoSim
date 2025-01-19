@@ -2,10 +2,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; } // Singleton instance
+
     [Header("Prefabs")]
     [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private GameObject _uiManagerPrefab;
     [SerializeField] private GameObject _deliveryVehicleManagerPrefab;
+    [SerializeField] private GameObject _purchaseManagerPrefab;
 
     [Header("Spawn Points")]
     [SerializeField] private Transform _playerSpawnPoint;
@@ -13,14 +15,26 @@ public class GameManager : MonoBehaviour
     [Header("Placeable Items")]
     [SerializeField] private PlaceableItemSO[] _placeableItems;
 
+    private void Awake()
+    {
+        // Singleton logic
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogWarning($"Duplicate GameManager detected and destroyed on {gameObject.name}");
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject); // Optional: Keeps the instance alive across scenes
+    }
 
     private void Start()
     {
-        SpawnPlayer();
         SpawnManagers();
+        SpawnPlayer();
         InitializePredefinedItems();
     }
-
 
     private void InitializePredefinedItems()
     {
@@ -55,6 +69,7 @@ public class GameManager : MonoBehaviour
 
         return null;
     }
+
     private void SpawnPlayer()
     {
         if (_playerPrefab == null || _playerSpawnPoint == null)
@@ -68,15 +83,6 @@ public class GameManager : MonoBehaviour
 
     private void SpawnManagers()
     {
-        if (_uiManagerPrefab == null)
-        {
-            Debug.LogError("UI Manager prefab is not assigned in the GameManager.");
-        }
-        else
-        {
-            Instantiate(_uiManagerPrefab);
-        }
-
         if (_deliveryVehicleManagerPrefab == null)
         {
             Debug.LogError("Delivery Vehicle Manager prefab is not assigned in the GameManager.");
@@ -86,5 +92,13 @@ public class GameManager : MonoBehaviour
             Instantiate(_deliveryVehicleManagerPrefab);
         }
 
+        if (_purchaseManagerPrefab == null)
+        {
+            Debug.LogError("Purchase Manager prefab is not assigned in the GameManager.");
+        }
+        else
+        {
+            Instantiate(_purchaseManagerPrefab);
+        }
     }
 }
