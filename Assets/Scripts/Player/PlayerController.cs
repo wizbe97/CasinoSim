@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using Unity.Netcode;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] private float walkSpeed = 5f;
@@ -31,25 +32,49 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         inputHandler = GetComponent<PlayerInputHandler>();
+    }
 
-        LockCursor();
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner)
+        {
+            if (playerCamera != null)
+                playerCamera.gameObject.SetActive(false);
+            return;
+        }
+        else
+        {
+            base.OnNetworkSpawn();
+
+            LockCursor();
+            rb = GetComponent<Rigidbody>();
+            inputHandler = GetComponent<PlayerInputHandler>();
+            inputHandler.OnJump += HandleJump;
+            inputHandler.OnSprintStart += () => isSprinting = true;
+            inputHandler.OnSprintEnd += () => isSprinting = false;
+        }
     }
 
     private void OnEnable()
     {
+        if (!IsOwner) return;
+
         inputHandler.OnJump += HandleJump;
         inputHandler.OnSprintStart += () => isSprinting = true;
         inputHandler.OnSprintEnd += () => isSprinting = false;
     }
 
-
     private void OnDisable()
     {
+        if (!IsOwner) return;
+
         inputHandler.OnJump -= HandleJump;
     }
 
     private void Update()
     {
+        if (!IsOwner) return;
+
         moveInput = inputHandler.MoveInput;
         lookInput = inputHandler.LookInput;
 
@@ -59,6 +84,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!IsOwner) return;
+
         HandleMovement();
     }
 
@@ -109,18 +136,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
     private void HandleJump()
     {
-        if (!enableJump || !isGrounded) return;
+        if (!IsOwner || !enableJump || !isGrounded) return;
 
         rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
         isGrounded = false;
-    }
-
-    private void HandleSprint(bool sprinting)
-    {
-        isSprinting = sprinting;
     }
 
     private void CheckGround()

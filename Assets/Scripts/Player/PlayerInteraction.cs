@@ -1,6 +1,7 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class PlayerInteraction : MonoBehaviour
+public class PlayerInteraction : NetworkBehaviour
 {
     [Header("Interaction Settings")]
     [SerializeField] private float _interactionDistance = 3f;
@@ -14,7 +15,7 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private float _maxPlacementDistance = 10f;
 
     [Header("References")]
-    [SerializeField] PlayerUI _playerUI;
+    [SerializeField] private PlayerUI _playerUI;
     [SerializeField] private GameManagerSO _gameManager;
     [SerializeField] private GameEventSO onBalanceChangedEvent;
 
@@ -32,6 +33,27 @@ public class PlayerInteraction : MonoBehaviour
     public bool CanPlace => _canPlace;
     #endregion
 
+    public override void OnNetworkSpawn()
+    {
+        if (!IsOwner)
+        {
+            enabled = false;
+            return;
+        }
+        else
+        {
+            base.OnNetworkSpawn();
+            _inputHandler = GetComponent<PlayerInputHandler>();
+            _reticleUI = GetComponentInChildren<RectTransform>();
+            _playerController = GetComponent<PlayerController>();
+            _inputHandler.OnPhoneMenu += TogglePhoneMenu;
+            _inputHandler.OnRotatePreviewOrOpenBox += HandleRotateOrOpenBox;
+            _inputHandler.OnPickupOrPlace += HandlePickupOrPlace;
+            _inputHandler.OnBoxOrSell += HandleBoxOrSell;
+            _inputHandler.OnCancel += HandleCancelPlacement;
+        }
+    }
+
     private void Awake()
     {
         _inputHandler = GetComponent<PlayerInputHandler>();
@@ -41,6 +63,8 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnEnable()
     {
+        if (!IsOwner) return;
+
         _inputHandler.OnPhoneMenu += TogglePhoneMenu;
         _inputHandler.OnRotatePreviewOrOpenBox += HandleRotateOrOpenBox;
         _inputHandler.OnPickupOrPlace += HandlePickupOrPlace;
@@ -50,6 +74,8 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnDisable()
     {
+        if (!IsOwner) return;
+
         _inputHandler.OnPhoneMenu -= TogglePhoneMenu;
         _inputHandler.OnRotatePreviewOrOpenBox -= HandleRotateOrOpenBox;
         _inputHandler.OnPickupOrPlace -= HandlePickupOrPlace;
@@ -59,6 +85,8 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
+        if (!IsOwner) return;
+
         if (_isPlacing && _currentPreview != null)
         {
             UpdatePreviewPosition();
@@ -67,6 +95,8 @@ public class PlayerInteraction : MonoBehaviour
 
     private void TogglePhoneMenu()
     {
+        if (!IsOwner) return;
+
         if (_playerUI.IsPhonePanelActive())
         {
             _playerUI.ResetPanelStates();
@@ -77,9 +107,10 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-
     private void HandleRotateOrOpenBox()
     {
+        if (!IsOwner) return;
+
         if (_isPlacing && _heldBox == null)
         {
             RotatePreview();
@@ -92,9 +123,10 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandlePickupOrPlace()
     {
+        if (!IsOwner) return;
+
         if (_heldBox != null)
         {
-            // Drop the box in the environment
             BoxPickup box = _heldBox.GetComponent<BoxPickup>();
             if (box != null)
             {
@@ -118,6 +150,8 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleBoxOrSell()
     {
+        if (!IsOwner) return;
+
         if (_heldBox != null)
         {
             SellItem();
@@ -130,9 +164,10 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleCancelPlacement()
     {
+        if (!IsOwner) return;
+
         if (_heldBox != null)
         {
-            // Drop the box
             BoxPickup box = _heldBox.GetComponent<BoxPickup>();
             if (box != null)
             {
@@ -150,7 +185,7 @@ public class PlayerInteraction : MonoBehaviour
 
     public void StartPlacement(PlaceableItemSO item)
     {
-        if (item == null) return;
+        if (!IsOwner || item == null) return;
 
         _currentItem = item;
         _isPlacing = true;
@@ -169,6 +204,8 @@ public class PlayerInteraction : MonoBehaviour
 
     private void TryPickUpObject()
     {
+        if (!IsOwner) return;
+
         Ray ray = PlayerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _placedObjectLayerMask))
@@ -193,6 +230,8 @@ public class PlayerInteraction : MonoBehaviour
 
     private void UpdatePreviewPosition()
     {
+        if (!IsOwner) return;
+
         Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position);
         Ray ray = PlayerCamera.ScreenPointToRay(screenPosition);
 
@@ -250,15 +289,14 @@ public class PlayerInteraction : MonoBehaviour
 
     public void RotatePreview()
     {
-        if (_currentPreview != null)
-        {
-            _currentPreview.transform.Rotate(0, 22.5f, 0);
-        }
+        if (!IsOwner || _currentPreview == null) return;
+
+        _currentPreview.transform.Rotate(0, 22.5f, 0);
     }
 
     public void PlaceObject()
     {
-        if (!_canPlace || _currentItem == null) return;
+        if (!IsOwner || !_canPlace || _currentItem == null) return;
 
         GameObject placedObject = Instantiate(_currentItem.GetPlacedPrefab(), _currentPreview.transform.position, _currentPreview.transform.rotation);
 
@@ -271,6 +309,8 @@ public class PlayerInteraction : MonoBehaviour
 
     public void CancelPlacement()
     {
+        if (!IsOwner) return;
+
         if (_currentPreview != null)
         {
             Destroy(_currentPreview);
@@ -280,30 +320,26 @@ public class PlayerInteraction : MonoBehaviour
 
     private void BoxCurrentPreview()
     {
-        if (_currentPreview != null && _currentItem != null)
+        if (!IsOwner || _currentPreview == null || _currentItem == null) return;
+
+        GameObject box = Instantiate(_currentItem.GetCardboardBoxPrefab(), _currentPreview.transform.position, _currentPreview.transform.rotation);
+
+        if (box.TryGetComponent(out Rigidbody rb))
         {
-            GameObject box = Instantiate(_currentItem.GetCardboardBoxPrefab(), _currentPreview.transform.position, _currentPreview.transform.rotation);
-
-            // Ensure the Rigidbody is kinematic before picking up
-            if (box.TryGetComponent(out Rigidbody rb))
-            {
-                rb.isKinematic = true;
-            }
-
-            if (box.TryGetComponent(out BoxPickup boxPickup))
-            {
-                boxPickup.SetContainedItem(_currentItem);
-
-                _heldBox = box;
-
-                boxPickup.Pickup(transform);
-            }
-
-            Destroy(_currentPreview);
-            ResetPlacementState();
+            rb.isKinematic = true;
         }
-    }
 
+        if (box.TryGetComponent(out BoxPickup boxPickup))
+        {
+            boxPickup.SetContainedItem(_currentItem);
+
+            _heldBox = box;
+            boxPickup.Pickup(transform);
+        }
+
+        Destroy(_currentPreview);
+        ResetPlacementState();
+    }
 
     private void ResetPlacementState()
     {
@@ -318,7 +354,9 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OpenHeldBox()
     {
-        if (_heldBox != null && _heldBox.TryGetComponent(out BoxPickup box))
+        if (!IsOwner || _heldBox == null) return;
+
+        if (_heldBox.TryGetComponent(out BoxPickup box))
         {
             PlaceableItemSO itemInside = box.GetContainedItem();
             if (itemInside != null)
@@ -332,7 +370,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private void SellItem()
     {
-        if (_heldBox == null) return;
+        if (!IsOwner || _heldBox == null) return;
 
         if (_heldBox.TryGetComponent(out BoxPickup box))
         {
@@ -351,6 +389,8 @@ public class PlayerInteraction : MonoBehaviour
 
     private bool IsLookingAtBox()
     {
+        if (!IsOwner) return false;
+
         Ray ray = PlayerCamera.ScreenPointToRay(_reticleUI.position);
 
         if (Physics.Raycast(ray, out RaycastHit hit, _interactionDistance, _interactableLayerMask))
@@ -363,55 +403,45 @@ public class PlayerInteraction : MonoBehaviour
 
     private void InteractWithBox()
     {
-        if (_heldBox == null)
-        {
-            Ray ray = PlayerCamera.ScreenPointToRay(_reticleUI.position);
+        if (!IsOwner || _heldBox != null) return;
 
-            if (Physics.Raycast(ray, out RaycastHit hit, _maxPlacementDistance, _placedObjectLayerMask))
-            {
-                if (hit.collider.TryGetComponent(out BoxPickup box))
-                {
-                    _heldBox = hit.collider.gameObject;
-                    box.Pickup(transform);
-                }
-            }
-        }
-        else
+        Ray ray = PlayerCamera.ScreenPointToRay(_reticleUI.position);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, _maxPlacementDistance, _placedObjectLayerMask))
         {
-            if (_heldBox.TryGetComponent(out BoxPickup box))
+            if (hit.collider.TryGetComponent(out BoxPickup box))
             {
-                box.Place();
-                _heldBox = null;
+                _heldBox = hit.collider.gameObject;
+                box.Pickup(transform);
             }
         }
     }
 
     public void SetReticleVisibility(bool isVisible)
     {
-        if (_reticleUI != null)
-        {
-            _reticleUI.gameObject.SetActive(isVisible);
-        }
+        if (!IsOwner || _reticleUI == null) return;
+
+        _reticleUI.gameObject.SetActive(isVisible);
     }
 
     public void DisableMovement()
     {
-        if (_playerController != null)
-        {
-            _playerController.enabled = false;
-        }
+        if (!IsOwner || _playerController == null) return;
+
+        _playerController.enabled = false;
     }
 
     public void EnableMovement()
     {
-        if (_playerController != null)
-        {
-            _playerController.enabled = true;
-        }
+        if (!IsOwner || _playerController == null) return;
+
+        _playerController.enabled = true;
     }
 
     public void BuyItem(PlaceableItemSO item)
     {
+        if (!IsOwner) return;
+
         var balanceManager = _gameManager.playerBalanceManager;
 
         if (balanceManager.CanAfford(item.Price))
@@ -423,6 +453,5 @@ public class PlayerInteraction : MonoBehaviour
 
             DeliveryVehicleManager.Instance.SpawnDeliveryVehicle(item.GetCardboardBoxPrefab());
         }
-
     }
 }

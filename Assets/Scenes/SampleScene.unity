@@ -1471,6 +1471,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7346307294101296785, guid: 67ccdcf73e49cfa4d998fcae8034e43f,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 801879791
+      objectReference: {fileID: 0}
+    - target: {fileID: 7346307294101296785, guid: 67ccdcf73e49cfa4d998fcae8034e43f,
+        type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 2080324409
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1538,6 +1548,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Roulette_Table
+      objectReference: {fileID: 0}
+    - target: {fileID: 8840411680182362715, guid: 62be9149e4b5b39448f2fa8c958d1191,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 4203495198
+      objectReference: {fileID: 0}
+    - target: {fileID: 8840411680182362715, guid: 62be9149e4b5b39448f2fa8c958d1191,
+        type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 312481019
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

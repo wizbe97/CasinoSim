@@ -1,6 +1,7 @@
 using UnityEngine;
+using Unity.Netcode;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance { get; private set; }
 
@@ -33,6 +34,13 @@ public class GameManager : MonoBehaviour
         // SpawnPlayer();
         InitializePredefinedItems();
     }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        InitializePredefinedItems();
+    }
+
 
     private void InitializePredefinedItems()
     {
