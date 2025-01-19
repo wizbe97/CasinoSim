@@ -79,29 +79,25 @@ public class PlayerController : MonoBehaviour
 
         if (moveInput != Vector2.zero)
         {
-            // Calculate move direction and speed
             Vector3 moveDirection = new Vector3(moveInput.x, 0, moveInput.y);
             moveDirection = transform.TransformDirection(moveDirection);
 
             float currentSpeed = isSprinting ? sprintSpeed : walkSpeed;
             moveDirection *= currentSpeed;
 
-            // Calculate velocity change
             Vector3 velocityChange = moveDirection - velocity;
             velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
             velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
             velocityChange.y = 0;
 
-            // Apply force for movement
             rb.AddForce(velocityChange, ForceMode.VelocityChange);
         }
         else
         {
             // Gradually slow down when no input is provided
-            float dampingFactor = 5f; // Adjust this value for faster/slower deceleration
+            float dampingFactor = 5f;
             Vector3 deceleration = -velocity * dampingFactor * Time.fixedDeltaTime;
 
-            // Ensure we don't apply forces if velocity is already near zero
             if (velocity.magnitude < 0.1f)
             {
                 rb.velocity = Vector3.zero;

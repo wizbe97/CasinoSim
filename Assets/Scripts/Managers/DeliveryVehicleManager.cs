@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class DeliveryVehicleManager : MonoBehaviour
 {
+    public static DeliveryVehicleManager Instance { get; private set; }
+
     [Header("Vehicle Settings")]
-    [SerializeField] private GameObject _deliveryVehiclePrefab; // The vehicle prefab
-    [SerializeField] private GameObject _cardboardBoxPrefab;    // The box prefab
-    [SerializeField] private float _vehicleSpeed = 5f;          // Speed of the vehicle
+    [SerializeField] private GameObject _deliveryVehiclePrefab;
+    [SerializeField] private float _vehicleSpeed = 5f; 
 
     [Header("Coordinates")]
     [SerializeField] private Vector3 _startPosition = new Vector3(21, -6, -21);
@@ -16,12 +17,22 @@ public class DeliveryVehicleManager : MonoBehaviour
     [SerializeField] private float _halfwayOffsetX = -2f;
     [SerializeField] private float _boxSpawnHeight = 3f;
 
+    private void Start()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+
     public void SpawnDeliveryVehicle(GameObject boxPrefab)
     {
-        // Instantiate the delivery vehicle
         GameObject deliveryVehicle = Instantiate(_deliveryVehiclePrefab, _startPosition, Quaternion.identity);
 
-        // Start the movement coroutine and pass the cardboard box prefab
         StartCoroutine(MoveVehicle(deliveryVehicle, boxPrefab));
     }
 
