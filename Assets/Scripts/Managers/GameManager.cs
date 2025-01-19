@@ -2,12 +2,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; } // Singleton instance
+    public static GameManager Instance { get; private set; }
 
     [Header("Prefabs")]
     [SerializeField] private GameObject _playerPrefab;
     [SerializeField] private GameObject _deliveryVehicleManagerPrefab;
-    [SerializeField] private GameObject _purchaseManagerPrefab;
 
     [Header("Spawn Points")]
     [SerializeField] private Transform _playerSpawnPoint;
@@ -17,7 +16,6 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        // Singleton logic
         if (Instance != null && Instance != this)
         {
             Debug.LogWarning($"Duplicate GameManager detected and destroyed on {gameObject.name}");
@@ -26,7 +24,7 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject); // Optional: Keeps the instance alive across scenes
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -90,15 +88,6 @@ public class GameManager : MonoBehaviour
         else
         {
             Instantiate(_deliveryVehicleManagerPrefab);
-        }
-
-        if (_purchaseManagerPrefab == null)
-        {
-            Debug.LogError("Purchase Manager prefab is not assigned in the GameManager.");
-        }
-        else
-        {
-            Instantiate(_purchaseManagerPrefab);
         }
     }
 }

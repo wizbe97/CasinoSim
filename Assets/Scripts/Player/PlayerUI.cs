@@ -13,7 +13,6 @@ public class PlayerUI : MonoBehaviour
     [Header("Player References")]
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private GameManagerSO _gameManager;
-    [SerializeField] private PurchaseManager _purchaseManager;
 
     [Header("Events")]
     [SerializeField] private GameEventSO onBalanceChangedEvent;
@@ -56,6 +55,11 @@ public class PlayerUI : MonoBehaviour
 
     public void CloseAppPanel()
     {
+        if (_appPanel == null)
+        {
+            Debug.LogError("AppPanel is not assigned in PlayerUI.");
+            return;
+        }
         _appPanel.SetActive(false);
         CloseFurniturePanel();
     }

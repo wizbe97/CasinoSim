@@ -17,11 +17,10 @@ public class PlacedItem : MonoBehaviour
 
     public PlaceableItemType GetItemType()
     {
-        if (_itemData == null)
-        {
+        if (_itemData != null)
+            return _itemData.ItemType;
+        else
             throw new System.NullReferenceException($"_itemData is null on {gameObject.name}. Ensure a PlaceableItemSO is assigned.");
-        }
-        return _itemData.ItemType;
     }
 
     public bool CanBePickedUp()

@@ -16,6 +16,7 @@ public class PlayerInteraction : MonoBehaviour
     [Header("References")]
     [SerializeField] PlayerUI _playerUI;
     [SerializeField] private GameManagerSO _gameManager;
+    [SerializeField] private GameEventSO onBalanceChangedEvent;
 
     private PlayerInputHandler _inputHandler;
     private PlayerController _playerController;
@@ -281,7 +282,6 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (_currentPreview != null && _currentItem != null)
         {
-            // Create the box at the current preview's position
             GameObject box = Instantiate(_currentItem.GetCardboardBoxPrefab(), _currentPreview.transform.position, _currentPreview.transform.rotation);
 
             // Ensure the Rigidbody is kinematic before picking up
@@ -292,20 +292,14 @@ public class PlayerInteraction : MonoBehaviour
 
             if (box.TryGetComponent(out BoxPickup boxPickup))
             {
-                // Set the item inside the box
                 boxPickup.SetContainedItem(_currentItem);
 
-                // Assign the box to _heldBox
                 _heldBox = box;
 
-                // Make the player "hold" the box
                 boxPickup.Pickup(transform);
             }
 
-            // Destroy the preview object
             Destroy(_currentPreview);
-
-            // Reset the placement state
             ResetPlacementState();
         }
     }
@@ -414,5 +408,21 @@ public class PlayerInteraction : MonoBehaviour
         {
             _playerController.enabled = true;
         }
+    }
+
+    public void BuyItem(PlaceableItemSO item)
+    {
+        var balanceManager = _gameManager.playerBalanceManager;
+
+        if (balanceManager.CanAfford(item.Price))
+        {
+            balanceManager.DeductBalance(item.Price);
+
+            onBalanceChangedEvent.Raise();
+            _playerUI.ResetPanelStates();
+
+            DeliveryVehicleManager.Instance.SpawnDeliveryVehicle(item.GetCardboardBoxPrefab());
+        }
+
     }
 }

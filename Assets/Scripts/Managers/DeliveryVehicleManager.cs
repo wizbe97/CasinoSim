@@ -6,9 +6,8 @@ public class DeliveryVehicleManager : MonoBehaviour
     public static DeliveryVehicleManager Instance { get; private set; }
 
     [Header("Vehicle Settings")]
-    [SerializeField] private GameObject _deliveryVehiclePrefab; // The vehicle prefab
-    [SerializeField] private GameObject _cardboardBoxPrefab;    // The box prefab
-    [SerializeField] private float _vehicleSpeed = 5f;          // Speed of the vehicle
+    [SerializeField] private GameObject _deliveryVehiclePrefab;
+    [SerializeField] private float _vehicleSpeed = 5f; 
 
     [Header("Coordinates")]
     [SerializeField] private Vector3 _startPosition = new Vector3(21, -6, -21);
@@ -20,24 +19,20 @@ public class DeliveryVehicleManager : MonoBehaviour
 
     private void Start()
     {
-        // Singleton logic
         if (Instance != null && Instance != this)
         {
-            Debug.LogWarning($"Duplicate DeliveryVehicleManager detected and destroyed on {gameObject.name}");
             Destroy(gameObject);
             return;
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject); // Optional: Keeps the instance across scene loads if needed
+        DontDestroyOnLoad(gameObject);
     }
 
     public void SpawnDeliveryVehicle(GameObject boxPrefab)
     {
-        // Instantiate the delivery vehicle
         GameObject deliveryVehicle = Instantiate(_deliveryVehiclePrefab, _startPosition, Quaternion.identity);
 
-        // Start the movement coroutine and pass the cardboard box prefab
         StartCoroutine(MoveVehicle(deliveryVehicle, boxPrefab));
     }
 

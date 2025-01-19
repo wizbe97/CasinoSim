@@ -48,9 +48,9 @@ public class CardboardBox : MonoBehaviour
         if (_isBeingHeld && _item != null)
         {
             playerInteraction.StartPlacement(_item);
-            _item = null; // Empty the box after opening
-            Drop();       // Detach the box
-            Destroy(gameObject); // Remove the empty box
+            _item = null;
+            Drop();
+            Destroy(gameObject);
         }
         else if (_item == null)
         {

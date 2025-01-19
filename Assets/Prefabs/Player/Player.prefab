@@ -235,7 +235,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6100070175161112519}
   - component: {fileID: 2784600889428751184}
-  - component: {fileID: 937366511873625960}
   - component: {fileID: 5559790291716658326}
   m_Layer: 8
   m_Name: PlayerCamera
@@ -311,14 +310,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &937366511873625960
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1014428131296029399}
-  m_Enabled: 1
 --- !u!114 &5559790291716658326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -484,9 +475,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1336460758025007370, guid: e78fa20f1308e5840a66d76b2394e30c,
-          type: 3}
-        m_TargetAssemblyTypeName: PurchaseManager, Assembly-CSharp
+      - m_Target: {fileID: 5752338930140922161}
+        m_TargetAssemblyTypeName: PlayerInteraction, Assembly-CSharp
         m_MethodName: BuyItem
         m_Mode: 2
         m_Arguments:
@@ -619,9 +609,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1336460758025007370, guid: e78fa20f1308e5840a66d76b2394e30c,
-          type: 3}
-        m_TargetAssemblyTypeName: PurchaseManager, Assembly-CSharp
+      - m_Target: {fileID: 5752338930140922161}
+        m_TargetAssemblyTypeName: PlayerInteraction, Assembly-CSharp
         m_MethodName: BuyItem
         m_Mode: 2
         m_Arguments:
@@ -1174,7 +1163,7 @@ MonoBehaviour:
   enableJump: 1
   jumpPower: 5
   playerCamera: {fileID: 2784600889428751184}
-  mouseSensitivity: 12
+  mouseSensitivity: 15
   maxLookAngle: 90
 --- !u!114 &5752338930140922161
 MonoBehaviour:
@@ -1205,6 +1194,8 @@ MonoBehaviour:
   _maxPlacementDistance: 5
   _playerUI: {fileID: 7098021626587286956}
   _gameManager: {fileID: 11400000, guid: 62787c92ef19748418e5f39a21f17c45, type: 2}
+  onBalanceChangedEvent: {fileID: 11400000, guid: 55cedb9a0d8aa0e4195bce682fdd0f0a,
+    type: 2}
 --- !u!114 &7098021626587286956
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1223,8 +1214,6 @@ MonoBehaviour:
   _reticle: {fileID: 6990398372024282876}
   _playerController: {fileID: 2832476190750885498}
   _gameManager: {fileID: 11400000, guid: 62787c92ef19748418e5f39a21f17c45, type: 2}
-  _purchaseManager: {fileID: 1336460758025007370, guid: e78fa20f1308e5840a66d76b2394e30c,
-    type: 3}
   onBalanceChangedEvent: {fileID: 11400000, guid: 55cedb9a0d8aa0e4195bce682fdd0f0a,
     type: 2}
 --- !u!1 &3714815447972551337
