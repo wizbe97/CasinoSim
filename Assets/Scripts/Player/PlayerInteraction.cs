@@ -281,15 +281,35 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (_currentPreview != null && _currentItem != null)
         {
-            GameObject box = Instantiate(_currentItem.GetCardboardBoxPrefab(), _currentPreview.transform.position, Quaternion.identity);
+            // Create the box at the current preview's position
+            GameObject box = Instantiate(_currentItem.GetCardboardBoxPrefab(), _currentPreview.transform.position, _currentPreview.transform.rotation);
+
+            // Ensure the Rigidbody is kinematic before picking up
+            if (box.TryGetComponent(out Rigidbody rb))
+            {
+                rb.isKinematic = true;
+            }
+
             if (box.TryGetComponent(out BoxPickup boxPickup))
             {
+                // Set the item inside the box
                 boxPickup.SetContainedItem(_currentItem);
+
+                // Assign the box to _heldBox
+                _heldBox = box;
+
+                // Make the player "hold" the box
+                boxPickup.Pickup(transform);
             }
+
+            // Destroy the preview object
             Destroy(_currentPreview);
+
+            // Reset the placement state
+            ResetPlacementState();
         }
-        ResetPlacementState();
     }
+
 
     private void ResetPlacementState()
     {
