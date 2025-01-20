@@ -107,6 +107,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Join Table"",
+                    ""type"": ""Button"",
+                    ""id"": ""00f40427-c445-4791-8169-5f4487526ea2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -351,6 +360,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ec915c5e-e212-4cf6-ab21-f9d84cdfa69f"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Join Table"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8fb6e5d5-2446-4e77-9b33-79bd1b97120e"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Join Table"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -368,6 +399,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_PickupOrPlace = m_Player.FindAction("PickupOrPlace", throwIfNotFound: true);
         m_Player_BoxOrSell = m_Player.FindAction("BoxOrSell", throwIfNotFound: true);
         m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
+        m_Player_JoinTable = m_Player.FindAction("Join Table", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -438,6 +470,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_PickupOrPlace;
     private readonly InputAction m_Player_BoxOrSell;
     private readonly InputAction m_Player_Cancel;
+    private readonly InputAction m_Player_JoinTable;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -451,6 +484,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @PickupOrPlace => m_Wrapper.m_Player_PickupOrPlace;
         public InputAction @BoxOrSell => m_Wrapper.m_Player_BoxOrSell;
         public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
+        public InputAction @JoinTable => m_Wrapper.m_Player_JoinTable;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -487,6 +521,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Cancel.started += instance.OnCancel;
             @Cancel.performed += instance.OnCancel;
             @Cancel.canceled += instance.OnCancel;
+            @JoinTable.started += instance.OnJoinTable;
+            @JoinTable.performed += instance.OnJoinTable;
+            @JoinTable.canceled += instance.OnJoinTable;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -518,6 +555,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Cancel.started -= instance.OnCancel;
             @Cancel.performed -= instance.OnCancel;
             @Cancel.canceled -= instance.OnCancel;
+            @JoinTable.started -= instance.OnJoinTable;
+            @JoinTable.performed -= instance.OnJoinTable;
+            @JoinTable.canceled -= instance.OnJoinTable;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -546,5 +586,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnPickupOrPlace(InputAction.CallbackContext context);
         void OnBoxOrSell(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
+        void OnJoinTable(InputAction.CallbackContext context);
     }
 }

@@ -1009,6 +1009,7 @@ GameObject:
   - component: {fileID: 2832476190750885498}
   - component: {fileID: 5752338930140922161}
   - component: {fileID: 7098021626587286956}
+  - component: {fileID: -2817925540111807242}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -1216,6 +1217,22 @@ MonoBehaviour:
   _gameManager: {fileID: 11400000, guid: 62787c92ef19748418e5f39a21f17c45, type: 2}
   onBalanceChangedEvent: {fileID: 11400000, guid: 55cedb9a0d8aa0e4195bce682fdd0f0a,
     type: 2}
+--- !u!114 &-2817925540111807242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3558442009391849069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb82944f72b8b594da6e40caeea51053, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blackjackTableLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  interactionDistance: 5
 --- !u!1 &3714815447972551337
 GameObject:
   m_ObjectHideFlags: 0

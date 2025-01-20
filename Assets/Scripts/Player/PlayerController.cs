@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float sprintSpeed = 7f;
     [SerializeField] private float maxVelocityChange = 10f;
-
     [Header("Jump Settings")]
     [SerializeField] private bool enableJump = true;
     [SerializeField] private float jumpPower = 5f;
@@ -26,6 +25,8 @@ public class PlayerController : MonoBehaviour
     private float yaw = 0f;
     private float pitch = 0f;
     private bool isGrounded = false;
+
+    public bool CanMove = true;
 
     private void Awake()
     {
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!CanMove) return;
         HandleMovement();
     }
 

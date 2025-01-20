@@ -30,6 +30,10 @@ public class PlayerInteraction : MonoBehaviour
     #region Public Properties
     public bool IsPlacing => _isPlacing;
     public bool CanPlace => _canPlace;
+    public RectTransform ReticleUI => _reticleUI;
+    public LayerMask PlacementLayerMask => _placementLayerMask;
+    public Camera PlayerCamera => GetComponentInChildren<Camera>();
+
     #endregion
 
     private void Awake()
@@ -313,9 +317,6 @@ public class PlayerInteraction : MonoBehaviour
     }
 
     #endregion
-
-    private Camera PlayerCamera => GetComponentInChildren<Camera>();
-
     private void OpenHeldBox()
     {
         if (_heldBox != null && _heldBox.TryGetComponent(out BoxPickup box))
