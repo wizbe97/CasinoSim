@@ -85,9 +85,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsOwner) return;
-
-        if (_isPlacing && _currentPreview != null)
+        if (_isPlacing && _currentPreview != null && IsHost)
         {
             UpdatePreviewPosition();
         }
@@ -95,8 +93,6 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void TogglePhoneMenu()
     {
-        if (!IsOwner) return;
-
         if (_playerUI.IsPhonePanelActive())
         {
             _playerUI.ResetPanelStates();
@@ -109,7 +105,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void HandleRotateOrOpenBox()
     {
-        if (!IsOwner) return;
+        if (!IsHost) return;
 
         if (_isPlacing && _heldBox == null)
         {
@@ -123,7 +119,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void HandlePickupOrPlace()
     {
-        if (!IsOwner) return;
+        if (!IsHost) return;
 
         if (_heldBox != null)
         {
@@ -150,7 +146,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void HandleBoxOrSell()
     {
-        if (!IsOwner) return;
+        if (!IsHost) return;
 
         if (_heldBox != null)
         {
@@ -164,7 +160,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void HandleCancelPlacement()
     {
-        if (!IsOwner) return;
+        if (!IsHost) return;
 
         if (_heldBox != null)
         {
@@ -185,7 +181,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     public void StartPlacement(PlaceableItemSO item)
     {
-        if (!IsOwner || item == null) return;
+        if (!IsHost || item == null) return;
 
         _currentItem = item;
         _isPlacing = true;
@@ -194,6 +190,7 @@ public class PlayerInteraction : NetworkBehaviour
         {
             _currentPreview = Instantiate(_currentItem.GetPreviewPrefab(), _pickedUpObject.transform.position, _pickedUpObject.transform.rotation);
             Destroy(_pickedUpObject);
+            _pickedUpObject.GetComponent<NetworkObject>().Despawn();
             _pickedUpObject = null;
         }
         else
@@ -204,7 +201,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void TryPickUpObject()
     {
-        if (!IsOwner) return;
+        if (!IsHost) return;
 
         Ray ray = PlayerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
 
@@ -230,7 +227,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void UpdatePreviewPosition()
     {
-        if (!IsOwner) return;
+        if (!IsHost) return;
 
         Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position);
         Ray ray = PlayerCamera.ScreenPointToRay(screenPosition);
@@ -289,16 +286,17 @@ public class PlayerInteraction : NetworkBehaviour
 
     public void RotatePreview()
     {
-        if (!IsOwner || _currentPreview == null) return;
+        if (!IsHost || _currentPreview == null) return;
 
         _currentPreview.transform.Rotate(0, 22.5f, 0);
     }
 
     public void PlaceObject()
     {
-        if (!IsOwner || !_canPlace || _currentItem == null) return;
+        if (!IsHost || !_canPlace || _currentItem == null) return;
 
         GameObject placedObject = Instantiate(_currentItem.GetPlacedPrefab(), _currentPreview.transform.position, _currentPreview.transform.rotation);
+        placedObject.GetComponent<NetworkObject>().Spawn();
 
         var placedItemScript = placedObject.GetComponent<PlacedItem>();
         placedItemScript.Initialize(_currentItem, _currentItem.GetPlacementCooldown());
@@ -309,7 +307,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     public void CancelPlacement()
     {
-        if (!IsOwner) return;
+        if (!IsHost) return;
 
         if (_currentPreview != null)
         {
@@ -320,7 +318,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void BoxCurrentPreview()
     {
-        if (!IsOwner || _currentPreview == null || _currentItem == null) return;
+        if (!IsHost || _currentPreview == null || _currentItem == null) return;
 
         GameObject box = Instantiate(_currentItem.GetCardboardBoxPrefab(), _currentPreview.transform.position, _currentPreview.transform.rotation);
 
@@ -354,7 +352,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void OpenHeldBox()
     {
-        if (!IsOwner || _heldBox == null) return;
+        if (!IsHost || _heldBox == null) return;
 
         if (_heldBox.TryGetComponent(out BoxPickup box))
         {
@@ -370,7 +368,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void SellItem()
     {
-        if (!IsOwner || _heldBox == null) return;
+        if (!IsHost || _heldBox == null) return;
 
         if (_heldBox.TryGetComponent(out BoxPickup box))
         {
@@ -389,7 +387,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     private bool IsLookingAtBox()
     {
-        if (!IsOwner) return false;
+        if (!IsHost) return false;
 
         Ray ray = PlayerCamera.ScreenPointToRay(_reticleUI.position);
 
@@ -403,7 +401,7 @@ public class PlayerInteraction : NetworkBehaviour
 
     private void InteractWithBox()
     {
-        if (!IsOwner || _heldBox != null) return;
+        if (!IsHost || _heldBox != null) return;
 
         Ray ray = PlayerCamera.ScreenPointToRay(_reticleUI.position);
 
