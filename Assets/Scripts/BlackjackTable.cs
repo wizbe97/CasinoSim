@@ -19,14 +19,10 @@ public class BlackjackTable : MonoBehaviour
     private void Awake()
     {
         if (dealerCardSpot == null)
-        {
             Debug.LogError("DealerCardSpot is not assigned in BlackjackTable!");
-        }
-
         if (chairs == null || chairs.Length == 0)
-        {
             Debug.LogError("Chairs are not assigned in BlackjackTable!");
-        }
+
     }
 
     public bool GameCanStart(out List<Chair> occupiedChairs)
@@ -54,7 +50,6 @@ public class BlackjackTable : MonoBehaviour
             }
         }
 
-        Debug.LogWarning("No free chairs found at the table.");
         return null;
     }
 

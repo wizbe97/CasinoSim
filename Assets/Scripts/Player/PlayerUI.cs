@@ -77,6 +77,7 @@ public class PlayerUI : MonoBehaviour
 
     public void ResetPanelStates()
     {
+
         CloseAppPanel();
         CloseFurniturePanel();
         _phonePanel.SetActive(false);

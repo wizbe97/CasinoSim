@@ -674,6 +674,7 @@ MonoBehaviour:
   - {fileID: 2369378438788255754}
   occupiedChairs: []
   DealerSeat: {fileID: 4806738407643250578}
+  cardDealingDelay: 0.75
 --- !u!1 &4800540832352149535
 GameObject:
   m_ObjectHideFlags: 0

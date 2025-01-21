@@ -19,6 +19,7 @@ public class BlackjackDealer : MonoBehaviour
     private bool isDealer = false; // Tracks whether the player has joined the table as the dealer
     private Transform dealerSpot; // Reference to the dealer's spot at the table
     private float cardDealingDelay;
+    private RectTransform _reticleUI;
 
     private void Awake()
     {
@@ -27,19 +28,34 @@ public class BlackjackDealer : MonoBehaviour
         _playerController = GetComponent<PlayerController>();
     }
 
-    private void OnEnable()
+    private void Start() {
+        _reticleUI = _playerInteraction.ReticleUI;
+    }
+
+    private void SubscribeDealerInputActions()
     {
+        Debug.Log("BlackjackDealer: Subscribing to dealer input actions.");
         _inputHandler.OnDealCard += DealCards;
-        _inputHandler.OnJoinTable += JoinTable;
         _inputHandler.OnCancel += LeaveDealerSpot;
     }
 
-    private void OnDisable()
+    private void UnsubscribeDealerInputActions()
     {
+        Debug.Log("BlackjackDealer: Unsubscribing from dealer input actions.");
         _inputHandler.OnDealCard -= DealCards;
-        _inputHandler.OnJoinTable -= JoinTable;
         _inputHandler.OnCancel -= LeaveDealerSpot;
     }
+
+    private void OnEnable()
+    {
+        _inputHandler.OnJoinTable += JoinTable;
+    }
+    private void OnDisable()
+    {
+        UnsubscribeDealerInputActions();
+        _inputHandler.OnJoinTable += JoinTable;
+    }
+
 
     private void JoinTable()
     {
@@ -89,42 +105,48 @@ public class BlackjackDealer : MonoBehaviour
                 }
             }
         }
-
-        Debug.Log("Raycast did not hit any valid blackjack table.");
     }
 
     private void TeleportToDealerSpot(Transform dealerSeat)
     {
+        if (dealerSeat == null)
+        {
+            return;
+        }
+
         // Teleport the player to the dealer seat
         transform.position = dealerSeat.position;
         transform.rotation = dealerSeat.rotation;
         cardDealingDelay = blackjackTable.CardDealingDelay;
 
         _playerController.CanMove = false;
+
         UnsubscribeInteractionEvents();
+        SubscribeDealerInputActions();
 
-        // Set as dealer and disable PlayerInteraction
         isDealer = true;
-        _playerInteraction.enabled = false;
 
-        Debug.Log("Player is now the dealer.");
     }
 
     private void LeaveDealerSpot()
     {
-        if (!isDealer) return;
+        if (!isDealer)
+            return;
 
         _playerController.CanMove = true;
+
         SubscribeInteractionEvents();
+        UnsubscribeDealerInputActions();
 
         isDealer = false;
-        blackjackTable = null; // Reset the table reference
-        Debug.Log("You have left the dealer spot.");
+        blackjackTable = null;
     }
+
+
 
     public void DealCards()
     {
-        if (cardsDealt)
+        if (cardsDealt == true)
         {
             Debug.LogWarning("Cards have already been dealt. End the round first.");
             return;
@@ -149,6 +171,7 @@ public class BlackjackDealer : MonoBehaviour
         }
 
         blackjackShoe.InitializeShoe();
+        cardsDealt = false;
 
         // Start the coroutine to deal cards with a delay
         StartCoroutine(DealCardsWithDelay());
@@ -239,5 +262,6 @@ public class BlackjackDealer : MonoBehaviour
         _inputHandler.OnBoxOrSell += _playerInteraction.HandleBoxOrSell;
         _inputHandler.OnPhoneMenu += _playerInteraction.TogglePhoneMenu;
         _inputHandler.OnCancel += _playerInteraction.HandleCancelPlacement;
+        _playerInteraction.ResetState();
     }
 }

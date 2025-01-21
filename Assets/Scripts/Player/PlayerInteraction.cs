@@ -43,23 +43,40 @@ public class PlayerInteraction : MonoBehaviour
         _playerController = GetComponent<PlayerController>();
     }
 
+    public void ResetState()
+    {
+        _currentPreview = null;
+        _heldBox = null;
+        _isPlacing = false;
+        _canPlace = false;
+        Debug.Log("PlayerInteraction: State reset.");
+    }
+
+
     private void OnEnable()
     {
+        // Re-subscribe to player input handler events
         _inputHandler.OnPhoneMenu += TogglePhoneMenu;
         _inputHandler.OnRotatePreviewOrOpenBox += HandleRotateOrOpenBox;
         _inputHandler.OnPickupOrPlace += HandlePickupOrPlace;
         _inputHandler.OnBoxOrSell += HandleBoxOrSell;
         _inputHandler.OnCancel += HandleCancelPlacement;
+
+        Debug.Log("PlayerInteraction enabled and events re-subscribed.");
     }
 
     private void OnDisable()
     {
+        // Unsubscribe from player input handler events
         _inputHandler.OnPhoneMenu -= TogglePhoneMenu;
         _inputHandler.OnRotatePreviewOrOpenBox -= HandleRotateOrOpenBox;
         _inputHandler.OnPickupOrPlace -= HandlePickupOrPlace;
         _inputHandler.OnBoxOrSell -= HandleBoxOrSell;
         _inputHandler.OnCancel -= HandleCancelPlacement;
+
+        Debug.Log("PlayerInteraction disabled and events unsubscribed.");
     }
+
 
     private void Update()
     {
@@ -71,12 +88,15 @@ public class PlayerInteraction : MonoBehaviour
 
     public void TogglePhoneMenu()
     {
+        Debug.Log("PlayerInteraction: TogglePhoneMenu called.");
         if (_playerUI.IsPhonePanelActive())
         {
+            Debug.Log("PlayerInteraction: Phone menu is active. Resetting panel states.");
             _playerUI.ResetPanelStates();
         }
         else
         {
+            Debug.Log("PlayerInteraction: Phone menu is inactive. Showing phone panel.");
             _playerUI.ShowPhonePanel();
         }
     }
@@ -442,4 +462,6 @@ public class PlayerInteraction : MonoBehaviour
         }
 
     }
+
+
 }

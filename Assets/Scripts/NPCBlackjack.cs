@@ -11,15 +11,6 @@ public class NPCBlackjack : MonoBehaviour
     {
         // Find the first BlackjackTable in the scene
         targetTable = FindObjectOfType<BlackjackTable>();
-
-        if (targetTable == null)
-        {
-            Debug.LogError("No blackjack table found in the scene!");
-        }
-        else
-        {
-            Debug.Log($"{name} found a blackjack table: {targetTable.name}");
-        }
     }
 
     private void Update()
@@ -53,11 +44,6 @@ public class NPCBlackjack : MonoBehaviour
             // Sit at the chair
             targetChair.SitNPC(transform);
             isSeated = true; // Disable movement
-            Debug.Log($"{name} is seated at {targetChair.name}.");
-        }
-        else
-        {
-            Debug.LogWarning("No free chairs available at the table.");
         }
     }
 }
