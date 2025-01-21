@@ -173,24 +173,24 @@ public class BlackjackDealer : MonoBehaviour
             return;
         }
 
-        // Determine the offset based on the number of existing cards at the spot
-        int cardCount = spot.childCount; // Count the number of cards already at this spot
-        Vector3 offset = new Vector3(0, 0, cardGap * cardCount); // Slight Z-axis offset for stacking
+        // Calculate the card's position offset based on the cardGap and number of children at the spot
+        Vector3 cardOffset = new Vector3(0, 0, -cardGap * spot.childCount); // Offset in local Z-axis
 
-        // Instantiate the card at the calculated position
-        GameObject cardObject = Instantiate(card.prefab, spot.position + offset, Quaternion.identity);
+        // Instantiate the card at the spot's position plus the offset
+        GameObject cardObject = Instantiate(card.prefab, spot.position, Quaternion.identity);
 
-        // Set the card as a child of the seat spot to maintain its hierarchy
+        // Parent the card to the spot
         cardObject.transform.SetParent(spot);
 
-        // Rotate the card if it's face down
-        if (faceDown)
-        {
-            cardObject.transform.rotation = Quaternion.Euler(0, 0, 180);
-        }
+        // Adjust the card's local position to add the offset
+        cardObject.transform.localPosition = cardOffset;
 
-        Debug.Log($"Dealt card: {card.GetCardName()} to {spot.name}");
+        // Set the card's local rotation
+        cardObject.transform.localRotation = Quaternion.Euler(0, 90, faceDown ? 180 : 0);
+
+        Debug.Log($"Dealt card: {card.GetCardName()} to {spot.name} with offset {cardOffset}");
     }
+
 
 
     public void EndRound()
