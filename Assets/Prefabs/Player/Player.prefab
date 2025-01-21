@@ -1166,6 +1166,7 @@ MonoBehaviour:
   playerCamera: {fileID: 2784600889428751184}
   mouseSensitivity: 15
   maxLookAngle: 90
+  CanMove: 1
 --- !u!114 &5752338930140922161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1229,10 +1230,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb82944f72b8b594da6e40caeea51053, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blackjackTableLayerMask:
-    serializedVersion: 2
-    m_Bits: 1024
-  interactionDistance: 5
+  blackjackShoe: {fileID: 11400000, guid: 431efdedcbaacae4397ee0069c27cd3c, type: 2}
+  _interactionDistance: 5
+  cardGap: 0.1
 --- !u!1 &3714815447972551337
 GameObject:
   m_ObjectHideFlags: 0

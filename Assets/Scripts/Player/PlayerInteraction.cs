@@ -69,7 +69,7 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    private void TogglePhoneMenu()
+    public void TogglePhoneMenu()
     {
         if (_playerUI.IsPhonePanelActive())
         {
@@ -82,7 +82,7 @@ public class PlayerInteraction : MonoBehaviour
     }
 
 
-    private void HandleRotateOrOpenBox()
+    public void HandleRotateOrOpenBox()
     {
         if (_isPlacing && _heldBox == null)
         {
@@ -94,7 +94,7 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    private void HandlePickupOrPlace()
+    public void HandlePickupOrPlace()
     {
         if (_heldBox != null)
         {
@@ -120,7 +120,7 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    private void HandleBoxOrSell()
+    public void HandleBoxOrSell()
     {
         if (_heldBox != null)
         {
@@ -132,7 +132,7 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    private void HandleCancelPlacement()
+    public void HandleCancelPlacement()
     {
         if (_heldBox != null)
         {
@@ -408,6 +408,22 @@ public class PlayerInteraction : MonoBehaviour
         if (_playerController != null)
         {
             _playerController.enabled = true;
+        }
+    }
+
+    public void DisableInput()
+    {
+        if (_inputHandler != null)
+        {
+            _inputHandler.enabled = false;
+        }
+    }
+
+    public void EnableInput()
+    {
+        if (_inputHandler != null)
+        {
+            _inputHandler.enabled = true;
         }
     }
 

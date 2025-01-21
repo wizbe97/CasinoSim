@@ -94,6 +94,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "DealCard",
+                    "type": "Button",
+                    "id": "aabc554b-f5b9-46af-8660-b142958e8cf6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -358,6 +367,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Join Table",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "13aa9980-420d-41e8-acd0-73579604f59f",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DealCard",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f05feefd-044c-441f-8b36-8c542c79c96f",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DealCard",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

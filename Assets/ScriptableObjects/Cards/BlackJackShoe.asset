@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9dfe4a16089daac4e8b643b8910af573, type: 3}
+  m_Name: BlackJackShoe
+  m_EditorClassIdentifier: 
+  packs:
+  - {fileID: 11400000, guid: 9cdd39a2324aca24384bf3ec1741801f, type: 2}
+  - {fileID: 11400000, guid: 91801a2e89262f941a888b9d71c95694, type: 2}
+  - {fileID: 11400000, guid: ab55e639619d99d4098f8b3e15770df5, type: 2}
+  - {fileID: 11400000, guid: 2894b8ee310bbb34a9111d47f6402bb1, type: 2}
+  - {fileID: 11400000, guid: 72cb1b44a87b5c249aa8a4aecd8c5e86, type: 2}
+  - {fileID: 11400000, guid: 0c13ab55407411c409ec0a9789642433, type: 2}

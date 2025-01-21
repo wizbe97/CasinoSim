@@ -17,6 +17,8 @@ public class PlayerInputHandler : MonoBehaviour
     public event InputActionEvent OnCancel;
     public event InputActionEvent OnPhoneMenu;
     public event InputActionEvent OnJoinTable;
+    public event InputActionEvent OnDealCard;
+    
 
     private void Awake()
     {
@@ -58,11 +60,11 @@ public class PlayerInputHandler : MonoBehaviour
         inputActions.Player.Cancel.performed += ctx => OnCancel?.Invoke();
 
         // JoinTable
-        inputActions.Player.JoinTable.performed += ctx =>
-        {
-            Debug.Log("JoinTable action triggered.");
-            OnJoinTable?.Invoke();
-        };
+        inputActions.Player.JoinTable.performed += ctx => OnJoinTable?.Invoke();
+
+        // Deal Card
+        inputActions.Player.DealCard.performed += ctx => OnDealCard?.Invoke();
+
     }
 
     private void OnDisable()

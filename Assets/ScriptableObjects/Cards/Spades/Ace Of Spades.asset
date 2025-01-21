@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de9319e863d519b4d9dec7a90b74f448, type: 3}
+  m_Name: Ace Of Spades
+  m_EditorClassIdentifier: 
+  suit: 3
+  value: 1
+  prefab: {fileID: 4962348939333252336, guid: dcfbe216f2e300849ba9b2939a350f83, type: 3}

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de9319e863d519b4d9dec7a90b74f448, type: 3}
+  m_Name: King Of Clubs
+  m_EditorClassIdentifier: 
+  suit: 2
+  value: 10
+  prefab: {fileID: 4751972095605629619, guid: 0ab82d3b6ea486f4da12a2a9391d5c25, type: 3}

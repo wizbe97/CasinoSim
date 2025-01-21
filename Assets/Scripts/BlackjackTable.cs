@@ -1,20 +1,71 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class BlackjackTable : MonoBehaviour
 {
-    public Transform[] chairs; // Assign all chair transforms in the inspector
+    [Header("Card Spots")]
+    public Transform dealerCardSpot; // Transform for the dealer's card spot
+    public Transform dealerSeat;
 
-    public Transform FindFreeChair()
+    [Header("Chair Management")]
+    public Chair[] chairs; // Array of Chair components representing the seats
+    public List<Chair> occupiedChairs = new List<Chair>(); // List of occupied chairs
+    public Transform DealerSeat;
+
+    private void Awake()
     {
-        // Loop through chairs and find the first free one
-        foreach (Transform chair in chairs)
+        if (dealerCardSpot == null)
         {
-            Chair chairScript = chair.GetComponent<Chair>();
-            if (chairScript != null && !chairScript.IsOccupied)
+            Debug.LogError("DealerCardSpot is not assigned in BlackjackTable!");
+        }
+
+        if (chairs == null || chairs.Length == 0)
+        {
+            Debug.LogError("Chairs are not assigned in BlackjackTable!");
+        }
+    }
+
+    public bool GameCanStart(out List<Chair> occupiedChairs)
+    {
+        occupiedChairs = new List<Chair>();
+
+        foreach (Chair chair in chairs)
+        {
+            if (chair != null && chair.IsOccupied)
+            {
+                occupiedChairs.Add(chair);
+            }
+        }
+
+        return occupiedChairs.Count > 0;
+    }
+
+    public Chair FindFreeChair()
+    {
+        foreach (Chair chair in chairs)
+        {
+            if (chair != null && !chair.IsOccupied)
             {
                 return chair;
             }
         }
-        return null; // No free chairs found
+
+        Debug.LogWarning("No free chairs found at the table.");
+        return null;
+    }
+
+    public bool RefreshOccupiedChairs()
+    {
+        occupiedChairs.Clear();
+
+        foreach (Chair chair in chairs)
+        {
+            if (chair != null && chair.IsOccupied)
+            {
+                occupiedChairs.Add(chair);
+            }
+        }
+
+        return occupiedChairs.Count > 0;
     }
 }

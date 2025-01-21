@@ -116,6 +116,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DealCard"",
+                    ""type"": ""Button"",
+                    ""id"": ""aabc554b-f5b9-46af-8660-b142958e8cf6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -382,6 +391,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Join Table"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""13aa9980-420d-41e8-acd0-73579604f59f"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DealCard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f05feefd-044c-441f-8b36-8c542c79c96f"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DealCard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -400,6 +431,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_BoxOrSell = m_Player.FindAction("BoxOrSell", throwIfNotFound: true);
         m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
         m_Player_JoinTable = m_Player.FindAction("Join Table", throwIfNotFound: true);
+        m_Player_DealCard = m_Player.FindAction("DealCard", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -471,6 +503,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_BoxOrSell;
     private readonly InputAction m_Player_Cancel;
     private readonly InputAction m_Player_JoinTable;
+    private readonly InputAction m_Player_DealCard;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -485,6 +518,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @BoxOrSell => m_Wrapper.m_Player_BoxOrSell;
         public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
         public InputAction @JoinTable => m_Wrapper.m_Player_JoinTable;
+        public InputAction @DealCard => m_Wrapper.m_Player_DealCard;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -524,6 +558,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @JoinTable.started += instance.OnJoinTable;
             @JoinTable.performed += instance.OnJoinTable;
             @JoinTable.canceled += instance.OnJoinTable;
+            @DealCard.started += instance.OnDealCard;
+            @DealCard.performed += instance.OnDealCard;
+            @DealCard.canceled += instance.OnDealCard;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -558,6 +595,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @JoinTable.started -= instance.OnJoinTable;
             @JoinTable.performed -= instance.OnJoinTable;
             @JoinTable.canceled -= instance.OnJoinTable;
+            @DealCard.started -= instance.OnDealCard;
+            @DealCard.performed -= instance.OnDealCard;
+            @DealCard.canceled -= instance.OnDealCard;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -587,5 +627,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnBoxOrSell(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnJoinTable(InputAction.CallbackContext context);
+        void OnDealCard(InputAction.CallbackContext context);
     }
 }

@@ -4,7 +4,7 @@ public class NPCBlackjack : MonoBehaviour
 {
     public float walkSpeed = 2f; // Speed at which the NPC walks
     private BlackjackTable targetTable;
-    private Transform targetChair;
+    private Chair targetChair; // Now stores the Chair object instead of just the Transform
     private bool isSeated = false;
 
     private void Start()
@@ -51,13 +51,9 @@ public class NPCBlackjack : MonoBehaviour
         if (targetChair != null)
         {
             // Sit at the chair
-            Chair chairScript = targetChair.GetComponent<Chair>();
-            if (chairScript != null)
-            {
-                chairScript.SitNPC(transform);
-                isSeated = true; // Disable movement
-                Debug.Log($"{name} is seated at {targetChair.name}.");
-            }
+            targetChair.SitNPC(transform);
+            isSeated = true; // Disable movement
+            Debug.Log($"{name} is seated at {targetChair.name}.");
         }
         else
         {
