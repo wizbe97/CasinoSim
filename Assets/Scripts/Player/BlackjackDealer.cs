@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class BlackjackDealer : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class BlackjackDealer : MonoBehaviour
     private bool cardsDealt = false; // Flag to prevent multiple deals without finishing a round
     private bool isDealer = false; // Tracks whether the player has joined the table as the dealer
     private Transform dealerSpot; // Reference to the dealer's spot at the table
+    private float cardDealingDelay;
 
     private void Awake()
     {
@@ -96,6 +98,7 @@ public class BlackjackDealer : MonoBehaviour
         // Teleport the player to the dealer seat
         transform.position = dealerSeat.position;
         transform.rotation = dealerSeat.rotation;
+        cardDealingDelay = blackjackTable.CardDealingDelay;
 
         _playerController.CanMove = false;
         UnsubscribeInteractionEvents();
@@ -121,7 +124,7 @@ public class BlackjackDealer : MonoBehaviour
 
     public void DealCards()
     {
-        if (cardsDealt == true)
+        if (cardsDealt)
         {
             Debug.LogWarning("Cards have already been dealt. End the round first.");
             return;
@@ -129,6 +132,7 @@ public class BlackjackDealer : MonoBehaviour
 
         if (!isDealer)
         {
+            Debug.LogWarning("You must join a table as the dealer before dealing cards.");
             return;
         }
 
@@ -146,23 +150,37 @@ public class BlackjackDealer : MonoBehaviour
 
         blackjackShoe.InitializeShoe();
 
+        // Start the coroutine to deal cards with a delay
+        StartCoroutine(DealCardsWithDelay());
+    }
+
+    private IEnumerator DealCardsWithDelay()
+    {
+        // First round of cards to all players
         foreach (Chair chair in blackjackTable.occupiedChairs)
         {
             DealCardToSpot(chair.seatCardSpot);
+            yield return new WaitForSeconds(cardDealingDelay);
         }
 
+        // Dealer's first card
         DealCardToSpot(blackjackTable.dealerCardSpot);
+        yield return new WaitForSeconds(cardDealingDelay);
 
+        // Second round of cards to all players
         foreach (Chair chair in blackjackTable.occupiedChairs)
         {
             DealCardToSpot(chair.seatCardSpot);
+            yield return new WaitForSeconds(cardDealingDelay);
         }
 
+        // Dealer's second card (face down)
         DealCardToSpot(blackjackTable.dealerCardSpot, faceDown: true);
 
         cardsDealt = true;
         Debug.Log("Hands dealt.");
     }
+
 
     private void DealCardToSpot(Transform spot, bool faceDown = false)
     {

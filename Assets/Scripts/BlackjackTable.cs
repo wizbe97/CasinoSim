@@ -12,6 +12,10 @@ public class BlackjackTable : MonoBehaviour
     public List<Chair> occupiedChairs = new List<Chair>(); // List of occupied chairs
     public Transform DealerSeat;
 
+    [SerializeField] private float cardDealingDelay = 0.5f; // Delay between dealing cards
+
+    public float CardDealingDelay => cardDealingDelay;
+
     private void Awake()
     {
         if (dealerCardSpot == null)
