@@ -1233,6 +1233,9 @@ MonoBehaviour:
   blackjackShoe: {fileID: 11400000, guid: 431efdedcbaacae4397ee0069c27cd3c, type: 2}
   _interactionDistance: 5
   cardGap: 0.1
+  zoomSpeed: 0.5
+  minZoom: 20
+  maxZoom: 50
 --- !u!1 &3714815447972551337
 GameObject:
   m_ObjectHideFlags: 0

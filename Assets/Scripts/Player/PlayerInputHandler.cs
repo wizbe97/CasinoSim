@@ -18,7 +18,8 @@ public class PlayerInputHandler : MonoBehaviour
     public event InputActionEvent OnPhoneMenu;
     public event InputActionEvent OnJoinTable;
     public event InputActionEvent OnDealCard;
-    
+    public delegate void ZoomActionEvent(float scrollInput); // Event with a float parameter for scroll value
+    public event ZoomActionEvent OnZoom;
 
     private void Awake()
     {
@@ -64,7 +65,11 @@ public class PlayerInputHandler : MonoBehaviour
 
         // Deal Card
         inputActions.Player.DealCard.performed += ctx => OnDealCard?.Invoke();
-
+        inputActions.Player.Zoom.performed += ctx =>
+        {
+            float scrollValue = ctx.ReadValue<Vector2>().y; // Get the Y-axis scroll value
+            OnZoom?.Invoke(scrollValue); // Trigger the OnZoom event with the scroll value
+        };
     }
 
     private void OnDisable()

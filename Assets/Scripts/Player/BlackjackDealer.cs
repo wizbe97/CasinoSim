@@ -11,6 +11,7 @@ public class BlackjackDealer : MonoBehaviour
     private PlayerInteraction _playerInteraction; // Reference to the player interaction script
     private PlayerController _playerController;
 
+
     [SerializeField] private float _interactionDistance = 5f; // Distance for raycasting to interact with objects
     [SerializeField] private float cardGap = 0.01f; // Gap between cards when dealing
 
@@ -20,6 +21,10 @@ public class BlackjackDealer : MonoBehaviour
     private Transform dealerSpot; // Reference to the dealer's spot at the table
     private float cardDealingDelay;
     private RectTransform _reticleUI;
+    [SerializeField] private float zoomSpeed = 2f; // Speed of zoom
+    [SerializeField] private float minZoom = 20f; // Minimum field of view for zooming
+    [SerializeField] private float maxZoom = 60f;
+    private float targetFOV;
 
     private void Awake()
     {
@@ -28,8 +33,10 @@ public class BlackjackDealer : MonoBehaviour
         _playerController = GetComponent<PlayerController>();
     }
 
-    private void Start() {
+    private void Start()
+    {
         _reticleUI = _playerInteraction.ReticleUI;
+
     }
 
     private void SubscribeDealerInputActions()
@@ -37,6 +44,7 @@ public class BlackjackDealer : MonoBehaviour
         Debug.Log("BlackjackDealer: Subscribing to dealer input actions.");
         _inputHandler.OnDealCard += DealCards;
         _inputHandler.OnCancel += LeaveDealerSpot;
+        _inputHandler.OnZoom += HandleZoom;
     }
 
     private void UnsubscribeDealerInputActions()
@@ -44,7 +52,31 @@ public class BlackjackDealer : MonoBehaviour
         Debug.Log("BlackjackDealer: Unsubscribing from dealer input actions.");
         _inputHandler.OnDealCard -= DealCards;
         _inputHandler.OnCancel -= LeaveDealerSpot;
+        _inputHandler.OnZoom -= HandleZoom;
     }
+
+
+    private void HandleZoom(float scrollInput)
+    {
+        // Adjust the target FOV based on scroll input
+        targetFOV -= scrollInput * zoomSpeed;
+        targetFOV = Mathf.Clamp(targetFOV, minZoom, maxZoom);
+
+        // Smoothly interpolate with dynamic speed adjustment
+        float lerpSpeed = Mathf.Max(10f, Mathf.Abs(_playerInteraction.PlayerCamera.fieldOfView - targetFOV) * 10f);
+        _playerInteraction.PlayerCamera.fieldOfView = Mathf.Lerp(
+            _playerInteraction.PlayerCamera.fieldOfView,
+            targetFOV,
+            Time.deltaTime * lerpSpeed
+        );
+    }
+
+    private void ResetZoom()
+    {
+        targetFOV = maxZoom; // Reset the target FOV
+        _playerInteraction.PlayerCamera.fieldOfView = maxZoom; // Immediately reset the camera's FOV
+    }
+
 
     private void OnEnable()
     {
@@ -137,6 +169,7 @@ public class BlackjackDealer : MonoBehaviour
 
         SubscribeInteractionEvents();
         UnsubscribeDealerInputActions();
+        ResetZoom();
 
         isDealer = false;
         blackjackTable = null;
@@ -171,9 +204,7 @@ public class BlackjackDealer : MonoBehaviour
         }
 
         blackjackShoe.InitializeShoe();
-        cardsDealt = false;
-
-        // Start the coroutine to deal cards with a delay
+        cardsDealt = true;
         StartCoroutine(DealCardsWithDelay());
     }
 
