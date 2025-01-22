@@ -267,9 +267,11 @@ public class BlackjackDealer : MonoBehaviour
 
         if (npcUI != null)
         {
-            // Update the NPC's total card value
-            npcUI.AddCardValue(card.value);
+            bool isAce = (card.value == 1); // Check if the card is an Ace
+            npcUI.AddCardValue(card.value, isAce);
         }
+
+
 
         Debug.Log($"Dealt card: {card.GetCardName()} to {spot.name} with offset {cardOffset}");
     }
