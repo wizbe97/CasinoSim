@@ -238,6 +238,7 @@ public class BlackjackDealer : MonoBehaviour
 
     private void DealCardToSpot(Transform spot, bool faceDown = false)
     {
+        // Draw a card from the shoe
         PlayingCardSO card = blackjackShoe.DrawCard();
         if (card == null)
         {
@@ -246,7 +247,7 @@ public class BlackjackDealer : MonoBehaviour
         }
 
         // Calculate the card's position offset based on the cardGap and number of children at the spot
-        Vector3 cardOffset = new Vector3(0, 0, -cardGap * spot.childCount); // Offset in local Z-axis
+        Vector3 cardOffset = new Vector3(0, 0, -cardGap * spot.childCount);
 
         // Instantiate the card at the spot's position plus the offset
         GameObject cardObject = Instantiate(card.prefab, spot.position, Quaternion.identity);
@@ -260,10 +261,18 @@ public class BlackjackDealer : MonoBehaviour
         // Set the card's local rotation
         cardObject.transform.localRotation = Quaternion.Euler(0, 90, faceDown ? 180 : 0);
 
+        // Find the NPC sibling of the Seat
+        Transform chair = spot.parent; // The parent Chair object
+        NPCBlackjackUI npcUI = chair.GetComponentInChildren<NPCBlackjackUI>(); // Look for NPCBlackjackUI
+
+        if (npcUI != null)
+        {
+            // Update the NPC's total card value
+            npcUI.AddCardValue(card.value);
+        }
+
         Debug.Log($"Dealt card: {card.GetCardName()} to {spot.name} with offset {cardOffset}");
     }
-
-
 
     public void EndRound()
     {
