@@ -11,7 +11,6 @@ public class BlackjackDealer : MonoBehaviour
     private PlayerInteraction _playerInteraction; // Reference to the player interaction script
     private PlayerController _playerController;
 
-
     [SerializeField] private float _interactionDistance = 5f; // Distance for raycasting to interact with objects
     [SerializeField] private float cardGap = 0.01f; // Gap between cards when dealing
 
@@ -26,6 +25,9 @@ public class BlackjackDealer : MonoBehaviour
     [SerializeField] private float maxZoom = 60f;
     private float targetFOV;
 
+    private int currentPlayerIndex = 0; // Tracks the current player's turn
+    private bool isAwaitingDealerInput = false; // Wait for the dealer to press D
+
     private void Awake()
     {
         _inputHandler = GetComponent<PlayerInputHandler>();
@@ -36,13 +38,12 @@ public class BlackjackDealer : MonoBehaviour
     private void Start()
     {
         _reticleUI = _playerInteraction.ReticleUI;
-
     }
 
     private void SubscribeDealerInputActions()
     {
         Debug.Log("BlackjackDealer: Subscribing to dealer input actions.");
-        _inputHandler.OnDealCard += DealCards;
+        _inputHandler.OnDealCard += HandleDealInput; // Adjusted to handle turn logic
         _inputHandler.OnCancel += LeaveDealerSpot;
         _inputHandler.OnZoom += HandleZoom;
     }
@@ -50,19 +51,29 @@ public class BlackjackDealer : MonoBehaviour
     private void UnsubscribeDealerInputActions()
     {
         Debug.Log("BlackjackDealer: Unsubscribing from dealer input actions.");
-        _inputHandler.OnDealCard -= DealCards;
+        _inputHandler.OnDealCard -= HandleDealInput;
         _inputHandler.OnCancel -= LeaveDealerSpot;
         _inputHandler.OnZoom -= HandleZoom;
     }
 
+    private void HandleDealInput()
+    {
+        if (!cardsDealt)
+        {
+            DealCards(); // Initial card dealing
+        }
+        else
+        {
+            // Advance the game flow (deal card or move to the next player)
+            isAwaitingDealerInput = false;
+        }
+    }
 
     private void HandleZoom(float scrollInput)
     {
-        // Adjust the target FOV based on scroll input
         targetFOV -= scrollInput * zoomSpeed;
         targetFOV = Mathf.Clamp(targetFOV, minZoom, maxZoom);
 
-        // Smoothly interpolate with dynamic speed adjustment
         float lerpSpeed = Mathf.Max(10f, Mathf.Abs(_playerInteraction.PlayerCamera.fieldOfView - targetFOV) * 10f);
         _playerInteraction.PlayerCamera.fieldOfView = Mathf.Lerp(
             _playerInteraction.PlayerCamera.fieldOfView,
@@ -73,21 +84,20 @@ public class BlackjackDealer : MonoBehaviour
 
     private void ResetZoom()
     {
-        targetFOV = maxZoom; // Reset the target FOV
-        _playerInteraction.PlayerCamera.fieldOfView = maxZoom; // Immediately reset the camera's FOV
+        targetFOV = maxZoom;
+        _playerInteraction.PlayerCamera.fieldOfView = maxZoom;
     }
-
 
     private void OnEnable()
     {
         _inputHandler.OnJoinTable += JoinTable;
     }
+
     private void OnDisable()
     {
         UnsubscribeDealerInputActions();
-        _inputHandler.OnJoinTable += JoinTable;
+        _inputHandler.OnJoinTable -= JoinTable;
     }
-
 
     private void JoinTable()
     {
@@ -97,14 +107,11 @@ public class BlackjackDealer : MonoBehaviour
             return;
         }
 
-        // Cast a ray from the player camera through the reticle
         Ray ray = _playerInteraction.PlayerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _playerInteraction.ReticleUI.position));
-        Debug.DrawRay(ray.origin, ray.direction * _interactionDistance, Color.red, 2f); // Debug the ray
+        Debug.DrawRay(ray.origin, ray.direction * _interactionDistance, Color.red, 2f);
 
-        // Use RaycastAll to get all hits
         RaycastHit[] hits = Physics.RaycastAll(ray, _interactionDistance);
 
-        // Filter hits to find the first object on the PlacedObjects layer
         foreach (RaycastHit hit in hits)
         {
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("PlacedObjects"))
@@ -112,24 +119,23 @@ public class BlackjackDealer : MonoBehaviour
                 GameObject hitObject = hit.collider.gameObject;
                 Debug.Log($"Hit object: {hitObject.name}, Layer: {LayerMask.LayerToName(hitObject.layer)}");
 
-                // Search for a BlackjackTable component in the hit object or its parents
                 BlackjackTable table = hitObject.GetComponentInParent<BlackjackTable>();
 
                 if (table != null)
                 {
-                    blackjackTable = table; // Dynamically assign the table
+                    blackjackTable = table;
                     dealerSpot = table.dealerCardSpot;
 
                     if (dealerSpot != null)
                     {
-                        TeleportToDealerSpot(table.dealerSeat); // Pass the dealer seat to the teleport method
+                        TeleportToDealerSpot(table.dealerSeat);
                     }
                     else
                     {
                         Debug.LogWarning("No DealerSpot found for the blackjack table.");
                     }
 
-                    return; // Exit after finding the first valid table
+                    return;
                 }
                 else
                 {
@@ -141,12 +147,8 @@ public class BlackjackDealer : MonoBehaviour
 
     private void TeleportToDealerSpot(Transform dealerSeat)
     {
-        if (dealerSeat == null)
-        {
-            return;
-        }
+        if (dealerSeat == null) return;
 
-        // Teleport the player to the dealer seat
         transform.position = dealerSeat.position;
         transform.rotation = dealerSeat.rotation;
         cardDealingDelay = blackjackTable.CardDealingDelay;
@@ -157,13 +159,11 @@ public class BlackjackDealer : MonoBehaviour
         SubscribeDealerInputActions();
 
         isDealer = true;
-
     }
 
     private void LeaveDealerSpot()
     {
-        if (!isDealer)
-            return;
+        if (!isDealer) return;
 
         _playerController.CanMove = true;
 
@@ -175,11 +175,9 @@ public class BlackjackDealer : MonoBehaviour
         blackjackTable = null;
     }
 
-
-
     public void DealCards()
     {
-        if (cardsDealt == true)
+        if (cardsDealt)
         {
             Debug.LogWarning("Cards have already been dealt. End the round first.");
             return;
@@ -210,35 +208,71 @@ public class BlackjackDealer : MonoBehaviour
 
     private IEnumerator DealCardsWithDelay()
     {
-        // First round of cards to all players
         foreach (Chair chair in blackjackTable.occupiedChairs)
         {
             DealCardToSpot(chair.seatCardSpot);
             yield return new WaitForSeconds(cardDealingDelay);
         }
 
-        // Dealer's first card
         DealCardToSpot(blackjackTable.dealerCardSpot);
         yield return new WaitForSeconds(cardDealingDelay);
 
-        // Second round of cards to all players
         foreach (Chair chair in blackjackTable.occupiedChairs)
         {
             DealCardToSpot(chair.seatCardSpot);
             yield return new WaitForSeconds(cardDealingDelay);
         }
 
-        // Dealer's second card (face down)
         DealCardToSpot(blackjackTable.dealerCardSpot, faceDown: true);
 
-        cardsDealt = true;
-        Debug.Log("Hands dealt.");
+        Debug.Log("Hands dealt. Game ready to begin player turns.");
+        StartCoroutine(HandlePlayerTurns());
+    }
+
+    private IEnumerator HandlePlayerTurns()
+    {
+        while (currentPlayerIndex < blackjackTable.occupiedChairs.Count)
+        {
+            Chair chair = blackjackTable.occupiedChairs[currentPlayerIndex];
+            NPCBlackjack player = chair.GetComponentInChildren<NPCBlackjack>();
+
+            if (player == null || player.isTurnOver)
+            {
+                currentPlayerIndex++;
+                continue;
+            }
+
+            Debug.Log($"Player in Chair {currentPlayerIndex + 1} is taking their turn.");
+
+            int dealerUpCardValue = blackjackTable.GetDealerCardValue();
+
+            if (!player.isWaitingForDealer)
+            {
+                player.TakeTurn(dealerUpCardValue, this);
+            }
+
+            if (player.isWaitingForDealer)
+            {
+                Debug.Log("Waiting for dealer input (Press D).");
+                isAwaitingDealerInput = true;
+                while (isAwaitingDealerInput) yield return null;
+                DealCardToPlayer(player);
+                player.isWaitingForDealer = false;
+            }
+
+            if (player.isTurnOver)
+            {
+                Debug.Log($"Player {currentPlayerIndex + 1}'s turn is over.");
+                currentPlayerIndex++;
+            }
+        }
+
+        Debug.Log("All players have made their choices.");
     }
 
 
     private void DealCardToSpot(Transform spot, bool faceDown = false)
     {
-        // Draw a card from the shoe
         PlayingCardSO card = blackjackShoe.DrawCard();
         if (card == null)
         {
@@ -246,48 +280,71 @@ public class BlackjackDealer : MonoBehaviour
             return;
         }
 
-        // Calculate the card's position offset based on the cardGap and number of children at the spot
         Vector3 cardOffset = new Vector3(0, 0, -cardGap * spot.childCount);
 
-        // Instantiate the card at the spot's position plus the offset
-        GameObject cardObject = Instantiate(card.prefab, spot.position, Quaternion.identity);
-
-        // Parent the card to the spot
+        GameObject cardObject = Instantiate(card.prefab, spot.position + cardOffset, Quaternion.identity);
         cardObject.transform.SetParent(spot);
-
-        // Adjust the card's local position to add the offset
         cardObject.transform.localPosition = cardOffset;
-
-        // Set the card's local rotation
         cardObject.transform.localRotation = Quaternion.Euler(0, 90, faceDown ? 180 : 0);
 
-        // Find the NPC sibling of the Seat
-        Transform chair = spot.parent; // The parent Chair object
-        NPCBlackjackUI npcUI = chair.GetComponentInChildren<NPCBlackjackUI>(); // Look for NPCBlackjackUI
-
-        if (npcUI != null)
-        {
-            bool isAce = (card.value == 1); // Check if the card is an Ace
-            npcUI.AddCardValue(card.value, isAce);
-        }
-
-
-
         Debug.Log($"Dealt card: {card.GetCardName()} to {spot.name} with offset {cardOffset}");
+
+        // Update NPC card value only once
+        Chair chair = spot.GetComponentInParent<Chair>();
+        if (chair != null)
+        {
+            NPCBlackjack npc = chair.GetComponentInChildren<NPCBlackjack>();
+            if (npc != null)
+            {
+                bool isAce = card.value == 1;
+                npc.AddCardValue(card.value, isAce); // Update card value for NPC
+            }
+        }
+        else if (spot == blackjackTable.dealerCardSpot)
+        {
+            // Update dealer card values
+            blackjackTable.AddDealerCard(card);
+        }
     }
 
-    public void EndRound()
+
+
+
+    private void DealCardToPlayer(NPCBlackjack player)
     {
-        if (blackjackTable == null)
+        PlayingCardSO card = blackjackShoe.DrawCard();
+        if (card == null)
         {
-            Debug.LogWarning("No table is currently assigned. Cannot end the round.");
+            Debug.LogWarning("No more cards in the shoe!");
             return;
         }
 
-        blackjackTable.RefreshOccupiedChairs();
-        cardsDealt = false;
-        Debug.Log("Round ended. Ready for next deal.");
+        bool isAce = card.value == 1;
+
+        // Add card value to NPC
+        player.AddCardValue(card.value, isAce);
+
+        // Instantiate card at the NPC's seatCardSpot
+        Transform seatCardSpot = player.GetComponentInParent<Chair>().seatCardSpot;
+        if (seatCardSpot != null)
+        {
+            // Calculate the offset for the new card
+            Vector3 cardOffset = new Vector3(0, 0, -cardGap * seatCardSpot.childCount);
+            GameObject cardObject = Instantiate(card.prefab, seatCardSpot.position + cardOffset, Quaternion.identity);
+
+            // Parent and position the card
+            cardObject.transform.SetParent(seatCardSpot);
+            cardObject.transform.localPosition = cardOffset;
+            cardObject.transform.localRotation = Quaternion.Euler(0, 90, 0);
+
+            Debug.Log($"Dealt {card.GetCardName()} to Chair {currentPlayerIndex + 1}. Total: {player.totalCardValue}");
+        }
+        else
+        {
+            Debug.LogWarning("No seatCardSpot found for this player.");
+        }
     }
+
     private void UnsubscribeInteractionEvents()
     {
         _inputHandler.OnRotatePreviewOrOpenBox -= _playerInteraction.HandleRotateOrOpenBox;

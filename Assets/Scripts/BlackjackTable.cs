@@ -16,13 +16,15 @@ public class BlackjackTable : MonoBehaviour
 
     public float CardDealingDelay => cardDealingDelay;
 
+    private int dealerTotalValue = 0; // Total value of the dealer's cards
+    private int dealerAceCount = 0; // Number of Aces in the dealer's hand
+
     private void Awake()
     {
         if (dealerCardSpot == null)
             Debug.LogError("DealerCardSpot is not assigned in BlackjackTable!");
         if (chairs == null || chairs.Length == 0)
             Debug.LogError("Chairs are not assigned in BlackjackTable!");
-
     }
 
     public bool GameCanStart(out List<Chair> occupiedChairs)
@@ -67,4 +69,49 @@ public class BlackjackTable : MonoBehaviour
 
         return occupiedChairs.Count > 0;
     }
+
+    /// <summary>
+    /// Updates the dealer's total card value when a card is dealt.
+    /// </summary>
+    public void AddDealerCard(PlayingCardSO card)
+    {
+        if (card == null)
+        {
+            Debug.LogWarning("Trying to add a null card to the dealer.");
+            return;
+        }
+
+        // Check if the card is an Ace
+        if (card.value == 1)
+        {
+            dealerAceCount++;
+        }
+
+        dealerTotalValue += card.value;
+        Debug.Log($"Dealer received card: {card.GetCardName()}. Current total: {GetDealerCardValue()}");
+    }
+
+    /// <summary>
+    /// Resets the dealer's total value and Ace count for a new round.
+    /// </summary>
+    public void ResetDealer()
+    {
+        dealerTotalValue = 0;
+        dealerAceCount = 0;
+    }
+
+    /// <summary>
+    /// Calculates and returns the dealer's current card value, accounting for soft totals with Aces.
+    /// </summary>
+    public int GetDealerCardValue()
+    {
+        int softValue = dealerTotalValue;
+        if (dealerAceCount > 0 && dealerTotalValue + 10 <= 21)
+        {
+            softValue = dealerTotalValue + 10; // Treat one Ace as 11 if it doesn't bust
+        }
+
+        return softValue;
+    }
+
 }
