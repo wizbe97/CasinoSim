@@ -13,20 +13,20 @@ public class NPCBlackjack : MonoBehaviour
     public bool isTurnOver = false; // Tracks whether the NPC has finished their turn
     public bool isWaitingForDealer = false; // Tracks if waiting for the dealer to deal a card
 
+    private NPCBlackjackUI ui; // Reference to the NPC UI script
+
     private void Start()
     {
-        // Find the first BlackjackTable in the scene
         targetTable = FindObjectOfType<BlackjackTable>();
+        ui = GetComponent<NPCBlackjackUI>(); // Initialize the UI reference
     }
 
     private void Update()
     {
         if (isSeated || targetTable == null) return;
 
-        // Move towards the table
         MoveTowardsTable();
 
-        // Check if close enough to the table to sit down
         if (Vector3.Distance(transform.position, targetTable.transform.position) < 3f)
         {
             SitAtTable();
@@ -35,21 +35,17 @@ public class NPCBlackjack : MonoBehaviour
 
     private void MoveTowardsTable()
     {
-        // Walk towards the table's position
         Vector3 direction = (targetTable.transform.position - transform.position).normalized;
         transform.position += direction * walkSpeed * Time.deltaTime;
     }
 
     private void SitAtTable()
     {
-        // Find a free chair at the table
         targetChair = targetTable.FindFreeChair();
-
         if (targetChair != null)
         {
-            // Sit at the chair
             targetChair.SitNPC(transform);
-            isSeated = true; // Disable movement
+            isSeated = true;
         }
     }
 
@@ -58,8 +54,6 @@ public class NPCBlackjack : MonoBehaviour
         if (isAce) aceCount++;
         totalCardValue += cardValue;
 
-        // Update the UI
-        NPCBlackjackUI ui = GetComponent<NPCBlackjackUI>();
         if (ui != null)
         {
             ui.AddCardValue(cardValue, isAce);
@@ -68,36 +62,112 @@ public class NPCBlackjack : MonoBehaviour
 
     public bool IsBusted()
     {
-        // Check if the total card value exceeds 21
         return totalCardValue > 21;
     }
 
     public bool DecideToHit(int dealerUpCardValue)
     {
-        // Calculate hard and soft totals
         int hardTotal = totalCardValue;
         int softTotal = (aceCount > 0 && totalCardValue + 10 <= 21) ? totalCardValue + 10 : totalCardValue;
 
-        // Use Blackjack strategy chart logic
-        if (softTotal <= 21)
+        // Check for natural blackjack
+        if (hardTotal == 21 || softTotal == 21)
         {
-            // Use the soft total for decision-making
-            if (softTotal >= 17 || (softTotal >= 13 && dealerUpCardValue <= 6))
+            Debug.Log($"Player has a natural blackjack (21). Automatically standing.");
+            UpdateUIBasedOnDecision(false, Color.yellow);
+            return false; // Automatically stand on blackjack
+        }
+
+        bool shouldHit = false;
+
+        // Decision logic based on dealer's up card
+        if (softTotal >= 17 && softTotal <= 20 && dealerUpCardValue != 1)
+        {
+            // Always stand on soft 17, 18, 19, or 20 unless dealer has an Ace
+            Debug.Log($"- Decision: Stand on Soft Total {softTotal} against Dealer Card {dealerUpCardValue}");
+            shouldHit = false;
+        }
+        else if (dealerUpCardValue >= 7)
+        {
+            // Dealer shows 7 or higher
+            shouldHit = hardTotal <= 16; // Hit on hard 16 or less
+        }
+        else if (dealerUpCardValue >= 4 && dealerUpCardValue <= 6)
+        {
+            // Dealer shows 4-6 (weak hand)
+            if (hardTotal >= 12 && hardTotal <= 20)
             {
-                Debug.Log($"[Soft Total] Player stands on {softTotal}");
-                return false; // Stand
+                // Stand on hard 13-20 vs 4-6
+                shouldHit = false;
+                Debug.Log($"- Decision: Stand on Hard Total {hardTotal} against Dealer's 4-6");
+            }
+            else
+            {
+                shouldHit = hardTotal <= 11 || softTotal <= 16; // Hit on hard 11 or less, or soft 16 or less
+                Debug.Log($"- Decision: {(shouldHit ? "Hit" : "Stand")} on Hard Total {hardTotal} or Soft Total {softTotal} vs Dealer's 4-6");
             }
         }
-
-        if (hardTotal <= 11 || (hardTotal == 12 && dealerUpCardValue >= 4 && dealerUpCardValue <= 6))
+        else if (dealerUpCardValue == 2 || dealerUpCardValue == 3)
         {
-            Debug.Log($"[Hard Total] Player hits on {hardTotal}");
-            return true; // Hit
+            // Dealer shows 2-3
+            if (hardTotal >= 13)
+            {
+                // Stand on hard 13+ vs 2-3
+                shouldHit = false;
+                Debug.Log($"- Decision: Stand on Hard Total {hardTotal} against Dealer's 2-3");
+            }
+            else
+            {
+                shouldHit = hardTotal <= 12 || softTotal <= 16; // Hit on hard 12 or less, or soft 16 or less
+                Debug.Log($"- Decision: {(shouldHit ? "Hit" : "Stand")} on Hard Total {hardTotal} or Soft Total {softTotal} vs Dealer's 2-3");
+            }
+        }
+        else if (dealerUpCardValue == 1)
+        {
+            // Dealer shows Ace
+            shouldHit = hardTotal <= 15 || softTotal <= 18; // Hit on hard 15 or less, or soft 18 or less
+            Debug.Log($"- Decision: {(shouldHit ? "Hit" : "Stand")} on Hard Total {hardTotal} or Soft Total {softTotal} vs Dealer's Ace");
         }
 
-        bool shouldHit = hardTotal <= 16 && dealerUpCardValue >= 7;
-        Debug.Log($"[Hard Total] Player {(shouldHit ? "hits" : "stands")} on {hardTotal}");
+        Debug.Log($"[DecideToHit] Dealer Up Card: {dealerUpCardValue}, Hard Total: {hardTotal}, Soft Total: {softTotal}, Decision: {(shouldHit ? "Hit" : "Stand")}");
+
+        // Update UI based on decision
+        UpdateUIBasedOnDecision(shouldHit);
+
         return shouldHit;
+    }
+
+    private void UpdateUIBasedOnDecision(bool shouldHit)
+    {
+        if (ui != null)
+        {
+            if (IsBusted())
+            {
+                ui.PlayerBusted();
+            }
+            else if (totalCardValue == 21 || (aceCount > 0 && totalCardValue + 10 == 21))
+            {
+                // Perfect hand: 21
+                ui.UpdateDecisionColor(Color.yellow); // Highlight yellow for blackjack
+            }
+            else if (shouldHit)
+            {
+                ui.UpdateDecisionColor(Color.green); // Highlight green for hit
+            }
+            else
+            {
+                ui.UpdateDecisionColor(Color.red); // Highlight red for stand
+            }
+        }
+    }
+
+    // Overloaded method to specify a custom color
+    private void UpdateUIBasedOnDecision(bool shouldHit, Color customColor)
+    {
+        if (ui != null)
+        {
+            ui.UpdateDecisionColor(customColor);
+        }
     }
 
     public void TakeTurn(int dealerUpCardValue, BlackjackDealer dealer)
@@ -106,18 +176,19 @@ public class NPCBlackjack : MonoBehaviour
         {
             Debug.Log($"Player in Chair {targetChair.name} has busted with {totalCardValue}.");
             isTurnOver = true;
+            UpdateUIBasedOnDecision(false);
             return;
         }
 
         if (DecideToHit(dealerUpCardValue))
         {
             Debug.Log($"Player in Chair {targetChair.name} decided to hit.");
-            isWaitingForDealer = true; // Wait for the dealer to deal a card
+            isWaitingForDealer = true;
         }
         else
         {
             Debug.Log($"Player in Chair {targetChair.name} decided to stand with {totalCardValue}.");
-            isTurnOver = true; // End the turn
+            isTurnOver = true;
         }
     }
 
@@ -128,12 +199,9 @@ public class NPCBlackjack : MonoBehaviour
         isTurnOver = false;
         isWaitingForDealer = false;
 
-        // Reset the UI
-        NPCBlackjackUI ui = GetComponent<NPCBlackjackUI>();
         if (ui != null)
         {
             ui.ResetCardValue();
         }
     }
-
 }

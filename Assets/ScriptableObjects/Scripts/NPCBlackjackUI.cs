@@ -49,48 +49,73 @@ public class NPCBlackjackUI : MonoBehaviour
         valueText.enabled = false;
         valueText.text = "";
         valueText.color = Color.white; // Reset color to default
+        valueText.fontStyle = FontStyles.Normal; // Reset font style
     }
 
     private void UpdateCardValueDisplay()
     {
-        // If no cards, hide the UI
         if (totalCardValue == 0)
         {
             valueText.enabled = false;
             return;
         }
 
-        // Show the text
         valueText.enabled = true;
 
-        // Calculate the soft and hard values
         int softValue = totalCardValue;
-        if (aceCount > 0)
+        if (aceCount > 0 && totalCardValue + 10 <= 21)
         {
-            softValue = totalCardValue + 10; // Treat one Ace as 11
+            softValue = totalCardValue + 10;
         }
 
-        // Check if the total is exactly 21
         if (softValue == 21 || totalCardValue == 21)
         {
-            valueText.text = "21"; // Perfect score
-            valueText.color = Color.yellow; // Highlight the text
+            valueText.text = "21";
+            valueText.color = Color.yellow; // Highlight the text for a perfect score
             return;
         }
 
-        // Display logic for hands with Aces
-        if (aceCount > 0 && softValue <= 21 && softValue != totalCardValue)
+        if (aceCount > 0 && softValue != totalCardValue)
         {
-            // Show both hard and soft values if softValue is valid and different
             valueText.text = $"{totalCardValue}/{softValue}";
         }
         else
         {
-            // Show only the hard value
             valueText.text = $"{totalCardValue}";
         }
 
-        // Reset color to default for non-perfect scores
-        valueText.color = Color.white;
+        valueText.color = Color.white; // Default color
+    }
+
+    public void UpdateDecisionColor(Color color)
+    {
+        if (valueText != null)
+        {
+            valueText.color = color; // Update color based on decision
+        }
+    }
+
+    public void PlayerBusted()
+    {
+        if (valueText != null)
+        {
+            valueText.fontStyle = FontStyles.Strikethrough; // Apply strikethrough for bust
+            valueText.color = Color.gray; // Set color to gray
+        }
+
+        DespawnCards();
+    }
+
+    private void DespawnCards()
+    {
+        // Logic to remove or hide the NPC's cards
+        Transform seatCardSpot = GetComponentInParent<Chair>()?.seatCardSpot;
+        if (seatCardSpot != null)
+        {
+            foreach (Transform child in seatCardSpot)
+            {
+                Destroy(child.gameObject); // Remove all card objects
+            }
+        }
     }
 }
