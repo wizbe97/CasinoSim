@@ -236,7 +236,13 @@ public class BlackjackDealer : MonoBehaviour
             yield return new WaitForSeconds(cardDealingDelay);
         }
 
-        DealCardToSpot(blackjackTable.dealerCardSpot);
+        // Deal the first card to the dealer (up card) and track its value
+        PlayingCardSO dealerUpCard = DealCardToSpot(blackjackTable.dealerCardSpot);
+        if (dealerUpCard != null)
+        {
+            blackjackTable.SetDealerUpCardValue(dealerUpCard.value);
+            Debug.Log("Dealer up card is: " + dealerUpCard.value);
+        }
         yield return new WaitForSeconds(cardDealingDelay);
 
         foreach (Chair chair in blackjackTable.occupiedChairs)
@@ -245,11 +251,13 @@ public class BlackjackDealer : MonoBehaviour
             yield return new WaitForSeconds(cardDealingDelay);
         }
 
+        // Deal the second (face-down) card to the dealer
         DealCardToSpot(blackjackTable.dealerCardSpot, faceDown: true);
 
         Debug.Log("Hands dealt. Game ready to begin player turns.");
         StartCoroutine(HandlePlayerTurns());
     }
+
 
     private IEnumerator HandlePlayerTurns()
     {
@@ -296,13 +304,13 @@ public class BlackjackDealer : MonoBehaviour
     }
 
 
-    private void DealCardToSpot(Transform spot, bool faceDown = false)
+    private PlayingCardSO DealCardToSpot(Transform spot, bool faceDown = false)
     {
         PlayingCardSO card = blackjackShoe.DrawCard();
         if (card == null)
         {
             Debug.LogWarning("No more cards in the shoe!");
-            return;
+            return null;
         }
 
         Vector3 cardOffset = new Vector3(0, 0, -cardGap * spot.childCount);
@@ -315,10 +323,10 @@ public class BlackjackDealer : MonoBehaviour
 
         Debug.Log($"Dealt card: {card.GetCardName()} to {spot.name} with offset {cardOffset}");
 
-        // Track the card in the `cardsOnTable` list
+        // Track the card for cleanup later
         cardsOnTable.Add(cardObject);
 
-        // Update NPC card value only once
+        // Update NPC or dealer values
         Chair chair = spot.GetComponentInParent<Chair>();
         if (chair != null)
         {
@@ -326,14 +334,15 @@ public class BlackjackDealer : MonoBehaviour
             if (npc != null)
             {
                 bool isAce = card.value == 1;
-                npc.AddCardValue(card.value, isAce); // Update card value for NPC
+                npc.AddCardValue(card.value, isAce);
             }
         }
         else if (spot == blackjackTable.dealerCardSpot)
         {
-            // Update dealer card values
             blackjackTable.AddDealerCard(card);
         }
+
+        return card; // Return the card dealt
     }
 
     private void DealCardToPlayer(NPCBlackjack player)
@@ -434,24 +443,39 @@ public class BlackjackDealer : MonoBehaviour
             NPCBlackjack player = chair.GetComponentInChildren<NPCBlackjack>();
             if (player == null) continue;
 
+            // Retrieve the player's UI
+            NPCBlackjackUI ui = player.GetComponent<NPCBlackjackUI>();
+            if (ui == null)
+            {
+                Debug.LogWarning($"No UI found for player at Chair {chair.name}");
+                continue;
+            }
+
+            // Determine the result and update UI
             if (player.IsBusted())
             {
                 Debug.Log($"Player at Chair {chair.name} busted with {player.totalCardValue}. Dealer wins.");
+                ui.UpdateDecisionColor(Color.red); // Red for losing
             }
             else if (dealerScore > 21 || player.totalCardValue > dealerScore)
             {
                 Debug.Log($"Player at Chair {chair.name} wins with {player.totalCardValue} against dealer's {dealerScore}.");
+                ui.UpdateDecisionColor(Color.green); // Green for winning
             }
             else if (player.totalCardValue == dealerScore)
             {
                 Debug.Log($"Player at Chair {chair.name} ties with the dealer. Score: {player.totalCardValue}.");
+                ui.UpdateDecisionColor(Color.yellow); // Yellow for tie
             }
             else
             {
                 Debug.Log($"Player at Chair {chair.name} loses with {player.totalCardValue} to dealer's {dealerScore}.");
+                ui.UpdateDecisionColor(Color.red); // Red for losing
             }
         }
-        _inputHandler.OnResetRound += ResetRound;
+
+        Debug.Log("All winners and losers determined.");
+        _inputHandler.OnResetRound += ResetRound; // Enable round reset
     }
 
     private void ResetRound()

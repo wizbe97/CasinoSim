@@ -20,6 +20,8 @@ public class BlackjackTable : MonoBehaviour
     private int dealerAceCount = 0; // Number of Aces in the dealer's hand
 
     private bool dealerCardRevealed = false;
+    private int dealerUpCardValue = 0; // Store the dealer's up card value
+
 
 
     private void Awake()
@@ -142,6 +144,17 @@ public class BlackjackTable : MonoBehaviour
     public void ResetDealerCardRevealed()
     {
         dealerCardRevealed = false;
+
+    }
+
+    public void SetDealerUpCardValue(int value)
+    {
+        dealerUpCardValue = value;
+    }
+
+    public int GetDealerUpCardValue()
+    {
+        return dealerUpCardValue;
     }
 
 }

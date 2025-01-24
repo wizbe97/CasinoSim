@@ -70,63 +70,25 @@ public class NPCBlackjack : MonoBehaviour
         int hardTotal = totalCardValue;
         int softTotal = (aceCount > 0 && totalCardValue + 10 <= 21) ? totalCardValue + 10 : totalCardValue;
 
-        // Check for natural blackjack
-        if (hardTotal == 21 || softTotal == 21)
+        // Always stand on soft or hard 21
+        if (softTotal == 21 || hardTotal == 21)
         {
             Debug.Log($"Player has a natural blackjack (21). Automatically standing.");
             UpdateUIBasedOnDecision(false, Color.yellow);
-            return false; // Automatically stand on blackjack
+            return false; // Stand
         }
 
-        bool shouldHit = false;
+        bool shouldHit = true; // Default decision
 
-        // Decision logic based on dealer's up card
-        if (softTotal >= 17 && softTotal <= 20 && dealerUpCardValue != 1)
+        if (dealerUpCardValue == 2 || dealerUpCardValue == 3 || dealerUpCardValue == 2 || dealerUpCardValue == 3)
         {
-            // Always stand on soft 17, 18, 19, or 20 unless dealer has an Ace
-            Debug.Log($"- Decision: Stand on Soft Total {softTotal} against Dealer Card {dealerUpCardValue}");
-            shouldHit = false;
+            // Stand on hard 13 or higher, but never stand on soft totals
+            shouldHit = hardTotal < 13;
         }
-        else if (dealerUpCardValue >= 7)
+        else if (dealerUpCardValue >= 7 || dealerUpCardValue == 1)
         {
-            // Dealer shows 7 or higher
-            shouldHit = hardTotal <= 16; // Hit on hard 16 or less
-        }
-        else if (dealerUpCardValue >= 4 && dealerUpCardValue <= 6)
-        {
-            // Dealer shows 4-6 (weak hand)
-            if (hardTotal >= 12 && hardTotal <= 20)
-            {
-                // Stand on hard 13-20 vs 4-6
-                shouldHit = false;
-                Debug.Log($"- Decision: Stand on Hard Total {hardTotal} against Dealer's 4-6");
-            }
-            else
-            {
-                shouldHit = hardTotal <= 11 || softTotal <= 16; // Hit on hard 11 or less, or soft 16 or less
-                Debug.Log($"- Decision: {(shouldHit ? "Hit" : "Stand")} on Hard Total {hardTotal} or Soft Total {softTotal} vs Dealer's 4-6");
-            }
-        }
-        else if (dealerUpCardValue == 2 || dealerUpCardValue == 3)
-        {
-            // Dealer shows 2-3
-            if (hardTotal >= 13)
-            {
-                // Stand on hard 13+ vs 2-3
-                shouldHit = false;
-                Debug.Log($"- Decision: Stand on Hard Total {hardTotal} against Dealer's 2-3");
-            }
-            else
-            {
-                shouldHit = hardTotal <= 12 || softTotal <= 16; // Hit on hard 12 or less, or soft 16 or less
-                Debug.Log($"- Decision: {(shouldHit ? "Hit" : "Stand")} on Hard Total {hardTotal} or Soft Total {softTotal} vs Dealer's 2-3");
-            }
-        }
-        else if (dealerUpCardValue == 1)
-        {
-            // Dealer shows Ace
-            shouldHit = hardTotal <= 15 || softTotal <= 18; // Hit on hard 15 or less, or soft 18 or less
-            Debug.Log($"- Decision: {(shouldHit ? "Hit" : "Stand")} on Hard Total {hardTotal} or Soft Total {softTotal} vs Dealer's Ace");
+            // Stand on soft or hard 17 or higher
+            shouldHit = hardTotal < 17 && softTotal < 17;
         }
 
         Debug.Log($"[DecideToHit] Dealer Up Card: {dealerUpCardValue}, Hard Total: {hardTotal}, Soft Total: {softTotal}, Decision: {(shouldHit ? "Hit" : "Stand")}");
@@ -136,6 +98,7 @@ public class NPCBlackjack : MonoBehaviour
 
         return shouldHit;
     }
+
 
     private void UpdateUIBasedOnDecision(bool shouldHit)
     {
