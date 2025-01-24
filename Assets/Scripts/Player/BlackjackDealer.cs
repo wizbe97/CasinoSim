@@ -31,6 +31,8 @@ public class BlackjackDealer : MonoBehaviour
     private BlackjackTable assignedTable;
     private bool allPlayersFinished = false; // Tracks if all players have hit or stood
     private List<GameObject> cardsOnTable = new List<GameObject>(); // List to track all card objects
+    private DealerScoreUI dealerScoreUI;
+
 
 
 
@@ -226,6 +228,7 @@ public class BlackjackDealer : MonoBehaviour
         blackjackShoe.InitializeShoe();
         cardsDealt = true;
         StartCoroutine(DealCardsWithDelay());
+        _inputHandler.OnCancel -= LeaveDealerSpot;
     }
 
     private IEnumerator DealCardsWithDelay()
@@ -236,12 +239,13 @@ public class BlackjackDealer : MonoBehaviour
             yield return new WaitForSeconds(cardDealingDelay);
         }
 
-        // Deal the first card to the dealer (up card) and track its value
+        // Deal the first card to the dealer (up card)
         PlayingCardSO dealerUpCard = DealCardToSpot(blackjackTable.dealerCardSpot);
         if (dealerUpCard != null)
         {
-            blackjackTable.SetDealerUpCardValue(dealerUpCard.value);
-            Debug.Log("Dealer up card is: " + dealerUpCard.value);
+            blackjackTable.SetDealerUpCardValue(dealerUpCard.value); // Set the up card value
+            dealerScoreUI = blackjackTable.GetComponentInChildren<DealerScoreUI>();
+            Debug.Log($"Dealer up card set to: {dealerUpCard.value}");
         }
         yield return new WaitForSeconds(cardDealingDelay);
 
@@ -253,10 +257,13 @@ public class BlackjackDealer : MonoBehaviour
 
         // Deal the second (face-down) card to the dealer
         DealCardToSpot(blackjackTable.dealerCardSpot, faceDown: true);
+        
 
         Debug.Log("Hands dealt. Game ready to begin player turns.");
+        _inputHandler.OnCancel += LeaveDealerSpot;
         StartCoroutine(HandlePlayerTurns());
     }
+
 
 
     private IEnumerator HandlePlayerTurns()
@@ -272,9 +279,8 @@ public class BlackjackDealer : MonoBehaviour
                 continue;
             }
 
-            Debug.Log($"Player in Chair {currentPlayerIndex + 1} is taking their turn.");
 
-            int dealerUpCardValue = blackjackTable.GetDealerCardValue();
+            int dealerUpCardValue = blackjackTable.GetDealerUpCardValue();
 
             if (!player.isWaitingForDealer)
             {
@@ -283,7 +289,6 @@ public class BlackjackDealer : MonoBehaviour
 
             if (player.isWaitingForDealer)
             {
-                Debug.Log("Waiting for dealer input (Press D).");
                 isAwaitingDealerInput = true;
                 while (isAwaitingDealerInput) yield return null; // Wait for `D` to be pressed
                 DealCardToPlayer(player);
@@ -321,7 +326,6 @@ public class BlackjackDealer : MonoBehaviour
         cardObject.transform.localPosition = cardOffset;
         cardObject.transform.localRotation = Quaternion.Euler(0, 90, faceDown ? 180 : 0);
 
-        Debug.Log($"Dealt card: {card.GetCardName()} to {spot.name} with offset {cardOffset}");
 
         // Track the card for cleanup later
         cardsOnTable.Add(cardObject);
@@ -340,6 +344,8 @@ public class BlackjackDealer : MonoBehaviour
         else if (spot == blackjackTable.dealerCardSpot)
         {
             blackjackTable.AddDealerCard(card);
+            dealerScoreUI.UpdateDealerScore();
+
         }
 
         return card; // Return the card dealt
@@ -372,7 +378,6 @@ public class BlackjackDealer : MonoBehaviour
             cardObject.transform.localPosition = cardOffset;
             cardObject.transform.localRotation = Quaternion.Euler(0, 90, 0);
 
-            Debug.Log($"Dealt {card.GetCardName()} to Chair {currentPlayerIndex + 1}. Total: {player.totalCardValue}");
 
             // Track the card in the `cardsOnTable` list
             cardsOnTable.Add(cardObject);
@@ -397,6 +402,8 @@ public class BlackjackDealer : MonoBehaviour
                 hitObject.transform.GetSiblingIndex() == 1) // Index 1 for the second card
             {
                 blackjackTable.RevealDealerCard();
+                dealerScoreUI.UpdateDealerScore();
+
             }
             else
             {

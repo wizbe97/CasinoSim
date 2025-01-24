@@ -67,37 +67,44 @@ public class NPCBlackjack : MonoBehaviour
 
     public bool DecideToHit(int dealerUpCardValue)
     {
+        Debug.Log($"DecideToHit called. dealerUpCardValue: {dealerUpCardValue}");
+
         int hardTotal = totalCardValue;
         int softTotal = (aceCount > 0 && totalCardValue + 10 <= 21) ? totalCardValue + 10 : totalCardValue;
 
         // Always stand on soft or hard 21
         if (softTotal == 21 || hardTotal == 21)
         {
-            Debug.Log($"Player has a natural blackjack (21). Automatically standing.");
             UpdateUIBasedOnDecision(false, Color.yellow);
             return false; // Stand
         }
 
         bool shouldHit = true; // Default decision
 
-        if (dealerUpCardValue == 2 || dealerUpCardValue == 3 || dealerUpCardValue == 2 || dealerUpCardValue == 3)
+        // Decision logic based on the dealer's up card value
+        if (dealerUpCardValue == 4 || dealerUpCardValue == 5 || dealerUpCardValue == 6)
+        {
+            // Stand on hard 12 or higher, but never stand on soft totals
+            shouldHit = hardTotal < 12;
+        }
+        else if (dealerUpCardValue == 2 || dealerUpCardValue == 3)
         {
             // Stand on hard 13 or higher, but never stand on soft totals
             shouldHit = hardTotal < 13;
         }
         else if (dealerUpCardValue >= 7 || dealerUpCardValue == 1)
         {
-            // Stand on soft or hard 17 or higher
-            shouldHit = hardTotal < 17 && softTotal < 17;
+            // Stand on soft 17 or higher or hard 17 or higher
+            shouldHit = hardTotal < 17 && (aceCount == 0 || softTotal < 17);
         }
 
-        Debug.Log($"[DecideToHit] Dealer Up Card: {dealerUpCardValue}, Hard Total: {hardTotal}, Soft Total: {softTotal}, Decision: {(shouldHit ? "Hit" : "Stand")}");
 
         // Update UI based on decision
         UpdateUIBasedOnDecision(shouldHit);
 
         return shouldHit;
     }
+
 
 
     private void UpdateUIBasedOnDecision(bool shouldHit)
@@ -137,7 +144,6 @@ public class NPCBlackjack : MonoBehaviour
     {
         if (IsBusted())
         {
-            Debug.Log($"Player in Chair {targetChair.name} has busted with {totalCardValue}.");
             isTurnOver = true;
             UpdateUIBasedOnDecision(false);
             return;
@@ -145,12 +151,10 @@ public class NPCBlackjack : MonoBehaviour
 
         if (DecideToHit(dealerUpCardValue))
         {
-            Debug.Log($"Player in Chair {targetChair.name} decided to hit.");
             isWaitingForDealer = true;
         }
         else
         {
-            Debug.Log($"Player in Chair {targetChair.name} decided to stand with {totalCardValue}.");
             isTurnOver = true;
         }
     }

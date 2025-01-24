@@ -103,7 +103,10 @@ public class BlackjackTable : MonoBehaviour
     {
         dealerTotalValue = 0;
         dealerAceCount = 0;
+        dealerUpCardValue = 0; // Ensure reset
+        Debug.Log("ResetDealer called. dealerUpCardValue reset to 0.");
     }
+
 
     /// <summary>
     /// Calculates and returns the dealer's current card value, accounting for soft totals with Aces.
@@ -146,15 +149,20 @@ public class BlackjackTable : MonoBehaviour
         dealerCardRevealed = false;
 
     }
-
     public void SetDealerUpCardValue(int value)
     {
         dealerUpCardValue = value;
+        Debug.Log($"SetDealerUpCardValue called. dealerUpCardValue set to: {dealerUpCardValue}");
     }
+
+
 
     public int GetDealerUpCardValue()
     {
+        Debug.Log($"GetDealerUpCardValue called. Returning: {dealerUpCardValue}");
         return dealerUpCardValue;
     }
+
+
 
 }
