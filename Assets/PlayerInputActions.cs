@@ -134,6 +134,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RevealDealerCard"",
+                    ""type"": ""Button"",
+                    ""id"": ""9eb24f0a-ddaf-4961-8320-2af342cbd70c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ResetRound"",
+                    ""type"": ""Button"",
+                    ""id"": ""5398055a-caf3-4727-abb8-479b532dcb46"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -433,6 +451,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""dd70567d-6b89-452e-be7b-45d2ccb65cb1"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RevealDealerCard"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""30b5320a-e93d-4912-95b9-22dbc98f19cd"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ResetRound"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -453,6 +493,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_JoinTable = m_Player.FindAction("Join Table", throwIfNotFound: true);
         m_Player_DealCard = m_Player.FindAction("DealCard", throwIfNotFound: true);
         m_Player_Zoom = m_Player.FindAction("Zoom", throwIfNotFound: true);
+        m_Player_RevealDealerCard = m_Player.FindAction("RevealDealerCard", throwIfNotFound: true);
+        m_Player_ResetRound = m_Player.FindAction("ResetRound", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -526,6 +568,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_JoinTable;
     private readonly InputAction m_Player_DealCard;
     private readonly InputAction m_Player_Zoom;
+    private readonly InputAction m_Player_RevealDealerCard;
+    private readonly InputAction m_Player_ResetRound;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -542,6 +586,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @JoinTable => m_Wrapper.m_Player_JoinTable;
         public InputAction @DealCard => m_Wrapper.m_Player_DealCard;
         public InputAction @Zoom => m_Wrapper.m_Player_Zoom;
+        public InputAction @RevealDealerCard => m_Wrapper.m_Player_RevealDealerCard;
+        public InputAction @ResetRound => m_Wrapper.m_Player_ResetRound;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -587,6 +633,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Zoom.started += instance.OnZoom;
             @Zoom.performed += instance.OnZoom;
             @Zoom.canceled += instance.OnZoom;
+            @RevealDealerCard.started += instance.OnRevealDealerCard;
+            @RevealDealerCard.performed += instance.OnRevealDealerCard;
+            @RevealDealerCard.canceled += instance.OnRevealDealerCard;
+            @ResetRound.started += instance.OnResetRound;
+            @ResetRound.performed += instance.OnResetRound;
+            @ResetRound.canceled += instance.OnResetRound;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -627,6 +679,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Zoom.started -= instance.OnZoom;
             @Zoom.performed -= instance.OnZoom;
             @Zoom.canceled -= instance.OnZoom;
+            @RevealDealerCard.started -= instance.OnRevealDealerCard;
+            @RevealDealerCard.performed -= instance.OnRevealDealerCard;
+            @RevealDealerCard.canceled -= instance.OnRevealDealerCard;
+            @ResetRound.started -= instance.OnResetRound;
+            @ResetRound.performed -= instance.OnResetRound;
+            @ResetRound.canceled -= instance.OnResetRound;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -658,5 +716,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnJoinTable(InputAction.CallbackContext context);
         void OnDealCard(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
+        void OnRevealDealerCard(InputAction.CallbackContext context);
+        void OnResetRound(InputAction.CallbackContext context);
     }
 }

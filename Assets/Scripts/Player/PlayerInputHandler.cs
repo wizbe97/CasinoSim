@@ -20,6 +20,8 @@ public class PlayerInputHandler : MonoBehaviour
     public event InputActionEvent OnDealCard;
     public delegate void ZoomActionEvent(float scrollInput); // Event with a float parameter for scroll value
     public event ZoomActionEvent OnZoom;
+    public event InputActionEvent  OnRevealDealerCard;
+    public event InputActionEvent OnResetRound;
 
     private void Awake()
     {
@@ -70,6 +72,8 @@ public class PlayerInputHandler : MonoBehaviour
             float scrollValue = ctx.ReadValue<Vector2>().y; // Get the Y-axis scroll value
             OnZoom?.Invoke(scrollValue); // Trigger the OnZoom event with the scroll value
         };
+        inputActions.Player.RevealDealerCard.performed += ctx => OnRevealDealerCard?.Invoke();
+        inputActions.Player.ResetRound.performed += ctx => OnResetRound?.Invoke();
     }
 
     private void OnDisable()

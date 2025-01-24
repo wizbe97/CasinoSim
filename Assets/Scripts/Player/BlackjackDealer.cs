@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BlackjackDealer : MonoBehaviour
 {
@@ -27,6 +28,12 @@ public class BlackjackDealer : MonoBehaviour
 
     private int currentPlayerIndex = 0; // Tracks the current player's turn
     private bool isAwaitingDealerInput = false; // Wait for the dealer to press D
+    private BlackjackTable assignedTable;
+    private bool allPlayersFinished = false; // Tracks if all players have hit or stood
+    private List<GameObject> cardsOnTable = new List<GameObject>(); // List to track all card objects
+
+
+
 
     private void Awake()
     {
@@ -40,34 +47,47 @@ public class BlackjackDealer : MonoBehaviour
         _reticleUI = _playerInteraction.ReticleUI;
     }
 
-    private void SubscribeDealerInputActions()
-    {
-        Debug.Log("BlackjackDealer: Subscribing to dealer input actions.");
-        _inputHandler.OnDealCard += HandleDealInput; // Adjusted to handle turn logic
-        _inputHandler.OnCancel += LeaveDealerSpot;
-        _inputHandler.OnZoom += HandleZoom;
-    }
-
-    private void UnsubscribeDealerInputActions()
-    {
-        Debug.Log("BlackjackDealer: Unsubscribing from dealer input actions.");
-        _inputHandler.OnDealCard -= HandleDealInput;
-        _inputHandler.OnCancel -= LeaveDealerSpot;
-        _inputHandler.OnZoom -= HandleZoom;
-    }
-
     private void HandleDealInput()
     {
-        if (!cardsDealt)
+        // Handle player input during their turn
+        if (isAwaitingDealerInput)
         {
-            DealCards(); // Initial card dealing
+            Debug.Log("Dealing card to the current player or dealer.");
+            isAwaitingDealerInput = false; // Clear the flag to proceed in the coroutine
+            return;
         }
-        else
+
+        // Start or continue the dealer's turn after revealing the card
+        if (cardsDealt && allPlayersFinished && blackjackTable.IsDealerCardRevealed())
         {
-            // Advance the game flow (deal card or move to the next player)
-            isAwaitingDealerInput = false;
+            int dealerScore = blackjackTable.GetDealerCardValue();
+            if (dealerScore < 17)
+            {
+                Debug.Log($"Dealer score is {dealerScore}. Starting dealer's turn.");
+                StartCoroutine(HandleDealerTurn());
+            }
+            else
+            {
+                Debug.Log($"Dealer score is {dealerScore}. No further action needed.");
+                DetermineWinners();
+            }
+        }
+        else if (!cardsDealt)
+        {
+            Debug.Log("Dealing initial cards.");
+            DealCards();
+        }
+        else if (!allPlayersFinished)
+        {
+            Debug.LogWarning("All players must finish their turns before proceeding.");
+        }
+        else if (!blackjackTable.IsDealerCardRevealed())
+        {
+            Debug.LogWarning("You must reveal the dealer's hidden card before proceeding.");
         }
     }
+
+
 
     private void HandleZoom(float scrollInput)
     {
@@ -148,6 +168,7 @@ public class BlackjackDealer : MonoBehaviour
     private void TeleportToDealerSpot(Transform dealerSeat)
     {
         if (dealerSeat == null) return;
+        assignedTable = blackjackTable;
 
         transform.position = dealerSeat.position;
         transform.rotation = dealerSeat.rotation;
@@ -160,7 +181,6 @@ public class BlackjackDealer : MonoBehaviour
 
         isDealer = true;
     }
-
     private void LeaveDealerSpot()
     {
         if (!isDealer) return;
@@ -172,8 +192,10 @@ public class BlackjackDealer : MonoBehaviour
         ResetZoom();
 
         isDealer = false;
+        assignedTable = null; // Clear the reference
         blackjackTable = null;
     }
+
 
     public void DealCards()
     {
@@ -255,10 +277,11 @@ public class BlackjackDealer : MonoBehaviour
             {
                 Debug.Log("Waiting for dealer input (Press D).");
                 isAwaitingDealerInput = true;
-                while (isAwaitingDealerInput) yield return null;
+                while (isAwaitingDealerInput) yield return null; // Wait for `D` to be pressed
                 DealCardToPlayer(player);
                 player.isWaitingForDealer = false;
             }
+
 
             if (player.isTurnOver)
             {
@@ -268,6 +291,8 @@ public class BlackjackDealer : MonoBehaviour
         }
 
         Debug.Log("All players have made their choices.");
+        allPlayersFinished = true; // Mark that all players have finished
+        _inputHandler.OnRevealDealerCard += HandleRevealCardInput; // Enable revealing the dealer card
     }
 
 
@@ -282,12 +307,16 @@ public class BlackjackDealer : MonoBehaviour
 
         Vector3 cardOffset = new Vector3(0, 0, -cardGap * spot.childCount);
 
+        // Instantiate the card
         GameObject cardObject = Instantiate(card.prefab, spot.position + cardOffset, Quaternion.identity);
         cardObject.transform.SetParent(spot);
         cardObject.transform.localPosition = cardOffset;
         cardObject.transform.localRotation = Quaternion.Euler(0, 90, faceDown ? 180 : 0);
 
         Debug.Log($"Dealt card: {card.GetCardName()} to {spot.name} with offset {cardOffset}");
+
+        // Track the card in the `cardsOnTable` list
+        cardsOnTable.Add(cardObject);
 
         // Update NPC card value only once
         Chair chair = spot.GetComponentInParent<Chair>();
@@ -306,9 +335,6 @@ public class BlackjackDealer : MonoBehaviour
             blackjackTable.AddDealerCard(card);
         }
     }
-
-
-
 
     private void DealCardToPlayer(NPCBlackjack player)
     {
@@ -338,12 +364,155 @@ public class BlackjackDealer : MonoBehaviour
             cardObject.transform.localRotation = Quaternion.Euler(0, 90, 0);
 
             Debug.Log($"Dealt {card.GetCardName()} to Chair {currentPlayerIndex + 1}. Total: {player.totalCardValue}");
+
+            // Track the card in the `cardsOnTable` list
+            cardsOnTable.Add(cardObject);
         }
         else
         {
             Debug.LogWarning("No seatCardSpot found for this player.");
         }
     }
+
+
+    private void HandleRevealCardInput()
+    {
+        Ray ray = _playerInteraction.PlayerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
+
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+        {
+            GameObject hitObject = hit.collider.gameObject;
+
+            // Ensure we're interacting with the dealer's second card
+            if (hitObject.transform.IsChildOf(blackjackTable.dealerCardSpot) &&
+                hitObject.transform.GetSiblingIndex() == 1) // Index 1 for the second card
+            {
+                blackjackTable.RevealDealerCard();
+            }
+            else
+            {
+                Debug.Log("Not targeting the hidden dealer card.");
+            }
+        }
+    }
+
+    private IEnumerator HandleDealerTurn()
+    {
+        while (blackjackTable.GetDealerCardValue() < 17)
+        {
+            Debug.Log("Dealer score is less than 17. Dealing a card to the dealer.");
+
+            // Deal a card immediately on the first iteration
+            DealCardToSpot(blackjackTable.dealerCardSpot);
+            yield return new WaitForSeconds(cardDealingDelay);
+
+            // Check if the dealer still needs to hit
+            if (blackjackTable.GetDealerCardValue() < 17)
+            {
+                Debug.Log("Dealer score is still less than 17. Press 'D' to deal another card.");
+                isAwaitingDealerInput = true;
+
+                // Wait for the dealer to press 'D' for the next card
+                while (isAwaitingDealerInput) yield return null;
+            }
+        }
+
+        int dealerScore = blackjackTable.GetDealerCardValue();
+        Debug.Log($"Dealer's turn ended with a score of {dealerScore}.");
+
+        // Determine winners
+        DetermineWinners();
+    }
+
+
+    private void DetermineWinners()
+    {
+        int dealerScore = blackjackTable.GetDealerCardValue();
+
+        foreach (Chair chair in blackjackTable.occupiedChairs)
+        {
+            NPCBlackjack player = chair.GetComponentInChildren<NPCBlackjack>();
+            if (player == null) continue;
+
+            if (player.IsBusted())
+            {
+                Debug.Log($"Player at Chair {chair.name} busted with {player.totalCardValue}. Dealer wins.");
+            }
+            else if (dealerScore > 21 || player.totalCardValue > dealerScore)
+            {
+                Debug.Log($"Player at Chair {chair.name} wins with {player.totalCardValue} against dealer's {dealerScore}.");
+            }
+            else if (player.totalCardValue == dealerScore)
+            {
+                Debug.Log($"Player at Chair {chair.name} ties with the dealer. Score: {player.totalCardValue}.");
+            }
+            else
+            {
+                Debug.Log($"Player at Chair {chair.name} loses with {player.totalCardValue} to dealer's {dealerScore}.");
+            }
+        }
+        _inputHandler.OnResetRound += ResetRound;
+    }
+
+    private void ResetRound()
+    {
+        // Destroy all cards on the table
+        foreach (GameObject card in cardsOnTable)
+        {
+            if (card != null)
+            {
+                Destroy(card);
+            }
+        }
+        cardsOnTable.Clear(); // Clear the list for the next round
+
+        // Reset dealer's score
+        if (blackjackTable != null)
+        {
+            blackjackTable.ResetDealer(); // Reset the dealer's score
+        }
+
+        // Reset all players' scores and states
+        if (assignedTable != null)
+        {
+            Debug.Log("Assigned table found. Resetting players and dealer.");
+
+            foreach (Chair chair in assignedTable.occupiedChairs)
+            {
+                NPCBlackjack player = chair.GetComponentInChildren<NPCBlackjack>();
+                if (player != null)
+                {
+                    Debug.Log($"Resetting player in Chair: {chair.name}, Current Total: {player.totalCardValue}");
+                    player.ResetPlayer(); // Reset each player's score
+                    Debug.Log($"Player in Chair: {chair.name} has been reset. New Total: {player.totalCardValue}");
+                }
+            }
+
+            Debug.Log("Resetting dealer state...");
+            assignedTable.ResetDealerCardRevealed();
+            Debug.Log("Dealer card revealed state reset.");
+
+            assignedTable.ResetDealer();
+            Debug.Log("Dealer has been reset.");
+        }
+        else
+        {
+            Debug.LogWarning("Assigned table is null. Skipping reset for players and dealer.");
+        }
+
+
+
+        currentPlayerIndex = 0;
+        cardsDealt = false;
+        allPlayersFinished = false; // Reset player turn tracking
+        Debug.Log("Round reset. Dealer and player scores reset. Ready to deal again.");
+
+        // Unsubscribe actions
+        _inputHandler.OnRevealDealerCard -= HandleRevealCardInput;
+        _inputHandler.OnResetRound -= ResetRound;
+    }
+
+
 
     private void UnsubscribeInteractionEvents()
     {
@@ -362,5 +531,25 @@ public class BlackjackDealer : MonoBehaviour
         _inputHandler.OnPhoneMenu += _playerInteraction.TogglePhoneMenu;
         _inputHandler.OnCancel += _playerInteraction.HandleCancelPlacement;
         _playerInteraction.ResetState();
+    }
+
+
+    private void SubscribeDealerInputActions()
+    {
+        Debug.Log("BlackjackDealer: Subscribing to dealer input actions.");
+        _inputHandler.OnDealCard += HandleDealInput; // Adjusted to handle turn logic
+        _inputHandler.OnCancel += LeaveDealerSpot;
+        _inputHandler.OnZoom += HandleZoom;
+
+    }
+
+    private void UnsubscribeDealerInputActions()
+    {
+        Debug.Log("BlackjackDealer: Unsubscribing from dealer input actions.");
+        _inputHandler.OnDealCard -= HandleDealInput;
+        _inputHandler.OnCancel -= LeaveDealerSpot;
+        _inputHandler.OnZoom -= HandleZoom;
+        _inputHandler.OnRevealDealerCard -= HandleRevealCardInput;
+        _inputHandler.OnResetRound -= ResetRound;
     }
 }

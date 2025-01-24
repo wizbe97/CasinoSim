@@ -19,6 +19,9 @@ public class BlackjackTable : MonoBehaviour
     private int dealerTotalValue = 0; // Total value of the dealer's cards
     private int dealerAceCount = 0; // Number of Aces in the dealer's hand
 
+    private bool dealerCardRevealed = false;
+
+
     private void Awake()
     {
         if (dealerCardSpot == null)
@@ -112,6 +115,33 @@ public class BlackjackTable : MonoBehaviour
         }
 
         return softValue;
+    }
+
+    public void RevealDealerCard()
+    {
+        // Assuming the second dealer card is always the second child of dealerCardSpot
+        if (dealerCardSpot.childCount > 1)
+        {
+            Transform hiddenCard = dealerCardSpot.GetChild(1); // Second card
+            hiddenCard.localRotation = Quaternion.Euler(0, 0, 0); // Rotate to reveal (front-facing)
+            Debug.Log($"Revealed dealer's hidden card. Total dealer value: {GetDealerCardValue()}");
+
+            dealerCardRevealed = true; // Mark the card as revealed
+        }
+        else
+        {
+            Debug.LogWarning("No hidden card to reveal!");
+        }
+    }
+
+
+    public bool IsDealerCardRevealed()
+    {
+        return dealerCardRevealed;
+    }
+    public void ResetDealerCardRevealed()
+    {
+        dealerCardRevealed = false;
     }
 
 }
