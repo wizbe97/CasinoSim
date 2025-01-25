@@ -42,7 +42,7 @@ public class DealerScoreUI : MonoBehaviour
         int dealerScore = blackjackTable.GetDealerCardValue();
 
         // Update the text
-        dealerScoreText.text = $"Dealer: {dealerScore}";
+        dealerScoreText.text =  dealerScore.ToString();
 
         // Check if the dealer has busted
         if (dealerScore > 21)

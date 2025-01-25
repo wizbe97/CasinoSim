@@ -8,7 +8,7 @@ public class BlackjackDealer : MonoBehaviour
     [SerializeField] private BlackJackShoeSO blackjackShoe; // Reference to the Blackjack Shoe Scriptable Object
 
     [Header("Player Interaction")]
-    private PlayerInputHandler _inputHandler; // Reference to the player input handler
+    [HideInInspector] public PlayerInputHandler _inputHandler; // Reference to the player input handler
     private PlayerInteraction _playerInteraction; // Reference to the player interaction script
     private PlayerController _playerController;
 
@@ -244,7 +244,6 @@ public class BlackjackDealer : MonoBehaviour
         if (dealerUpCard != null)
         {
             blackjackTable.SetDealerUpCardValue(dealerUpCard.value); // Set the up card value
-            dealerScoreUI = blackjackTable.GetComponentInChildren<DealerScoreUI>();
             Debug.Log($"Dealer up card set to: {dealerUpCard.value}");
         }
         yield return new WaitForSeconds(cardDealingDelay);
@@ -257,7 +256,7 @@ public class BlackjackDealer : MonoBehaviour
 
         // Deal the second (face-down) card to the dealer
         DealCardToSpot(blackjackTable.dealerCardSpot, faceDown: true);
-        
+
 
         Debug.Log("Hands dealt. Game ready to begin player turns.");
         _inputHandler.OnCancel += LeaveDealerSpot;
@@ -326,7 +325,6 @@ public class BlackjackDealer : MonoBehaviour
         cardObject.transform.localPosition = cardOffset;
         cardObject.transform.localRotation = Quaternion.Euler(0, 90, faceDown ? 180 : 0);
 
-
         // Track the card for cleanup later
         cardsOnTable.Add(cardObject);
 
@@ -344,12 +342,21 @@ public class BlackjackDealer : MonoBehaviour
         else if (spot == blackjackTable.dealerCardSpot)
         {
             blackjackTable.AddDealerCard(card);
-            dealerScoreUI.UpdateDealerScore();
 
+            if (!faceDown) // Only update the score UI if the card is face-up
+            {
+                if (dealerScoreUI == null)
+                {
+                    dealerScoreUI = blackjackTable.GetComponentInChildren<DealerScoreUI>();
+                }
+
+                dealerScoreUI.UpdateDealerScore(); // Update visible dealer score
+            }
         }
 
         return card; // Return the card dealt
     }
+
 
     private void DealCardToPlayer(NPCBlackjack player)
     {
@@ -443,49 +450,11 @@ public class BlackjackDealer : MonoBehaviour
 
     private void DetermineWinners()
     {
-        int dealerScore = blackjackTable.GetDealerCardValue();
-
-        foreach (Chair chair in blackjackTable.occupiedChairs)
-        {
-            NPCBlackjack player = chair.GetComponentInChildren<NPCBlackjack>();
-            if (player == null) continue;
-
-            // Retrieve the player's UI
-            NPCBlackjackUI ui = player.GetComponent<NPCBlackjackUI>();
-            if (ui == null)
-            {
-                Debug.LogWarning($"No UI found for player at Chair {chair.name}");
-                continue;
-            }
-
-            // Determine the result and update UI
-            if (player.IsBusted())
-            {
-                Debug.Log($"Player at Chair {chair.name} busted with {player.totalCardValue}. Dealer wins.");
-                ui.UpdateDecisionColor(Color.red); // Red for losing
-            }
-            else if (dealerScore > 21 || player.totalCardValue > dealerScore)
-            {
-                Debug.Log($"Player at Chair {chair.name} wins with {player.totalCardValue} against dealer's {dealerScore}.");
-                ui.UpdateDecisionColor(Color.green); // Green for winning
-            }
-            else if (player.totalCardValue == dealerScore)
-            {
-                Debug.Log($"Player at Chair {chair.name} ties with the dealer. Score: {player.totalCardValue}.");
-                ui.UpdateDecisionColor(Color.yellow); // Yellow for tie
-            }
-            else
-            {
-                Debug.Log($"Player at Chair {chair.name} loses with {player.totalCardValue} to dealer's {dealerScore}.");
-                ui.UpdateDecisionColor(Color.red); // Red for losing
-            }
-        }
-
-        Debug.Log("All winners and losers determined.");
+        blackjackTable.DetermineWinners();
         _inputHandler.OnResetRound += ResetRound; // Enable round reset
     }
 
-    private void ResetRound()
+    public void ResetRound()
     {
         // Destroy all cards on the table
         foreach (GameObject card in cardsOnTable)
@@ -525,6 +494,7 @@ public class BlackjackDealer : MonoBehaviour
 
             assignedTable.ResetDealer();
             Debug.Log("Dealer has been reset.");
+            dealerScoreUI.UpdateDealerScore();
         }
         else
         {

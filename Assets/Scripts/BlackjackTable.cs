@@ -137,6 +137,59 @@ public class BlackjackTable : MonoBehaviour
         {
             Debug.LogWarning("No hidden card to reveal!");
         }
+
+        if (dealerTotalValue >= 17)
+        {
+            DetermineWinners();
+            BlackjackDealer dealer = FindAnyObjectByType<BlackjackDealer>();
+            if (dealer != null && dealer._inputHandler != null)
+            {
+                dealer._inputHandler.OnResetRound += dealer.ResetRound;
+            }
+        }
+    }
+
+    public void DetermineWinners()
+    {
+        int dealerScore = GetDealerCardValue();
+
+        foreach (Chair chair in occupiedChairs)
+        {
+            NPCBlackjack player = chair.GetComponentInChildren<NPCBlackjack>();
+            if (player == null) continue;
+
+            // Retrieve the player's UI
+            NPCBlackjackUI ui = player.GetComponent<NPCBlackjackUI>();
+            if (ui == null)
+            {
+                Debug.LogWarning($"No UI found for player at Chair {chair.name}");
+                continue;
+            }
+
+            // Determine the result and update UI
+            if (player.IsBusted())
+            {
+                Debug.Log($"Player at Chair {chair.name} busted with {player.totalCardValue}. Dealer wins.");
+                ui.UpdateDecisionColor(Color.red); // Red for losing
+            }
+            else if (dealerScore > 21 || player.totalCardValue > dealerScore)
+            {
+                Debug.Log($"Player at Chair {chair.name} wins with {player.totalCardValue} against dealer's {dealerScore}.");
+                ui.UpdateDecisionColor(Color.green); // Green for winning
+            }
+            else if (player.totalCardValue == dealerScore)
+            {
+                Debug.Log($"Player at Chair {chair.name} ties with the dealer. Score: {player.totalCardValue}.");
+                ui.UpdateDecisionColor(Color.yellow); // Yellow for tie
+            }
+            else
+            {
+                Debug.Log($"Player at Chair {chair.name} loses with {player.totalCardValue} to dealer's {dealerScore}.");
+                ui.UpdateDecisionColor(Color.red); // Red for losing
+            }
+        }
+
+        Debug.Log("All winners and losers determined.");
     }
 
 

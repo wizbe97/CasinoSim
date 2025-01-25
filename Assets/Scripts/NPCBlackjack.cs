@@ -72,38 +72,40 @@ public class NPCBlackjack : MonoBehaviour
         int hardTotal = totalCardValue;
         int softTotal = (aceCount > 0 && totalCardValue + 10 <= 21) ? totalCardValue + 10 : totalCardValue;
 
-        // Always stand on soft or hard 21
-        if (softTotal == 21 || hardTotal == 21)
+        // Always stand on 17, 18, 19, 20, or 21 (soft or hard)
+        if (softTotal >= 17 || hardTotal >= 17)
         {
-            UpdateUIBasedOnDecision(false, Color.yellow);
+            UpdateUIBasedOnDecision(false, Color.red); // Stand
             return false; // Stand
         }
 
-        bool shouldHit = true; // Default decision
-
-        // Decision logic based on the dealer's up card value
-        if (dealerUpCardValue == 4 || dealerUpCardValue == 5 || dealerUpCardValue == 6)
+        // Stand on 12 or higher if dealer's card is explicitly 2, 3, 4, 5, or 6
+        if ((dealerUpCardValue == 2 || dealerUpCardValue == 3 || dealerUpCardValue == 4 ||
+             dealerUpCardValue == 5 || dealerUpCardValue == 6) && hardTotal >= 12)
         {
-            // Stand on hard 12 or higher, but never stand on soft totals
-            shouldHit = hardTotal < 12;
-        }
-        else if (dealerUpCardValue == 2 || dealerUpCardValue == 3)
-        {
-            // Stand on hard 13 or higher, but never stand on soft totals
-            shouldHit = hardTotal < 13;
-        }
-        else if (dealerUpCardValue >= 7 || dealerUpCardValue == 1)
-        {
-            // Stand on soft 17 or higher or hard 17 or higher
-            shouldHit = hardTotal < 17 && (aceCount == 0 || softTotal < 17);
+            UpdateUIBasedOnDecision(false, Color.red); // Stand
+            return false; // Stand
         }
 
+        // Hit on 16 or lower with dealer showing 7, 8, 9, or 10
+        if (dealerUpCardValue == 7 || dealerUpCardValue == 8 || dealerUpCardValue == 9 || dealerUpCardValue == 10)
+        {
+            if (hardTotal <= 16 || softTotal <= 16)
+            {
+                UpdateUIBasedOnDecision(true, Color.green); // Hit
+                return true; // Hit
+            }
 
-        // Update UI based on decision
-        UpdateUIBasedOnDecision(shouldHit);
+            // Stand on 17 or higher
+            UpdateUIBasedOnDecision(false, Color.red); // Stand
+            return false; // Stand
+        }
 
-        return shouldHit;
+        // Otherwise, decide to hit
+        UpdateUIBasedOnDecision(true, Color.green); // Hit
+        return true; // Hit
     }
+
 
 
 

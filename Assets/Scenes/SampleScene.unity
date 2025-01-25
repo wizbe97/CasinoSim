@@ -545,14 +545,35 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6506706670473265590, guid: 67ccdcf73e49cfa4d998fcae8034e43f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.586071
+      objectReference: {fileID: 0}
+    - target: {fileID: 6506706670473265590, guid: 67ccdcf73e49cfa4d998fcae8034e43f,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -8.268284
+      objectReference: {fileID: 0}
+    - target: {fileID: 8656699978742155522, guid: 67ccdcf73e49cfa4d998fcae8034e43f,
+        type: 3}
+      propertyPath: activeColor.b
+      value: 0.972549
+      objectReference: {fileID: 0}
+    - target: {fileID: 8656699978742155522, guid: 67ccdcf73e49cfa4d998fcae8034e43f,
+        type: 3}
+      propertyPath: activeColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8656699978742155522, guid: 67ccdcf73e49cfa4d998fcae8034e43f,
+        type: 3}
+      propertyPath: activeColor.r
+      value: 0.7490196
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 850447700632116374, guid: 67ccdcf73e49cfa4d998fcae8034e43f,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 7711585091845407863}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 67ccdcf73e49cfa4d998fcae8034e43f, type: 3}
 --- !u!1 &737090998
 GameObject:
@@ -1147,28 +1168,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5561f49bdc9394f47bd10457ac0ed311, type: 3}
---- !u!1 &7113117511409528303 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 850447700632116374, guid: 67ccdcf73e49cfa4d998fcae8034e43f,
-    type: 3}
-  m_PrefabInstance: {fileID: 675612100}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7711585091845407863
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7113117511409528303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a64e2e17750000444963068b5496656a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dealerScoreText: {fileID: 0}
-  normalColor: {r: 1, g: 1, b: 1, a: 1}
-  bustedColor: {r: 1, g: 0, b: 0, a: 1}
-  activeColor: {r: 1, g: 0.75, b: 0.8, a: 1}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

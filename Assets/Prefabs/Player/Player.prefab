@@ -1231,8 +1231,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blackjackShoe: {fileID: 11400000, guid: 431efdedcbaacae4397ee0069c27cd3c, type: 2}
+  _inputHandler: {fileID: 0}
   _interactionDistance: 5
-  cardGap: 0.1
+  cardGap: 0.12
   zoomSpeed: 0.5
   minZoom: 20
   maxZoom: 50
