@@ -45,8 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab12e9279a01d6f4fa9be00c253ac8f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _deliveryVehiclePrefab: {fileID: 6570804505523997655, guid: df3c8b234348e934ab6d6759f593b08e,
-    type: 3}
+  _deliveryVehiclePrefab: {fileID: 6570804505523997655, guid: df3c8b234348e934ab6d6759f593b08e, type: 3}
   _vehicleSpeed: 5
   _startPosition: {x: 21, y: 0, z: -21}
   _endPosition: {x: 21, y: 0, z: 20}

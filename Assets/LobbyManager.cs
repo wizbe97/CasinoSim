@@ -24,14 +24,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 	public override void OnConnectedToMaster()
 	{
 		PhotonNetwork.JoinLobby(TypedLobby.Default);
-
-		// Create a test room if none exist
-		if (PhotonNetwork.CountOfRooms == 0)
-		{
-			RoomOptions roomOptions = new RoomOptions() { MaxPlayers = 4 };
-			PhotonNetwork.CreateRoom("TestRoom", roomOptions);
-			Debug.Log("Creating a test room...");
-		}
 	}
 
 	public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -49,11 +41,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 	void UpdateRoomList(List<RoomInfo> roomList)
 	{
 		// Clear previous room buttons
-		foreach (GameObject button in roomButtons)
-		{
-			Destroy(button);
-		}
-		roomButtons.Clear();
+		//foreach (GameObject button in roomButtons)
+		//{
+			//Destroy(button);
+		//}
+		//roomButtons.Clear();
 
 		// Populate new room list
 		foreach (RoomInfo room in roomList)

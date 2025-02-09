@@ -5,7 +5,6 @@ using Photon.Pun;
 using Steamworks;
 using UnityEngine.UI;
 using Photon.Realtime;
-using System.Collections.Generic;
 
 public class InviteVan : MonoBehaviourPunCallbacks, IInteractable
 {
@@ -21,7 +20,7 @@ public class InviteVan : MonoBehaviourPunCallbacks, IInteractable
 	private List<GameObject> roomButtons = new List<GameObject>();
 
 	public void OnInteract()
-	{
+	{												
 		// Add your interaction logic here
 		InviteObj.SetActive(true);
 
