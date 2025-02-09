@@ -116,18 +116,20 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
 	void UpdateRoomList(List<RoomInfo> roomList)
 	{
+		string myUsername = SteamFriends.GetPersonaName(); // Get Steam username
+
 		// Clear previous room buttons
-		//foreach (GameObject button in roomButtons)
-		//{
-			//Destroy(button);
-		//}
-		//roomButtons.Clear();
+		foreach (GameObject button in roomButtons)
+		{
+			Destroy(button);
+		}
+		roomButtons.Clear();
 
 		// Populate new room list
 		foreach (RoomInfo room in roomList)
 		{
-			//if (room.RemovedFromList || room.PlayerCount == 0)
-				//continue;
+			if (room.RemovedFromList || room.PlayerCount == 0 || room.Name.Contains(myUsername))
+				continue; // Skip the room if it includes your username
 
 			// Debugging log
 			Debug.Log("Adding Room: " + room.Name + " | Players: " + room.PlayerCount + "/" + room.MaxPlayers);
