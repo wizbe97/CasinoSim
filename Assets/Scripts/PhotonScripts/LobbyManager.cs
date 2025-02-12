@@ -5,6 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
 using Steamworks;
+using System.Linq;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
@@ -29,40 +30,65 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 	public override void OnRoomListUpdate(List<RoomInfo> roomList)
 	{
 		Debug.Log("Received Room List Update: " + roomList.Count + " rooms found.");
-		if (roomList == null || roomList.Count == 0)
-		{
-			Debug.Log("No rooms available.");
-			return;
-		}
-
 		UpdateRoomList(roomList);
 	}
 
 	void UpdateRoomList(List<RoomInfo> roomList)
 	{
-		string myUsername = SteamFriends.GetPersonaName(); // Get Steam username
+		string myUsername = SteamFriends.GetPersonaName(); // Get Steam username  
 
-		// Clear previous room buttons
+		if (roomList == null || roomList.Count == 0)
+		{
+			Debug.Log("No available rooms.");
+			foreach (GameObject button in roomButtons)
+			{
+				Destroy(button);
+			}
+			roomButtons.Clear();
+			return;
+		}
+
+		// Create a dictionary to track existing room buttons
+		Dictionary<string, GameObject> existingButtons = new Dictionary<string, GameObject>();
+
 		foreach (GameObject button in roomButtons)
 		{
-			Destroy(button);
+			string roomName = button.transform.GetChild(1).GetComponent<Text>().text;
+			existingButtons[roomName] = button;
 		}
-		roomButtons.Clear();
 
-		// Populate new room list
+		// Update or create new room buttons
 		foreach (RoomInfo room in roomList)
 		{
-			if (room.RemovedFromList || room.PlayerCount == 0 || room.Name.Contains(myUsername))
-				continue; // Skip the room if it includes your username
+			if (room.RemovedFromList || room.PlayerCount == 0)
+				continue; // Skip removed or empty rooms
 
-			// Debugging log
-			Debug.Log("Adding Room: " + room.Name + " | Players: " + room.PlayerCount + "/" + room.MaxPlayers);
+			if (existingButtons.ContainsKey(room.Name))
+			{
+				// Update existing button
+				GameObject roomButton = existingButtons[room.Name];
+				roomButton.transform.GetChild(2).GetComponent<Text>().text = room.PlayerCount + "/" + room.MaxPlayers;
+			}
+			else
+			{
+				// Create new button
+				GameObject roomButton = Instantiate(roomButtonPrefab, roomListContainer);
+				roomButton.transform.GetChild(1).GetComponent<Text>().text = room.Name;
+				roomButton.transform.GetChild(2).GetComponent<Text>().text = room.PlayerCount + "/" + room.MaxPlayers;
+				roomButton.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.Name));
 
-			GameObject roomButton = Instantiate(roomButtonPrefab, roomListContainer);
-			roomButton.transform.GetChild(1).GetComponent<Text>().text = room.Name;
-			roomButton.transform.GetChild(2).GetComponent<Text>().text = room.PlayerCount + "/" + room.MaxPlayers;
-			roomButton.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.Name));
-			roomButtons.Add(roomButton);
+				roomButtons.Add(roomButton);
+			}
+		}
+
+		// Remove buttons for rooms that no longer exist
+		foreach (var roomName in existingButtons.Keys)
+		{
+			if (!roomList.Any(room => room.Name == roomName))
+			{
+				Destroy(existingButtons[roomName]);
+				roomButtons.Remove(existingButtons[roomName]);
+			}
 		}
 	}
 
@@ -80,6 +106,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 	public void ReturnMyWorld()
 	{
 		string username = SteamFriends.GetPersonaName();
-		PhotonNetwork.CreateRoom(username + "s' room");
+		PhotonNetwork.JoinOrCreateRoom(username + "s' room", new RoomOptions { MaxPlayers = 4, IsOpen = true, IsVisible = true}, TypedLobby.Default);
 	}
 }
