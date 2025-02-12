@@ -5,7 +5,6 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
 using Steamworks;
-using System.Linq;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
@@ -29,66 +28,31 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
 	public override void OnRoomListUpdate(List<RoomInfo> roomList)
 	{
+		// Clear previous room buttons
+		for (int i = 0; i < roomButtons.Count; i++) {
+			Destroy(roomButtons[i]);
+		}
+
+		string myUsername = SteamFriends.GetPersonaName(); // Get Steam username
+
 		Debug.Log("Received Room List Update: " + roomList.Count + " rooms found.");
-		UpdateRoomList(roomList);
-	}
 
-	void UpdateRoomList(List<RoomInfo> roomList)
-	{
-		string myUsername = SteamFriends.GetPersonaName(); // Get Steam username  
-
-		if (roomList == null || roomList.Count == 0)
-		{
-			Debug.Log("No available rooms.");
-			foreach (GameObject button in roomButtons)
-			{
-				Destroy(button);
-			}
-			roomButtons.Clear();
-			return;
-		}
-
-		// Create a dictionary to track existing room buttons
-		Dictionary<string, GameObject> existingButtons = new Dictionary<string, GameObject>();
-
-		foreach (GameObject button in roomButtons)
-		{
-			string roomName = button.transform.GetChild(1).GetComponent<Text>().text;
-			existingButtons[roomName] = button;
-		}
-
-		// Update or create new room buttons
+		// Populate new room list
 		foreach (RoomInfo room in roomList)
 		{
-			if (room.RemovedFromList || room.PlayerCount == 0)
-				continue; // Skip removed or empty rooms
-
-			if (existingButtons.ContainsKey(room.Name))
+			if (room.RemovedFromList || room.PlayerCount == 0 || room.Name.Contains(myUsername))
 			{
-				// Update existing button
-				GameObject roomButton = existingButtons[room.Name];
-				roomButton.transform.GetChild(2).GetComponent<Text>().text = room.PlayerCount + "/" + room.MaxPlayers;
+				return; // Skip the room if it includes your username
 			}
-			else
-			{
-				// Create new button
-				GameObject roomButton = Instantiate(roomButtonPrefab, roomListContainer);
-				roomButton.transform.GetChild(1).GetComponent<Text>().text = room.Name;
-				roomButton.transform.GetChild(2).GetComponent<Text>().text = room.PlayerCount + "/" + room.MaxPlayers;
-				roomButton.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.Name));
 
-				roomButtons.Add(roomButton);
-			}
-		}
+			GameObject roomButton = Instantiate(roomButtonPrefab, roomListContainer);
+			roomButton.transform.GetChild(1).GetComponent<Text>().text = room.Name;
+			roomButton.transform.GetChild(2).GetComponent<Text>().text = room.PlayerCount + "/" + room.MaxPlayers;
+			roomButton.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.Name));
+			roomButtons.Add(roomButton);
 
-		// Remove buttons for rooms that no longer exist
-		foreach (var roomName in existingButtons.Keys)
-		{
-			if (!roomList.Any(room => room.Name == roomName))
-			{
-				Destroy(existingButtons[roomName]);
-				roomButtons.Remove(existingButtons[roomName]);
-			}
+			// Debugging log
+			Debug.Log("Adding Room: " + room.Name + " | Players: " + room.PlayerCount + "/" + room.MaxPlayers);
 		}
 	}
 
