@@ -5,6 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
 using Steamworks;
+using System.Linq;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
@@ -28,121 +29,69 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
 	public override void OnRoomListUpdate(List<RoomInfo> roomList)
 	{
-<<<<<<< HEAD
-		string myUsername = SteamFriends.GetPersonaName(); // Get Steam username
 		Debug.Log("Received Room List Update: " + roomList.Count + " rooms found.");
+		UpdateRoomList(roomList);
+	}
+
+	void UpdateRoomList(List<RoomInfo> roomList)
+	{
+		string myUsername = SteamFriends.GetPersonaName(); // Get Steam username  
 
 		if (roomList == null || roomList.Count == 0)
 		{
 			Debug.Log("No available rooms.");
-			ClearRoomButtons();
+			foreach (GameObject button in roomButtons)
+			{
+				Destroy(button);
+			}
+			roomButtons.Clear();
 			return;
 		}
 
-		// Dictionary to track existing buttons
-		Dictionary<string, GameObject> roomButtonsDict = new Dictionary<string, GameObject>();
+		// Create a dictionary to track existing room buttons
+		Dictionary<string, GameObject> existingButtons = new Dictionary<string, GameObject>();
 
 		foreach (GameObject button in roomButtons)
 		{
 			string roomName = button.transform.GetChild(1).GetComponent<Text>().text;
-			roomButtonsDict[roomName] = button;
+			existingButtons[roomName] = button;
 		}
 
-		List<GameObject> buttonsToRemove = new List<GameObject>();
-
+		// Update or create new room buttons
 		foreach (RoomInfo room in roomList)
 		{
-			if (room.RemovedFromList || room.PlayerCount == 0 || room.Name.Contains(myUsername))
-			{
-				// Mark button for removal if the room is no longer valid
-				if (roomButtonsDict.ContainsKey(room.Name))
-				{
-					buttonsToRemove.Add(roomButtonsDict[room.Name]);
-					roomButtonsDict.Remove(room.Name);
-				}
-				continue; // Skip this room
-			}
+			if (room.RemovedFromList || room.PlayerCount == 0)
+				continue; // Skip removed or empty rooms
 
-			if (roomButtonsDict.ContainsKey(room.Name))
+			if (existingButtons.ContainsKey(room.Name))
 			{
-				// Update existing room button
-				GameObject roomButton = roomButtonsDict[room.Name];
+				// Update existing button
+				GameObject roomButton = existingButtons[room.Name];
 				roomButton.transform.GetChild(2).GetComponent<Text>().text = room.PlayerCount + "/" + room.MaxPlayers;
 			}
 			else
 			{
-				// Create new room button
+				// Create new button
 				GameObject roomButton = Instantiate(roomButtonPrefab, roomListContainer);
 				roomButton.transform.GetChild(1).GetComponent<Text>().text = room.Name;
 				roomButton.transform.GetChild(2).GetComponent<Text>().text = room.PlayerCount + "/" + room.MaxPlayers;
 				roomButton.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.Name));
 
 				roomButtons.Add(roomButton);
-				roomButtonsDict[room.Name] = roomButton;
 			}
-
-			Debug.Log("Adding/Updating Room: " + room.Name + " | Players: " + room.PlayerCount + "/" + room.MaxPlayers);
 		}
 
-		// Remove any buttons that no longer correspond to an active room
-		foreach (GameObject button in buttonsToRemove)
+		// Remove buttons for rooms that no longer exist
+		foreach (var roomName in existingButtons.Keys)
 		{
-			roomButtons.Remove(button);
-			Destroy(button);
+			if (!roomList.Any(room => room.Name == roomName))
+			{
+				Destroy(existingButtons[roomName]);
+				roomButtons.Remove(existingButtons[roomName]);
+			}
 		}
 	}
 
-	// Helper function to clear all buttons
-	void ClearRoomButtons()
-	{
-		foreach (GameObject button in roomButtons)
-		{
-			Destroy(button);
-		}
-		roomButtons.Clear();
-	}
-
-
-=======
-		Debug.Log("Received Room List Update: " + roomList.Count + " rooms found.");
-		if (roomList == null || roomList.Count == 0)
-		{
-			Debug.Log("No rooms available.");
-			return;
-		}
-
-		UpdateRoomList(roomList);
-	}
-
-	void UpdateRoomList(List<RoomInfo> roomList)
-	{
-		string myUsername = SteamFriends.GetPersonaName(); // Get Steam username
-
-		// Clear previous room buttons
-		foreach (GameObject button in roomButtons)
-		{
-			Destroy(button);
-		}
-		roomButtons.Clear();
-
-		// Populate new room list
-		foreach (RoomInfo room in roomList)
-		{
-			if (room.RemovedFromList || room.PlayerCount == 0 || room.Name.Contains(myUsername))
-				continue; // Skip the room if it includes your username
-
-			// Debugging log
-			Debug.Log("Adding Room: " + room.Name + " | Players: " + room.PlayerCount + "/" + room.MaxPlayers);
-
-			GameObject roomButton = Instantiate(roomButtonPrefab, roomListContainer);
-			roomButton.transform.GetChild(1).GetComponent<Text>().text = room.Name;
-			roomButton.transform.GetChild(2).GetComponent<Text>().text = room.PlayerCount + "/" + room.MaxPlayers;
-			roomButton.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.Name));
-			roomButtons.Add(roomButton);
-		}
-	}
-
->>>>>>> b1d3c21 (photon updates)
 	void JoinRoom(string roomName)
 	{
 		PhotonNetwork.JoinRoom(roomName);
@@ -157,10 +106,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 	public void ReturnMyWorld()
 	{
 		string username = SteamFriends.GetPersonaName();
-<<<<<<< HEAD
 		PhotonNetwork.JoinOrCreateRoom(username + "s' room", new RoomOptions { MaxPlayers = 4, IsOpen = true, IsVisible = true}, TypedLobby.Default);
-=======
-		PhotonNetwork.CreateRoom(username + "s' room");
->>>>>>> b1d3c21 (photon updates)
 	}
 }
