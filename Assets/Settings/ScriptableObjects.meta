@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Settings/ScriptableObjects.meta
 guid: c57ceedfa78c93546b05e3690c3ac74c
+========
+guid: 92350b81f0fc378449d98f33085c528b
+>>>>>>>> b1d3c21 (photon updates):Assets/PACKS.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}

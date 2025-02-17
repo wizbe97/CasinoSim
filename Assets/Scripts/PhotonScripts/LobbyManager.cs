@@ -28,6 +28,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
 	public override void OnRoomListUpdate(List<RoomInfo> roomList)
 	{
+<<<<<<< HEAD
 		string myUsername = SteamFriends.GetPersonaName(); // Get Steam username
 		Debug.Log("Received Room List Update: " + roomList.Count + " rooms found.");
 
@@ -102,6 +103,44 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 	}
 
 
+=======
+		Debug.Log("Received Room List Update: " + roomList.Count + " rooms found.");
+		if (roomList == null || roomList.Count == 0)
+		{
+			Debug.Log("No rooms available.");
+			return;
+		}
+
+		UpdateRoomList(roomList);
+	}
+
+	void UpdateRoomList(List<RoomInfo> roomList)
+	{
+		// Clear previous room buttons
+		//foreach (GameObject button in roomButtons)
+		//{
+			//Destroy(button);
+		//}
+		//roomButtons.Clear();
+
+		// Populate new room list
+		foreach (RoomInfo room in roomList)
+		{
+			//if (room.RemovedFromList || room.PlayerCount == 0)
+				//continue;
+
+			// Debugging log
+			Debug.Log("Adding Room: " + room.Name + " | Players: " + room.PlayerCount + "/" + room.MaxPlayers);
+
+			GameObject roomButton = Instantiate(roomButtonPrefab, roomListContainer);
+			roomButton.transform.GetChild(1).GetComponent<Text>().text = room.Name;
+			roomButton.transform.GetChild(2).GetComponent<Text>().text = room.PlayerCount + "/" + room.MaxPlayers;
+			roomButton.GetComponent<Button>().onClick.AddListener(() => JoinRoom(room.Name));
+			roomButtons.Add(roomButton);
+		}
+	}
+
+>>>>>>> b1d3c21 (photon updates)
 	void JoinRoom(string roomName)
 	{
 		PhotonNetwork.JoinRoom(roomName);
@@ -116,6 +155,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 	public void ReturnMyWorld()
 	{
 		string username = SteamFriends.GetPersonaName();
+<<<<<<< HEAD
 		PhotonNetwork.JoinOrCreateRoom(username + "s' room", new RoomOptions { MaxPlayers = 4, IsOpen = true, IsVisible = true}, TypedLobby.Default);
+=======
+		PhotonNetwork.CreateRoom(username + "s' room");
+>>>>>>> b1d3c21 (photon updates)
 	}
 }

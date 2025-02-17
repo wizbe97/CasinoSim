@@ -1,5 +1,10 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/PACKS/Low poly city vehicle pack/Scenes/Demo scene.unity.meta
 guid: 9fc0d4010bbf28b4594072e72b8655ab
+========
+guid: 4c50285ef2585e84c88d669d578b2d10
+folderAsset: yes
+>>>>>>>> b1d3c21 (photon updates):Assets/Scripts/PhotonScripts.meta
 DefaultImporter:
   externalObjects: {}
   userData: 
