@@ -9,7 +9,6 @@ using Photon.Realtime;
 public class InviteVan : MonoBehaviourPunCallbacks, IInteractable
 {
 	public GameObject InviteObj;
-
 	[Header("UI Settings")]
 	[SerializeField] private GameObject friendButtonPrefab; // Prefab for a button
 	[SerializeField] private Transform friendListContainer; // Parent for buttons
@@ -20,36 +19,30 @@ public class InviteVan : MonoBehaviourPunCallbacks, IInteractable
 
 	private List<GameObject> roomButtons = new List<GameObject>();
 
-	// Your Steam App ID (Replace this with your actual App ID)
-	private static readonly AppId_t GAME_APP_ID = new AppId_t(480); // Example App ID (Replace with your actual one)
-
-
-	public GameObject InviteFriendsP;
-
-
 	public void OnInteract()
-	{
+	{												
+		// Add your interaction logic here
 		InviteObj.SetActive(true);
+
 		DisplayFriends();
 	}
 
-	private void Start() {
-		InviteFriendsP.SetActive(PhotonNetwork.IsMasterClient);
+	private void Start()
+	{
 	}
 
 	private void DisplayFriends()
 	{
-		// Clear previous buttons
-		foreach (Transform child in friendListContainer)
+		foreach (GameObject go in  friendListContainer)
 		{
-			Destroy(child.gameObject);
+			if (friendListContainer.transform.childCount != 0)
+			{
+				Destroy(go.gameObject);
+			}
 		}
 
 		int friendCount = SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate);
 		Debug.Log($"Found {friendCount} friends.");
-
-		List<(CSteamID, string, EPersonaState)> onlineFriends = new List<(CSteamID, string, EPersonaState)>();
-		List<(CSteamID, string, EPersonaState)> offlineFriends = new List<(CSteamID, string, EPersonaState)>();
 
 		for (int i = 0; i < friendCount; i++)
 		{
@@ -57,52 +50,33 @@ public class InviteVan : MonoBehaviourPunCallbacks, IInteractable
 			EPersonaState friendState = SteamFriends.GetFriendPersonaState(friendSteamId);
 			string friendName = SteamFriends.GetFriendPersonaName(friendSteamId);
 
-			// Check if the friend owns the game
-			if (!SteamApps.BIsSubscribedApp(GAME_APP_ID))
-			{
-				Debug.Log($"{friendName} does not own the game. Skipping...");
-				continue; // Skip friends who don't have the game
-			}
+			Debug.Log($"Friend {i + 1}: {friendName} ({friendSteamId})");
 
+			// Instantiate friend button
+			GameObject friendButtonObj = Instantiate(friendButtonPrefab, friendListContainer);
+			friendButtonObj.GetComponentInChildren<Text>().text = friendName;
+
+			// Add listener to the button
+			Button friendButton = friendButtonObj.GetComponent<Button>();
+			friendButton.onClick.AddListener(() => SendInvite(friendName, friendSteamId));
+
+			// Check if friend is online or offline
 			if (friendState == EPersonaState.k_EPersonaStateOffline)
 			{
-				offlineFriends.Add((friendSteamId, friendName, friendState));
+				friendButton.interactable = false; // Disable button if offline
 			}
 			else
 			{
-				onlineFriends.Add((friendSteamId, friendName, friendState));
+				friendButton.interactable = true; // Enable button if online
 			}
 		}
-
-		Debug.Log($"Online Friends: {onlineFriends.Count}, Offline Friends: {offlineFriends.Count}");
-
-		// Instantiate buttons (Online first, then Offline)
-		foreach (var friend in onlineFriends)
-		{
-			CreateFriendButton(friend.Item1, friend.Item2, friend.Item3, true);
-		}
-
-		foreach (var friend in offlineFriends)
-		{
-			CreateFriendButton(friend.Item1, friend.Item2, friend.Item3, false);
-		}
-	}
-
-	private void CreateFriendButton(CSteamID friendSteamId, string friendName, EPersonaState friendState, bool isOnline)
-	{
-		GameObject friendButtonObj = Instantiate(friendButtonPrefab, friendListContainer);
-		friendButtonObj.GetComponentInChildren<Text>().text = friendName;
-
-		Button friendButton = friendButtonObj.GetComponent<Button>();
-		friendButton.onClick.AddListener(() => SendInvite(friendName, friendSteamId));
-
-		friendButton.interactable = isOnline; // Disable if offline
 	}
 
 	private void SendInvite(string friendName, CSteamID friendSteamId)
 	{
 		Debug.Log($"Sending invite to {friendName} ({friendSteamId}).");
 
+		// The room name to send in the invite
 		string roomName = PhotonNetwork.CurrentRoom?.Name;
 		if (string.IsNullOrEmpty(roomName))
 		{
@@ -110,9 +84,13 @@ public class InviteVan : MonoBehaviourPunCallbacks, IInteractable
 			return;
 		}
 
+		// Create the invite message
 		string inviteMessage = $"{SteamFriends.GetPersonaName()} invited you to join their room. Room: {roomName}";
 
+		// Convert the message to bytes
 		byte[] messageBytes = System.Text.Encoding.UTF8.GetBytes(inviteMessage);
+
+		// Send the invite message via Steam P2P
 		bool sent = SteamNetworking.SendP2PPacket(friendSteamId, messageBytes, (uint)messageBytes.Length, EP2PSend.k_EP2PSendReliable);
 
 		if (sent)
@@ -143,7 +121,7 @@ public class InviteVan : MonoBehaviourPunCallbacks, IInteractable
 	{
 		while (PhotonNetwork.InRoom)
 		{
-			yield return null;
+			yield return null; // Wait until the player leaves the current room
 		}
 		PhotonNetwork.JoinRoom(roomName);
 	}
