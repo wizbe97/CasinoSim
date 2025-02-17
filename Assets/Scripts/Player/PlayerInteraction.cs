@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
@@ -37,6 +38,11 @@ public class PlayerInteraction : MonoBehaviour
         _inputHandler = GetComponent<PlayerInputHandler>();
         _reticleUI = GetComponentInChildren<RectTransform>();
         _playerController = GetComponent<PlayerController>();
+
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            this.enabled = false;
+        }
     }
 
     private void OnEnable()
@@ -157,13 +163,13 @@ public class PlayerInteraction : MonoBehaviour
 
         if (_pickedUpObject != null)
         {
-            _currentPreview = Instantiate(_currentItem.GetPreviewPrefab(), _pickedUpObject.transform.position, _pickedUpObject.transform.rotation);
-            Destroy(_pickedUpObject);
+            _currentPreview = PhotonNetwork.Instantiate(_currentItem.GetPreviewPrefab().name, _pickedUpObject.transform.position, _pickedUpObject.transform.rotation);
+            PhotonNetwork.Destroy(_pickedUpObject);
             _pickedUpObject = null;
         }
         else
         {
-            _currentPreview = Instantiate(_currentItem.GetPreviewPrefab());
+            _currentPreview = PhotonNetwork.Instantiate(_currentItem.GetPreviewPrefab().name, Vector3.zero, Quaternion.identity);
         }
     }
 
@@ -260,12 +266,12 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (!_canPlace || _currentItem == null) return;
 
-        GameObject placedObject = Instantiate(_currentItem.GetPlacedPrefab(), _currentPreview.transform.position, _currentPreview.transform.rotation);
+        GameObject placedObject = PhotonNetwork.Instantiate(_currentItem.GetPlacedPrefab().name, _currentPreview.transform.position, _currentPreview.transform.rotation);
 
         var placedItemScript = placedObject.GetComponent<PlacedItem>();
         placedItemScript.Initialize(_currentItem, _currentItem.GetPlacementCooldown());
 
-        Destroy(_currentPreview);
+        PhotonNetwork.Destroy(_currentPreview);
         ResetPlacementState();
     }
 
@@ -282,7 +288,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (_currentPreview != null && _currentItem != null)
         {
-            GameObject box = Instantiate(_currentItem.GetCardboardBoxPrefab(), _currentPreview.transform.position, _currentPreview.transform.rotation);
+            GameObject box = PhotonNetwork.Instantiate(_currentItem.GetCardboardBoxPrefab().name, _currentPreview.transform.position, _currentPreview.transform.rotation);
 
             // Ensure the Rigidbody is kinematic before picking up
             if (box.TryGetComponent(out Rigidbody rb))
@@ -299,7 +305,7 @@ public class PlayerInteraction : MonoBehaviour
                 boxPickup.Pickup(transform);
             }
 
-            Destroy(_currentPreview);
+            PhotonNetwork.Destroy(_currentPreview);
             ResetPlacementState();
         }
     }
@@ -324,7 +330,7 @@ public class PlayerInteraction : MonoBehaviour
             if (itemInside != null)
             {
                 StartPlacement(itemInside);
-                Destroy(_heldBox);
+                PhotonNetwork.Destroy(_heldBox);
                 _heldBox = null;
             }
         }
