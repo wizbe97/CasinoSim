@@ -1,8 +1,13 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Settings/ScriptableObjects/DefaultVolumeProfile.asset.meta
 guid: c047cc1e501821748adfa970c20226fb
 NativeFormatImporter:
+========
+guid: 2efad839f4030b747858baba677dc7a8
+folderAsset: yes
+DefaultImporter:
+>>>>>>>> b1d3c21 (photon updates):Assets/Scripts/SteamScripts.meta
   externalObjects: {}
-  mainObjectFileID: 11400000
   userData: 
   assetBundleName: 
   assetBundleVariant: 
