@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 		}
 	}
 
-	private void OnEnable()
+	public override void OnEnable()
 	{
 		if (photonView.IsMine)
 		{
@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 		}
 	}
 
-	private void OnDisable()
+	public override void OnDisable()
 	{
 		if (photonView.IsMine)
 		{
@@ -67,6 +67,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 		}
 	}
 
+	[System.Obsolete]
 	private void Update()
 	{
 		if (!photonView.IsMine) return;
