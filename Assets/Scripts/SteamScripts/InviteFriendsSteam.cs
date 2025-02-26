@@ -15,6 +15,7 @@ public class InviteFriendsSteam : MonoBehaviourPunCallbacks
 	[SerializeField] private LayerMask interactableLayer; // Layer mask for interactable objects
 
 	[Header("UI Elements")]
+	public Transform inviteListHolder;
 	[SerializeField] private Transform inviteListContainer; // Parent container for invite buttons
 	[SerializeField] private GameObject inviteButtonPrefab; // Prefab for invite buttons
 
@@ -35,6 +36,30 @@ public class InviteFriendsSteam : MonoBehaviourPunCallbacks
 		}
 
 		CheckIncomingInvites();
+
+	//	if (Input.GetKeyDown(KeyCode.Q))
+		//{
+	//		if (inviteListHolder.gameObject.activeSelf)
+		//	{
+		//		inviteListHolder.gameObject.SetActive(false);
+		//	}
+		//	else
+		//	{
+		//		inviteListHolder.gameObject.SetActive(true);
+		//	}
+		//}
+	}
+
+	public void NotifactionsCheck()
+	{
+		if (inviteListHolder.gameObject.activeSelf)
+		{
+			inviteListHolder.gameObject.SetActive(false);
+		}
+		else
+		{
+			inviteListHolder.gameObject.SetActive(true);
+		}
 	}
 
 	private void CheckForObject()
