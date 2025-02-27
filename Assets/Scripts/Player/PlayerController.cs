@@ -98,16 +98,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
 	private void FixedUpdate()
 	{
-		if (FindObjectOfType<Chatsystem>())
-		{
-			if (!FindObjectOfType<Chatsystem>().canMove)
-			{
-				return;
-			}
-		}
-
 		if (photonView.IsMine)
 		{
+			if (FindObjectOfType<Chatsystem>())
+			{
+				if (!FindObjectOfType<Chatsystem>().canMove)
+				{
+					return;
+				}
+			}
 			HandleMovement();
 		}
 		else

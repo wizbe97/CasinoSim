@@ -18,12 +18,25 @@ public class Chatsystem : MonoBehaviour
 
 	public bool canMove = false;
 
-	public GameObject _eventS;
+	public Text _header;
 
+
+	private void Awake()
+	{
+		// Local Check
+		if (!GetComponent<PhotonView>().IsMine) {
+			return;
+		}
+
+		_header = FindObjectOfType<chatBox>()._header;
+		_box = FindObjectOfType<chatBox>()._box;
+		container = FindObjectOfType<chatBox>().container;
+		_field = FindObjectOfType<chatBox>()._field;
+	}
 
 	private void Start()
 	{
-		_eventS.SetActive(GetComponent<PhotonView>().IsMine);
+		_header.text = SteamFriends.GetPersonaName() + "'s World";
 	}
 
 	private void Update()
@@ -74,12 +87,14 @@ public class Chatsystem : MonoBehaviour
 
 	private void SendMessage()
 	{
-
-		// Deselect the input field when Enter is pressed
-		TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
-		inputField.DeactivateInputField();
-		EventSystem.current.SetSelectedGameObject(null); // Deselect UI element
-		canMove = true;
+		if (GetComponent<PhotonView>().IsMine)
+		{
+			// Deselect the input field when Enter is pressed
+			TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
+			inputField.DeactivateInputField();
+			EventSystem.current.SetSelectedGameObject(null); // Deselect UI element
+			canMove = true;
+		}
 
 		GetComponent<PhotonView>().RPC("SendRPC", RpcTarget.AllBuffered, SteamFriends.GetPersonaName() + ": " + _field.text);
 	}
