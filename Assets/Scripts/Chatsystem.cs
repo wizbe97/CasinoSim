@@ -20,6 +20,8 @@ public class Chatsystem : MonoBehaviour
 
 	public Text _header;
 
+	public int maxMessages;
+
 
 	private void Awake()
 	{
@@ -100,5 +102,12 @@ public class Chatsystem : MonoBehaviour
 	{
 		GameObject _c = Instantiate(_card, container);
 		_c.GetComponentInChildren<UnityEngine.UI.Text>().text = message;
+
+		if (container.childCount > maxMessages)
+		{
+			Destroy(container.GetChild(0).gameObject); // Remove the oldest message
+		}
+
+		Canvas.ForceUpdateCanvases();
 	}
 }

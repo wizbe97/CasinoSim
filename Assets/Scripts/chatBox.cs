@@ -8,6 +8,7 @@ public class chatBox : MonoBehaviour
 {
 	public GameObject _box = null;
 	public Transform container;
+	public RectTransform chatContent;
 
 	public TMP_InputField _field = null;
 

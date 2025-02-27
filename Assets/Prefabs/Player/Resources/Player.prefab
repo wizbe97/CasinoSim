@@ -1582,6 +1582,7 @@ MonoBehaviour:
   _field: {fileID: 0}
   canMove: 0
   _header: {fileID: 0}
+  maxMessages: 4
 --- !u!1 &3714815447972551337
 GameObject:
   m_ObjectHideFlags: 0
