@@ -4262,6 +4262,7 @@ GameObject:
   - component: {fileID: 4738512009617603700}
   - component: {fileID: 9041221920811339292}
   - component: {fileID: 7558179525103485711}
+  - component: {fileID: 8125395659540684885}
   m_Layer: 5
   m_Name: MenuCanvas
   m_TagString: Untagged
@@ -4354,6 +4355,47 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8125395659540684885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8076443823980550317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d47f4e40bb8e5b740af125bd5f9ab973, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuPanel: {fileID: 1927921882489673232}
+  newGameButton: {fileID: 3745934043229142616}
+  loadGameButton: {fileID: 3951972736612199693}
+  chooseSlotPanel: {fileID: 6667046985669277093}
+  chooseSlotBackButton: {fileID: 651978571892817890}
+  chooseSlotButtons:
+  - {fileID: 5873573409482325807}
+  - {fileID: 7281988419220383347}
+  - {fileID: 8934324590579611440}
+  - {fileID: 2076079637851526203}
+  chooseSlotLabels:
+  - {fileID: 2911005836163236156}
+  - {fileID: 6647609915929803256}
+  - {fileID: 6131375553861845513}
+  - {fileID: 4590023129987248692}
+  autoSaveSlotText: {fileID: 4668706333953614583}
+  loadGameBackButton: {fileID: 6372025114151150683}
+  loadGamePanel: {fileID: 415180583652949664}
+  loadSlotButtons:
+  - {fileID: 3765074821834918185}
+  - {fileID: 8421477341558319484}
+  - {fileID: 5248199422148529328}
+  - {fileID: 8018005489537714447}
+  removeSlotButtons:
+  - {fileID: 1529696349969205588}
+  - {fileID: 5939192951223515559}
+  - {fileID: 8348568213314053419}
+  - {fileID: 8516350213632022425}
+  gameManager: {fileID: 11400000, guid: 62787c92ef19748418e5f39a21f17c45, type: 2}
 --- !u!1 &8328320600208844689
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,8 +2,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Photon.Pun;
 
-public class GameplayUI : MonoBehaviour
+public class GameplayUI : MonoBehaviourPunCallbacks
 {
     [Header("PAUSE")]
     public GameObject pausePanel;
@@ -19,6 +20,7 @@ public class GameplayUI : MonoBehaviour
     public Button menuConfirmButton;
 
     public GameManagerSO gameManager;
+    private PlayerUI playerUI; // Reference to PlayerUI
 
     void Start()
     {
@@ -28,6 +30,7 @@ public class GameplayUI : MonoBehaviour
         menuConfirmButton.onClick.AddListener(MenuConfirmClick);
         backButton.onClick.AddListener(ConfirmBackClick);
         saveAndQuitButton.onClick.AddListener(SaveAndQuit);
+        playerUI = FindFirstObjectByType<PlayerUI>();
 
         UpdateSlotButton(false);
     }
@@ -57,6 +60,9 @@ public class GameplayUI : MonoBehaviour
     {
         Time.timeScale = 1;
         pausePanel.SetActive(false);
+        if (photonView.IsMine)
+            playerUI.HideCursor();
+
     }
 
     private void PauseGame()
@@ -64,6 +70,8 @@ public class GameplayUI : MonoBehaviour
         Time.timeScale = 0;
         UpdateSlotButton(false);
         pausePanel.SetActive(true);
+        if (photonView.IsMine)
+            playerUI.ShowCursor();
     }
 
     private void Save()

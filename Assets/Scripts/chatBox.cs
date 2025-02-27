@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class chatBox : MonoBehaviour
+public class ChatBox : MonoBehaviour
 {
 	public GameObject _box = null;
 	public Transform container;

@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd3db0249ef3b644badb8abe7eb95947, type: 3}
   m_Name: PlayerBalance
   m_EditorClassIdentifier: 
-  balance: 96250
+  balance: 1000
   startingBalace: 5000
