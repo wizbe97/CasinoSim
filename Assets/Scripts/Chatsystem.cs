@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using TMPro;
 using Steamworks;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.DebugUI;
 
 public class Chatsystem : MonoBehaviour
 {
@@ -23,15 +20,15 @@ public class Chatsystem : MonoBehaviour
 
 	private void Awake()
 	{
-		_header = FindObjectOfType<chatBox>()._header;
-		_box = FindObjectOfType<chatBox>()._box;
-		container = FindObjectOfType<chatBox>().container;
-		_field = FindObjectOfType<chatBox>()._field;
+		_header = FindFirstObjectByType<chatBox>()._header;
+		_box = FindFirstObjectByType<chatBox>()._box;
+		container = FindFirstObjectByType<chatBox>().container;
+		_field = FindFirstObjectByType<chatBox>()._field;
 	}
 
 	private void Start()
 	{
-		_header.text = PhotonNetwork.CurrentRoom.Name + "'s World";
+		_header.text = PhotonNetwork.CurrentRoom.Name;
 	}
 
 	private void Update()
