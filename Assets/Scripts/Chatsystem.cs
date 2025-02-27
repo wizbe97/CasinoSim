@@ -23,11 +23,6 @@ public class Chatsystem : MonoBehaviour
 
 	private void Awake()
 	{
-		// Local Check
-		if (!GetComponent<PhotonView>().IsMine) {
-			return;
-		}
-
 		_header = FindObjectOfType<chatBox>()._header;
 		_box = FindObjectOfType<chatBox>()._box;
 		container = FindObjectOfType<chatBox>().container;
