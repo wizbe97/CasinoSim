@@ -18,6 +18,14 @@ public class Chatsystem : MonoBehaviour
 
 	public bool canMove = false;
 
+	public GameObject _eventS;
+
+
+	private void Start()
+	{
+		_eventS.SetActive(GetComponent<PhotonView>().IsMine);
+	}
+
 	private void Update()
 	{
 		// Local Check
