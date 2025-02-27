@@ -75,6 +75,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 		{
 			if (!FindObjectOfType<Chatsystem>().canMove)
 			{
+				moveInput = new Vector2(0, 0);
 				return;
 			}
 		}
@@ -97,6 +98,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
 	private void FixedUpdate()
 	{
+		if (FindObjectOfType<Chatsystem>())
+		{
+			if (!FindObjectOfType<Chatsystem>().canMove)
+			{
+				return;
+			}
+		}
+
 		if (photonView.IsMine)
 		{
 			HandleMovement();
@@ -158,6 +167,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
 	private void HandleJump()
 	{
+		if (FindObjectOfType<Chatsystem>())
+		{
+			if (!FindObjectOfType<Chatsystem>().canMove)
+			{
+				return;
+			}
+		}
+
 		if (!enableJump || !isGrounded) return;
 
 		rb.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
