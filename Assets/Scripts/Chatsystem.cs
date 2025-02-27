@@ -92,6 +92,7 @@ public class Chatsystem : MonoBehaviour
 		}
 
 		GetComponent<PhotonView>().RPC("SendRPC", RpcTarget.AllBuffered, SteamFriends.GetPersonaName() + ": " + _field.text);
+		_field.text = null;
 	}
 
 	[PunRPC]
@@ -99,6 +100,5 @@ public class Chatsystem : MonoBehaviour
 	{
 		GameObject _c = Instantiate(_card, container);
 		_c.GetComponentInChildren<UnityEngine.UI.Text>().text = message;
-		_field.text = null;
 	}
 }
