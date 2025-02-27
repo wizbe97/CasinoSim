@@ -36,7 +36,7 @@ public class Chatsystem : MonoBehaviour
 
 	private void Start()
 	{
-		_header.text = SteamFriends.GetPersonaName() + "'s World";
+		_header.text = PhotonNetwork.CurrentRoom.Name + "'s World";
 	}
 
 	private void Update()
