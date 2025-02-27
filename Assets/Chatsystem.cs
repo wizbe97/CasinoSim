@@ -6,6 +6,7 @@ using TMPro;
 using Steamworks;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class Chatsystem : MonoBehaviour
 {
@@ -15,12 +16,24 @@ public class Chatsystem : MonoBehaviour
 
 	public TMP_InputField _field = null;
 
+	public bool canMove = false;
 
 	private void Update()
 	{
 		// Local Check
 		if (!GetComponent<PhotonView>().IsMine) {
 			return;
+		}
+
+		// Check if the active UI element is an InputField
+		if (EventSystem.current.currentSelectedGameObject != null)
+		{
+			TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
+			canMove = inputField == null; // Disable movement if an InputField is selected
+		}
+		else
+		{
+			canMove = true;
 		}
 
 		if (Input.GetKeyDown(KeyCode.T))
@@ -53,6 +66,13 @@ public class Chatsystem : MonoBehaviour
 
 	private void SendMessage()
 	{
+
+		// Deselect the input field when Enter is pressed
+		TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
+		inputField.DeactivateInputField();
+		EventSystem.current.SetSelectedGameObject(null); // Deselect UI element
+		canMove = true;
+
 		GetComponent<PhotonView>().RPC("SendRPC", RpcTarget.AllBuffered, SteamFriends.GetPersonaName() + ": " + _field.text);
 	}
 

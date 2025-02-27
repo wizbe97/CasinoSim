@@ -2119,6 +2119,7 @@ MonoBehaviour:
   container: {fileID: 4259634992789350712}
   _card: {fileID: 8752843096651809418, guid: 0bb810423a1b3f3468eabe5f872a959b, type: 3}
   _field: {fileID: 4003563942332810160}
+  canMove: 0
 --- !u!1 &3714815447972551337
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using UnityEditor.VersionControl;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
@@ -69,6 +70,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 	private void Update()
 	{
 		if (!photonView.IsMine) return;
+
+		if (FindObjectOfType<Chatsystem>())
+		{
+			if (!FindObjectOfType<Chatsystem>().canMove)
+			{
+				return;
+			}
+		}
 
 		moveInput = inputHandler.MoveInput;
 		lookInput = inputHandler.LookInput;
