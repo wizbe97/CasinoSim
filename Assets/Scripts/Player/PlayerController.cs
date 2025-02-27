@@ -71,9 +71,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 	{
 		if (!photonView.IsMine) return;
 
-		if (FindObjectOfType<Chatsystem>())
+		if (GetComponent<Chatsystem>())
 		{
-			if (!FindObjectOfType<Chatsystem>().canMove)
+			if (!GetComponent<Chatsystem>().canMove)
 			{
 				moveInput = new Vector2(0, 0);
 				return;
@@ -100,9 +100,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 	{
 		if (photonView.IsMine)
 		{
-			if (FindObjectOfType<Chatsystem>())
+			if (GetComponent<Chatsystem>())
 			{
-				if (!FindObjectOfType<Chatsystem>().canMove)
+				if (!GetComponent<Chatsystem>().canMove)
 				{
 					return;
 				}
@@ -166,9 +166,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
 	private void HandleJump()
 	{
-		if (FindObjectOfType<Chatsystem>())
+		if (GetComponent<Chatsystem>())
 		{
-			if (!FindObjectOfType<Chatsystem>().canMove)
+			if (!GetComponent<Chatsystem>().canMove)
 			{
 				return;
 			}
