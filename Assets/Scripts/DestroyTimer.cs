@@ -6,7 +6,7 @@ public class DestroyTimer : MonoBehaviour
 {
 	private void Start()
 	{
-		Invoke("Destroy", 7f);
+		Invoke("Destroy", 15f);
 	}
 	private void Destroy()
 	{
