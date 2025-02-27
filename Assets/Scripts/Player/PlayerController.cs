@@ -76,14 +76,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 		HandleCameraLook();
 		CheckGround();
 
-		//if (FindObjectOfType<InviteVan>().InviteObj.activeSelf || FindObjectOfType<Phone>())
-		//{
-		//	UnLockCursor();
-		//}
-		//else
-		//{
-		//	LockCursor();
-		//}
+		if (FindObjectOfType<InviteVan>().InviteObj.activeSelf || FindObjectOfType<Phone>())
+		{
+			UnLockCursor();
+		}
+		else
+		{
+			LockCursor();
+		}
 	}
 
 	private void FixedUpdate()
@@ -171,8 +171,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 	}
 	private void UnLockCursor()
 	{
-	//	Cursor.lockState = CursorLockMode.None;
-	//	Cursor.visible = true;
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
 	}
 
 	// Photon synchronization

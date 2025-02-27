@@ -37,9 +37,9 @@ public class InviteFriendsSteam : MonoBehaviourPunCallbacks
 
 		CheckIncomingInvites();
 
-	//	if (Input.GetKeyDown(KeyCode.Q))
+		//if (Input.GetKeyDown(KeyCode.Tab))
 		//{
-	//		if (inviteListHolder.gameObject.activeSelf)
+		//	if (inviteListHolder.gameObject.activeSelf)
 		//	{
 		//		inviteListHolder.gameObject.SetActive(false);
 		//	}

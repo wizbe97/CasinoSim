@@ -4,6 +4,8 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 using Steamworks;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class Chatsystem : MonoBehaviour
 {
@@ -23,14 +25,17 @@ public class Chatsystem : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.T))
 		{
-			if (_box.activeSelf)
-			{
-				_box.SetActive(false);
-			}
-			else
-			{
-				_box.SetActive(true);
-			}
+			//if (_box.activeSelf)
+			//{
+			//	_box.SetActive(false);
+			//}
+			//else
+			//{
+			//	_box.SetActive(true);
+			//}
+
+			EventSystem.current.SetSelectedGameObject(_field.gameObject);
+			_field.ActivateInputField(); // Makes it ready for typing
 		}
 
 		if (!_box.activeSelf) {
