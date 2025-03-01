@@ -15,9 +15,22 @@ public class PlayerListManager : MonoBehaviourPunCallbacks
 		UpdatePlayerList(); // Initialize the list on start
 	}
 
+	public override void OnEnable()
+	{
+		base.OnEnable();
+		PhotonNetwork.NetworkingClient.EventReceived += OnPlayerListChanged;
+	}
+
+	public override void OnDisable()
+	{
+		base.OnDisable();
+		PhotonNetwork.NetworkingClient.EventReceived -= OnPlayerListChanged;
+	}
+
 	public override void OnPlayerEnteredRoom(Player newPlayer)
 	{
 		UpdatePlayerList();
+		photonView.RPC(nameof(RPC_UpdatePlayerList), RpcTarget.All);
 	}
 
 	public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -27,6 +40,13 @@ public class PlayerListManager : MonoBehaviourPunCallbacks
 			Destroy(playerItems[otherPlayer.ActorNumber]); // Remove UI
 			playerItems.Remove(otherPlayer.ActorNumber);
 		}
+		UpdatePlayerList();
+		photonView.RPC(nameof(RPC_UpdatePlayerList), RpcTarget.All);
+	}
+
+	[PunRPC]
+	private void RPC_UpdatePlayerList()
+	{
 		UpdatePlayerList();
 	}
 
@@ -56,6 +76,7 @@ public class PlayerListManager : MonoBehaviourPunCallbacks
 			// Show Kick Button only if Master Client and not kicking themselves
 			Button kickButton = playerItem.transform.GetComponentInChildren<Button>();
 			kickButton.gameObject.SetActive(PhotonNetwork.IsMasterClient && !player.IsMasterClient);
+			kickButton.onClick.RemoveAllListeners(); // Prevent duplicate listeners
 			kickButton.onClick.AddListener(() => KickPlayer(player));
 
 			playerItems[player.ActorNumber] = playerItem;
@@ -69,5 +90,10 @@ public class PlayerListManager : MonoBehaviourPunCallbacks
 			PhotonNetwork.CloseConnection(playerToKick);
 			Debug.Log($"Kicked {playerToKick.NickName}");
 		}
+	}
+
+	private void OnPlayerListChanged(ExitGames.Client.Photon.EventData obj)
+	{
+		UpdatePlayerList();
 	}
 }

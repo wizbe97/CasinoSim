@@ -54,7 +54,7 @@ public class Chatsystem : MonoBehaviour
 			canMove = true;
 		}
 
-		if (Input.GetKeyDown(KeyCode.T))
+		if (Input.inputString == "T") // Checks for capital "T"
 		{
 			if (connected_players.activeSelf)
 			{

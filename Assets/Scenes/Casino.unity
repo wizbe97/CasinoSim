@@ -4409,6 +4409,7 @@ GameObject:
   - component: {fileID: 1865207138}
   - component: {fileID: 1865207140}
   - component: {fileID: 1865207141}
+  - component: {fileID: 1865207142}
   m_Layer: 0
   m_Name: PhotonManager
   m_TagString: Untagged
@@ -4474,6 +4475,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerListParent: {fileID: 1758817729}
   playerItemPrefab: {fileID: 9217392895434969930, guid: b991fb9d54fd62e418f187b05db777ff, type: 3}
+--- !u!114 &1865207142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1865207137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 3
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &1904111624
 GameObject:
   m_ObjectHideFlags: 0
