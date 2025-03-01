@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8955485635382149498}
   - component: {fileID: 140438122247404111}
   - component: {fileID: 4450354233874641653}
-  m_Layer: 10
+  m_Layer: 6
   m_Name: Roulette_Table
   m_TagString: PlacedObject
   m_Icon: {fileID: 0}
@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 6290100051023308885}
   - component: {fileID: 1956805396801754420}
   - component: {fileID: 1751057947653051997}
-  m_Layer: 10
+  m_Layer: 6
   m_Name: Table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,7 +224,7 @@ GameObject:
   - component: {fileID: 7941066353812150890}
   - component: {fileID: 1101148032831521591}
   - component: {fileID: 8277048033649175470}
-  m_Layer: 10
+  m_Layer: 6
   m_Name: Roulette
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -311,7 +311,7 @@ GameObject:
   - component: {fileID: 1268646005722331093}
   - component: {fileID: 1264438011768550353}
   - component: {fileID: 6098740770861159151}
-  m_Layer: 10
+  m_Layer: 6
   m_Name: Dome
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -418,7 +418,7 @@ GameObject:
   - component: {fileID: 1074794124223576487}
   - component: {fileID: 7829184740837783928}
   - component: {fileID: 2576330777513617967}
-  m_Layer: 10
+  m_Layer: 6
   m_Name: Roulette
   m_TagString: Untagged
   m_Icon: {fileID: 0}

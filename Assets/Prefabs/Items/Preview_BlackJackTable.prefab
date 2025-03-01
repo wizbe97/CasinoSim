@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6034920242355260824}
   - component: {fileID: 8982660561717182453}
   - component: {fileID: 8928414578883788510}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Chair (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,6 +59,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -118,7 +120,7 @@ GameObject:
   - component: {fileID: 807190146443466409}
   - component: {fileID: 1358575938273977708}
   - component: {fileID: 723129773408701274}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Chair (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -165,6 +167,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -224,7 +228,7 @@ GameObject:
   - component: {fileID: 5827763881981130737}
   - component: {fileID: 7712288784586586375}
   - component: {fileID: 4891086693847855893}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Chair (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -271,6 +275,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -330,7 +336,7 @@ GameObject:
   - component: {fileID: 4498113243063653065}
   - component: {fileID: 4469329968892968768}
   - component: {fileID: 3656980118830767842}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Preview_BlackJackTable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -384,6 +390,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -442,7 +450,7 @@ GameObject:
   - component: {fileID: 2255750866313824728}
   - component: {fileID: 6048152550683282444}
   - component: {fileID: 9148608488745285836}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Chair
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -489,6 +497,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -548,7 +558,7 @@ GameObject:
   - component: {fileID: 5950368736140551953}
   - component: {fileID: 9202379497612788706}
   - component: {fileID: 2441620312056439857}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Chair (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -595,6 +605,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -654,7 +666,7 @@ GameObject:
   - component: {fileID: 4509556827288446336}
   - component: {fileID: 7791994439784916622}
   - component: {fileID: 2604391573734440138}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Chair (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -701,6 +713,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -760,7 +774,7 @@ GameObject:
   - component: {fileID: 2323549644625302779}
   - component: {fileID: 1321154817793109834}
   - component: {fileID: 3204208272262690889}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Chair (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -807,6 +821,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

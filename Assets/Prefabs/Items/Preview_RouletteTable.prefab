@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3360946056373845205}
   - component: {fileID: 2949866784053161531}
   - component: {fileID: 849611525418117014}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Dome
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -58,6 +58,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -94,7 +96,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2154966638406410119}
   - component: {fileID: 8100515117270421573}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Preview_RouletteTable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151,7 +153,7 @@ GameObject:
   - component: {fileID: 7995075029309962553}
   - component: {fileID: 2551259007845552364}
   - component: {fileID: 2535020986335827210}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Table
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -198,6 +200,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -234,7 +238,7 @@ GameObject:
   - component: {fileID: 7365971940169588473}
   - component: {fileID: 1151216192638702759}
   - component: {fileID: 3638140772057657121}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Roulette
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -281,6 +285,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -317,7 +323,7 @@ GameObject:
   - component: {fileID: 1445581998763694955}
   - component: {fileID: 8388877604100752157}
   - component: {fileID: 8190011185485645722}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Roulette
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -365,6 +371,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

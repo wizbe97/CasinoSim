@@ -25,7 +25,7 @@ namespace Photon.Chat.Demo
             #if UNITY_6000_0_OR_NEWER
             this.chatNewComponent = FindFirstObjectByType<ChatGui>();
             #else
-            this.chatNewComponent = FindObjectOfType<ChatGui>();
+            this.chatNewComponent = FindFirstObjectByType<ChatGui>();
             #endif
 
             string prefsName = PlayerPrefs.GetString(UserNamePlayerPref);
@@ -50,7 +50,7 @@ namespace Photon.Chat.Demo
             #if UNITY_6000_0_OR_NEWER
             ChatGui chatNewComponent = FindFirstObjectByType<ChatGui>();
             #else
-            ChatGui chatNewComponent = FindObjectOfType<ChatGui>();
+            ChatGui chatNewComponent = FindFirstObjectByType<ChatGui>();
             #endif
 
             chatNewComponent.UserName = this.idInput.text.Trim();

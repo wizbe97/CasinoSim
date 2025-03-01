@@ -28,7 +28,7 @@ namespace Photon.Chat.Demo
             #if UNITY_6000_0_OR_NEWER
             ChatGui handler = FindFirstObjectByType<ChatGui>();
             #else
-            ChatGui handler = FindObjectOfType<ChatGui>();
+            ChatGui handler = FindFirstObjectByType<ChatGui>();
             #endif
 
             handler.ShowChannel(this.Channel);

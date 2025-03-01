@@ -30,7 +30,7 @@ namespace Photon.Chat.UtilityScripts
             #if UNITY_6000_0_OR_NEWER
             EventSystem sceneEventSystem = FindFirstObjectByType<EventSystem>();
             #else
-            EventSystem sceneEventSystem = FindObjectOfType<EventSystem>();
+            EventSystem sceneEventSystem = FindFirstObjectByType<EventSystem>();
             #endif
 
             if (sceneEventSystem == null)

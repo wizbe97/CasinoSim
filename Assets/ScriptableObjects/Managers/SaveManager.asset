@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd3db0249ef3b644badb8abe7eb95947, type: 3}
-  m_Name: PlayerBalance
+  m_Script: {fileID: 11500000, guid: 5d1816c10e1c90d4c8b1b6e77203def2, type: 3}
+  m_Name: SaveManager
   m_EditorClassIdentifier: 
-  balance: 96250
-  startingBalace: 5000
+  gameManager: {fileID: 11400000, guid: 62787c92ef19748418e5f39a21f17c45, type: 2}
+  currentSlot: 1
