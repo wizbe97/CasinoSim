@@ -21,6 +21,8 @@ public class Chatsystem : MonoBehaviour
 
 	public GameObject connected_players;
 
+	public bool isTyping = false;
+
 
 	private void Awake()
 	{
@@ -43,6 +45,8 @@ public class Chatsystem : MonoBehaviour
 			return;
 		}
 
+		isTyping = !canMove;
+
 		// Check if the active UI element is an InputField
 		if (EventSystem.current.currentSelectedGameObject != null)
 		{
@@ -54,13 +58,23 @@ public class Chatsystem : MonoBehaviour
 			canMove = true;
 		}
 
-		if (Input.inputString == "T") // Checks for capital "T"
+        if (Input.GetKeyDown(KeyCode.Escape) && EventSystem.current.currentSelectedGameObject != null)
+        {
+			// Deselect the input field when Enter is pressed
+			TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
+		    inputField.DeactivateInputField();
+			EventSystem.current.SetSelectedGameObject(null); // Deselect UI element
+			canMove = true;
+
+			connected_players.SetActive(false);
+			EventSystem.current.SetSelectedGameObject(null); // Deselect any UI element
+			_field.DeactivateInputField(); // Stop editing
+		}
+
+		if (Input.GetKeyDown(KeyCode.Return) && _field.text.Length == 0)
 		{
 			if (connected_players.activeSelf)
 			{
-				connected_players.SetActive(false);
-				EventSystem.current.SetSelectedGameObject(null); // Deselect any UI element
-				_field.DeactivateInputField(); // Stop editing
 			}
 			else
 			{

@@ -1584,6 +1584,7 @@ MonoBehaviour:
   _header: {fileID: 0}
   maxMessages: 4
   connected_players: {fileID: 0}
+  isTyping: 0
 --- !u!1 &3714815447972551337
 GameObject:
   m_ObjectHideFlags: 0

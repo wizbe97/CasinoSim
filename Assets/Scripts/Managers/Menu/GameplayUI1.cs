@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Photon.Pun;
+using UnityEditor.VersionControl;
 
 public class GameplayUI : MonoBehaviourPunCallbacks
 {
@@ -43,7 +44,7 @@ public class GameplayUI : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && !FindObjectOfType<Chatsystem>().isTyping)
         {
             if (pausePanel.activeSelf)
             {
