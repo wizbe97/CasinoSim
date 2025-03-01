@@ -118,4 +118,19 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 		string username = SteamFriends.GetPersonaName();
 		PhotonNetwork.JoinOrCreateRoom(username + "s' room", new RoomOptions { MaxPlayers = 4, IsOpen = true, IsVisible = true}, TypedLobby.Default);
 	}
+
+	public void RefreshRoomList()
+	{
+		if (PhotonNetwork.InLobby)
+		{
+			PhotonNetwork.LeaveLobby();
+			PhotonNetwork.JoinLobby();
+			Debug.Log("Refreshing Room List...");
+		}
+		else
+		{
+			Debug.Log("Not in a lobby. Joining now...");
+			PhotonNetwork.JoinLobby();
+		}
+	}
 }

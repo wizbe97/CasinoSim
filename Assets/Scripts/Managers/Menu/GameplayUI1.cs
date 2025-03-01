@@ -60,8 +60,8 @@ public class GameplayUI : MonoBehaviourPunCallbacks
     {
         Time.timeScale = 1;
         pausePanel.SetActive(false);
-        if (photonView.IsMine)
-            playerUI.HideCursor();
+       // if (photonView.IsMine)
+       //     playerUI.HideCursor();
 
     }
 
@@ -70,8 +70,8 @@ public class GameplayUI : MonoBehaviourPunCallbacks
         Time.timeScale = 0;
         UpdateSlotButton(false);
         pausePanel.SetActive(true);
-        if (photonView.IsMine)
-            playerUI.ShowCursor();
+        //if (photonView.IsMine)
+         //   playerUI.ShowCursor();
     }
 
     private void Save()

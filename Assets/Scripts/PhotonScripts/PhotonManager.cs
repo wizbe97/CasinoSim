@@ -87,4 +87,26 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		PhotonNetwork.JoinLobby();
 		SceneManager.LoadScene(1);
 	}
+
+	public override void OnMasterClientSwitched(Player newMasterClient)
+	{
+		// Check if the old Master Client has left
+		if (PhotonNetwork.IsMasterClient == false)
+		{
+			Debug.Log("Master Client has left. Closing room and making all clients leave.");
+
+			// Close the room so no new players can join
+			PhotonNetwork.CurrentRoom.IsOpen = false;
+			PhotonNetwork.CurrentRoom.IsVisible = false;
+
+			// Make all clients leave
+			PhotonNetwork.LeaveRoom();
+		}
+	}
+
+	public override void OnLeftRoom()
+	{
+		// Load a different scene or return to the main menu
+		PhotonNetwork.LoadLevel(0); // Replace "MainMenu" with your scene name
+	}
 }
