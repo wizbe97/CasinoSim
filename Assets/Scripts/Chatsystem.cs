@@ -87,11 +87,15 @@ public class Chatsystem : MonoBehaviour
 	{
 		if (GetComponent<PhotonView>().IsMine)
 		{
+			// Select the input field Again when Enter is pressed
+			EventSystem.current.SetSelectedGameObject(_field.gameObject);
+			_field.ActivateInputField(); // Makes it ready for typing
+
 			// Deselect the input field when Enter is pressed
-			TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
-			inputField.DeactivateInputField();
-			EventSystem.current.SetSelectedGameObject(null); // Deselect UI element
-			canMove = true;
+			//TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
+			//inputField.DeactivateInputField();
+			//EventSystem.current.SetSelectedGameObject(null); // Deselect UI element
+			//canMove = true;
 		}
 
 		GetComponent<PhotonView>().RPC("SendRPC", RpcTarget.AllBuffered, SteamFriends.GetPersonaName() + ": " + _field.text);

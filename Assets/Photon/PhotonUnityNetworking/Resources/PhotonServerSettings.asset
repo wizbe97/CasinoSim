@@ -43,6 +43,7 @@ MonoBehaviour:
   - ShowLeaveMessage
   - ShowMasterLeftMessage
   - BroadcastMessage
+  - RPC_UpdatePlayerList
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
