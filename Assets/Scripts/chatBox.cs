@@ -13,4 +13,6 @@ public class chatBox : MonoBehaviour
 	public TMP_InputField _field = null;
 
 	public Text _header;
+
+	public GameObject connected_players;
 }

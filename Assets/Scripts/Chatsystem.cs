@@ -19,6 +19,8 @@ public class Chatsystem : MonoBehaviour
 
 	public int maxMessages;
 
+	public GameObject connected_players;
+
 
 	private void Awake()
 	{
@@ -26,6 +28,7 @@ public class Chatsystem : MonoBehaviour
 		_box = FindFirstObjectByType<chatBox>()._box;
 		container = FindFirstObjectByType<chatBox>().container;
 		_field = FindFirstObjectByType<chatBox>()._field;
+		connected_players = FindFirstObjectByType<chatBox>().connected_players;
 	}
 
 	private void Start()
@@ -53,17 +56,18 @@ public class Chatsystem : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.T))
 		{
-			//if (_box.activeSelf)
-			//{
-			//	_box.SetActive(false);
-			//}
-			//else
-			//{
-			//	_box.SetActive(true);
-			//}
-
-			EventSystem.current.SetSelectedGameObject(_field.gameObject);
-			_field.ActivateInputField(); // Makes it ready for typing
+			if (connected_players.activeSelf)
+			{
+				connected_players.SetActive(false);
+				EventSystem.current.SetSelectedGameObject(null); // Deselect any UI element
+				_field.DeactivateInputField(); // Stop editing
+			}
+			else
+			{
+				connected_players.SetActive(true);
+				EventSystem.current.SetSelectedGameObject(_field.gameObject);
+				_field.ActivateInputField(); // Makes it ready for typing
+			}
 		}
 
 		if (!_box.activeSelf) {

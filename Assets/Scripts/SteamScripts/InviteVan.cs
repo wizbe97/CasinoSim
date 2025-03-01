@@ -150,13 +150,21 @@ public class InviteVan : MonoBehaviourPunCallbacks, IInteractable
 
 	public void OpenRoom()
 	{
-		PhotonNetwork.CurrentRoom.IsOpen = true;
-		PhotonNetwork.CurrentRoom.IsVisible = true;
+		if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
+		{
+			PhotonNetwork.CurrentRoom.IsOpen = true;   // Players can join again
+			PhotonNetwork.CurrentRoom.IsVisible = true; // The room appears in the lobby
+		}
+
 	}
 
 	public void CloseRoom()
 	{
-		PhotonNetwork.CurrentRoom.IsOpen = false;
-		PhotonNetwork.CurrentRoom.IsVisible = false;
+		if (PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient)
+		{
+			PhotonNetwork.CurrentRoom.IsOpen = false;   // No one can join now
+			PhotonNetwork.CurrentRoom.IsVisible = false; // The room is hidden from lobby
+		}
+
 	}
 }

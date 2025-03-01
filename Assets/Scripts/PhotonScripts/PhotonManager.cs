@@ -14,6 +14,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	private Dictionary<string, RoomInfo> roomList = new Dictionary<string, RoomInfo>();
 
+	public GameObject EscPanel = null;
+
 
 	private void Start()
 	{
@@ -29,6 +31,21 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		}
 	}
 
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			if (EscPanel.activeSelf)
+			{
+				EscPanel.SetActive(false);
+			}
+			else
+			{
+				EscPanel.SetActive(true);
+			}
+		}
+	}
+
 	public override void OnConnectedToMaster()
 	{
 		// Join the lobby to receive room list updates
@@ -38,8 +55,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	public override void OnJoinedLobby()
 	{
 		RoomOptions roomOptions = new RoomOptions();
-		roomOptions.IsVisible = true; // Ensure the room is visible
-		roomOptions.IsOpen = true; // Ensure the room is open
+		roomOptions.IsVisible = false; // Ensure the room is visible
+		roomOptions.IsOpen = false; // Ensure the room is open
 		roomOptions.MaxPlayers = 4;
 
 		string username = SteamFriends.GetPersonaName();
@@ -61,6 +78,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	public override void OnJoinedRoom()
 	{
+		PhotonNetwork.NickName = SteamFriends.GetPersonaName();
+
 		PhotonNetwork.LoadLevel(0);
 
 		print(PhotonNetwork.CurrentRoom.Name);
