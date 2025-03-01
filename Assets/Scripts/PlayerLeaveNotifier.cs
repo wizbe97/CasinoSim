@@ -47,7 +47,7 @@ public class PlayerLeaveNotifier : MonoBehaviourPunCallbacks
 	private void BroadcastMessage(string playerName, string action, float r, float g, float b)
 	{
 		GameObject msgObject = Instantiate(messagePrefab, messageListParent);
-		Text messageText = msgObject.GetComponent<Text>();
+		Text messageText = msgObject.GetComponentInChildren<Text>();
 
 		if (messageText != null)
 		{
