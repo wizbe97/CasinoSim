@@ -3,6 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class PlayerListManager : MonoBehaviourPunCallbacks
 {
@@ -35,6 +36,12 @@ public class PlayerListManager : MonoBehaviourPunCallbacks
 
 	public override void OnPlayerLeftRoom(Player otherPlayer)
 	{
+		if (otherPlayer.ActorNumber == 0)
+		{
+			PhotonNetwork.LeaveRoom();
+			SceneManager.LoadScene(0);
+		}
+
 		if (playerItems.ContainsKey(otherPlayer.ActorNumber))
 		{
 			Destroy(playerItems[otherPlayer.ActorNumber]); // Remove UI

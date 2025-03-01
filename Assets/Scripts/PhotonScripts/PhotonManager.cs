@@ -27,6 +27,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			Offline_cam.SetActive(true);
 			PhotonNetwork.ConnectUsingSettings();
 		}
+
+		PhotonNetwork.IsMessageQueueRunning = false;
 	}
 
 	private void Update()
