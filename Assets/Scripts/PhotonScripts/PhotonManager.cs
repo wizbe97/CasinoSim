@@ -28,7 +28,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			PhotonNetwork.ConnectUsingSettings();
 		}
 
-		PhotonNetwork.IsMessageQueueRunning = false;
+		//PhotonNetwork.IsMessageQueueRunning = false;
 	}
 
 	private void Update()
