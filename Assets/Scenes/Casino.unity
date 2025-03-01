@@ -979,7 +979,7 @@ GameObject:
   - component: {fileID: 472757087}
   - component: {fileID: 472757089}
   m_Layer: 5
-  m_Name: player connected
+  m_Name: Players Connected
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2839,7 +2839,7 @@ GameObject:
   - component: {fileID: 1197504177}
   - component: {fileID: 1197504176}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: Chat Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4289,7 +4289,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Offline_cam: {fileID: 832984690}
   GameManager: {fileID: 1066946553}
-  EscPanel: {fileID: 0}
 --- !u!4 &1865207139
 Transform:
   m_ObjectHideFlags: 0
@@ -5707,7 +5706,7 @@ GameObject:
   - component: {fileID: 5725115346292930252}
   - component: {fileID: 166819989}
   m_Layer: 5
-  m_Name: chat box
+  m_Name: Chat Box
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
