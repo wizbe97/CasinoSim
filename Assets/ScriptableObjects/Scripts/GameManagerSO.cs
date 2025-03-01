@@ -4,5 +4,5 @@ using UnityEngine;
 public class GameManagerSO : ScriptableObject
 {
     public PlayerBalanceManagerSO playerBalanceManager;
-    // public SaveManagerSO saveManager;
+    public SaveManagerSO saveManager;
 }

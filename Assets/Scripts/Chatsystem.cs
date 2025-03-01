@@ -24,11 +24,11 @@ public class Chatsystem : MonoBehaviour
 
 	private void Awake()
 	{
-		_header = FindFirstObjectByType<chatBox>()._header;
-		_box = FindFirstObjectByType<chatBox>()._box;
-		container = FindFirstObjectByType<chatBox>().container;
-		_field = FindFirstObjectByType<chatBox>()._field;
-		connected_players = FindFirstObjectByType<chatBox>().connected_players;
+		_header = FindFirstObjectByType<ChatBox>()._header;
+		_box = FindFirstObjectByType<ChatBox>()._box;
+		container = FindFirstObjectByType<ChatBox>().container;
+		_field = FindFirstObjectByType<ChatBox>()._field;
+		connected_players = FindFirstObjectByType<ChatBox>().connected_players;
 	}
 
 	private void Start()

@@ -103,14 +103,14 @@ public class PlayerUI : MonoBehaviourPunCallbacks
 		_isPhonePanelActive = false;
 	}
 
-	private void ShowCursor()
+	public void ShowCursor()
 	{
 		Cursor.lockState = CursorLockMode.None;
 		Cursor.visible = true;
 		_playerController.enabled = false;
 	}
 
-	private void HideCursor()
+	public void HideCursor()
 	{
 		Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;
