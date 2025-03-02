@@ -9,8 +9,6 @@ public class SaveManagerSO : ScriptableObject
     public GameManagerSO gameManager;
 
 
-    private const string SaveFileDogPath = "OwnedDogs";
-    private const string SaveFileCatPath = "OwnedCats";
     private const string SaveFileBalancePath = "Balance";
     private string saveDirectory;
 
@@ -32,12 +30,17 @@ public class SaveManagerSO : ScriptableObject
 
     public void LoadBalance()
     {
-        if (File.Exists(CombinePath(SaveFileBalancePath, currentSlot)))
+        Debug.Log("Loading Balance");
+        string path = CombinePath(SaveFileBalancePath, currentSlot);
+
+        if (File.Exists(path))
         {
-            string json = File.ReadAllText(CombinePath(SaveFileBalancePath, currentSlot));
+            string json = File.ReadAllText(path);
             BalanceData balanceData = JsonUtility.FromJson<BalanceData>(json);
             gameManager.playerBalanceManager.playerBalance.balance = balanceData.balance;
         }
+        else
+            StartEmpty();
     }
 
     private void CheckAutoSave()
@@ -92,6 +95,8 @@ public class SaveManagerSO : ScriptableObject
 
     public void LoadAllData()
     {
+        Debug.Log("LoadAllData Called");  // Debugging line to check if it's running
+
         saveDirectory = Path.Combine(Application.persistentDataPath, "Saves");
         if (!Directory.Exists(saveDirectory))
         {
@@ -101,6 +106,7 @@ public class SaveManagerSO : ScriptableObject
         LoadBalance();
     }
 
+
     public bool IsDataSaved(int slot)
     {
         saveDirectory = Path.Combine(Application.persistentDataPath, "Saves");
@@ -108,7 +114,7 @@ public class SaveManagerSO : ScriptableObject
         {
             Directory.CreateDirectory(saveDirectory);
         }
-        string combinedPath = CombinePath(SaveFileDogPath, slot);
+        string combinedPath = CombinePath(SaveFileBalancePath, slot);
         return File.Exists(combinedPath);
     }
 
@@ -116,8 +122,7 @@ public class SaveManagerSO : ScriptableObject
     {
         string[] paths =
         {
-        CombinePath(SaveFileDogPath, slot),
-        CombinePath(SaveFileCatPath, slot),
+
         CombinePath(SaveFileBalancePath, slot)
     };
 
