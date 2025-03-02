@@ -330,7 +330,7 @@ public class PlayerInteraction : MonoBehaviour
             if (itemInside != null)
             {
                 StartPlacement(itemInside);
-                PhotonNetwork.Destroy(_heldBox);
+                Destroy(_heldBox);
                 _heldBox = null;
             }
         }
