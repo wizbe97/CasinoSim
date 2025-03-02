@@ -4,6 +4,11 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using static UnityEngine.Rendering.DebugUI;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEditor.Networking.PlayerConnection;
+using UnityEngine.EventSystems;
 
 public class PlayerListManager : MonoBehaviourPunCallbacks
 {
@@ -81,7 +86,7 @@ public class PlayerListManager : MonoBehaviourPunCallbacks
 			}
 
 			// Show Kick Button only if Master Client and not kicking themselves
-			Button kickButton = playerItem.transform.GetComponentInChildren<Button>();
+			UnityEngine.UI.Button kickButton = playerItem.transform.GetComponentInChildren<UnityEngine.UI.Button>();
 			kickButton.gameObject.SetActive(PhotonNetwork.IsMasterClient && !player.IsMasterClient);
 			kickButton.onClick.RemoveAllListeners(); // Prevent duplicate listeners
 			kickButton.onClick.AddListener(() => KickPlayer(player));
@@ -97,6 +102,19 @@ public class PlayerListManager : MonoBehaviourPunCallbacks
 			Debug.Log($"Sending RPC to kick {playerToKick.NickName}");
 			FindObjectOfType<PlayerLeaveNotifier>().OnPlayerKicked(playerToKick.NickName);
 			photonView.RPC(nameof(ForceDisconnect), playerToKick);
+
+
+			Chatsystem chatSc = FindObjectOfType<Chatsystem>();
+
+			// Deselect the input field when Enter is pressed
+			TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
+			inputField.DeactivateInputField();
+			EventSystem.current.SetSelectedGameObject(null); // Deselect UI element
+			chatSc.canMove = true;
+
+			chatSc.connected_players.SetActive(false);
+			EventSystem.current.SetSelectedGameObject(null); // Deselect any UI element
+			chatSc._field.DeactivateInputField(); // Stop editing
 		}
 	}
 
