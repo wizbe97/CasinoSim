@@ -15,9 +15,9 @@ GameObject:
   - component: {fileID: 8611948256844284786}
   - component: {fileID: -3690610114721082914}
   - component: {fileID: 4122431790683806730}
-  m_Layer: 10
+  m_Layer: 6
   m_Name: BlackjackTableBox
-  m_TagString: Untagged
+  m_TagString: PlacedObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

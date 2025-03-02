@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 2143876304819017460}
   - component: {fileID: -8661686366328887477}
   - component: {fileID: -2066060696414737340}
-  m_Layer: 10
+  m_Layer: 6
   m_Name: CarboardBox_1
-  m_TagString: Untagged
+  m_TagString: PlacedObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61,6 +61,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
