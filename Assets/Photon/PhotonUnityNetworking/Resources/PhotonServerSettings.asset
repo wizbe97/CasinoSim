@@ -45,6 +45,7 @@ MonoBehaviour:
   - BroadcastMessage
   - RPC_UpdatePlayerList
   - ForceDisconnect
+  - RPC_ForceLeaveRoom
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

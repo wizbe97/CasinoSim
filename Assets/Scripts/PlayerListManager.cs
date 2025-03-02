@@ -95,7 +95,7 @@ public class PlayerListManager : MonoBehaviourPunCallbacks
 		if (PhotonNetwork.IsMasterClient)
 		{
 			Debug.Log($"Sending RPC to kick {playerToKick.NickName}");
-			photonView.RPC(nameof(ForceDisconnect), playerToKick);
+			photonView.RPC(nameof(ForceDisconnect), RpcTarget.All, playerToKick.NickName);
 		}
 	}
 
