@@ -34,13 +34,9 @@ public class PlayerLeaveNotifier : MonoBehaviourPunCallbacks
 		}
 	}
 
-	public void OnPlayerKicked(Player kickedPlayer)
+	public void OnPlayerKicked(string kickedPlayer)
 	{
-		if (playerNames.ContainsKey(kickedPlayer.ActorNumber))
-		{
-			photonView.RPC("BroadcastMessage", RpcTarget.All, playerNames[kickedPlayer.ActorNumber], "was kicked from the world", 1f, 0.5f, 0f); // Orange
-			playerNames.Remove(kickedPlayer.ActorNumber);
-		}
+		photonView.RPC("BroadcastMessage", RpcTarget.All, kickedPlayer, "was kicked from the world", 1f, 0.5f, 0f); // Orange
 	}
 
 	[PunRPC]

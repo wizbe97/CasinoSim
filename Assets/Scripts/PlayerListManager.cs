@@ -100,8 +100,10 @@ public class PlayerListManager : MonoBehaviourPunCallbacks
 	}
 
 	[PunRPC]
-	private void ForceDisconnect()
+	private void ForceDisconnect(string name)
 	{
+		FindObjectOfType<PlayerLeaveNotifier>().OnPlayerKicked(name);
+
 		Debug.Log("I was kicked!");
 		PhotonNetwork.LeaveRoom();
 	}
