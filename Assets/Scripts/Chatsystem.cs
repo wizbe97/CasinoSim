@@ -58,7 +58,7 @@ public class Chatsystem : MonoBehaviour
 			canMove = true;
 		}
 
-        if (Input.GetKeyDown(KeyCode.Escape) && EventSystem.current.currentSelectedGameObject != null)
+        if (Input.GetKeyDown(KeyCode.Escape) && EventSystem.current.currentSelectedGameObject != _field.gameObject)
         {
 			// Deselect the input field when Enter is pressed
 			TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
