@@ -47,6 +47,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		roomOptions.IsVisible = false; // Ensure the room is visible
 		roomOptions.IsOpen = false; // Ensure the room is open
 		roomOptions.MaxPlayers = 4;
+		roomOptions.PlayerTtl = 1000;  // 1 second timeout for kicked players
 
 		string username = SteamFriends.GetPersonaName();
 		if (username != null)
@@ -98,18 +99,28 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			Debug.Log("Master Client has left. Closing the room and making all players leave.");
 
 			// Close the room so no new players can join
-			PhotonNetwork.CurrentRoom.IsOpen = false;
-			PhotonNetwork.CurrentRoom.IsVisible = false;
+			if (PhotonNetwork.CurrentRoom != null)
+			{
+				PhotonNetwork.CurrentRoom.IsOpen = false;
+				PhotonNetwork.CurrentRoom.IsVisible = false;
+			}
 
 			// Make all clients leave
-			PhotonNetwork.LeaveRoom();
+			photonView.RPC(nameof(RPC_ForceLeaveRoom), RpcTarget.All);
 		}
+	}
+
+	[PunRPC]
+	private void RPC_ForceLeaveRoom()
+	{
+		Debug.Log("Forced to leave room.");
+		PhotonNetwork.LeaveRoom();
 	}
 
 	public override void OnLeftRoom()
 	{
 		// Load a different scene or return to the main menu
-		PhotonNetwork.LoadLevel(0); // Replace 0 with the correct scene index for your main menu
+		Debug.Log("Left room, loading main menu...");
+		PhotonNetwork.LoadLevel(0); // Replace 0 with your actual menu scene index
 	}
-
 }

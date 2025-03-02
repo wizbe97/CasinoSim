@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 339852722624560798}
   - component: {fileID: 8611948256844284786}
   - component: {fileID: -3690610114721082914}
+  - component: {fileID: 4122431790683806730}
   m_Layer: 10
   m_Name: BlackjackTableBox
   m_TagString: Untagged
@@ -61,6 +62,8 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -149,3 +152,25 @@ MonoBehaviour:
   _offset: {x: 0, y: 0.5, z: 2}
   _rotation: {x: 0, y: 0, z: 0}
   _containedItem: {fileID: 11400000, guid: c80c8a5fe7598994689e3f4fc5c1fdff, type: 2}
+--- !u!114 &4122431790683806730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6460623043242113392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
