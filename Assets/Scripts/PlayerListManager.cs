@@ -108,7 +108,10 @@ public class PlayerListManager : MonoBehaviourPunCallbacks
 
 			// Deselect the input field when Enter is pressed
 			TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
-			inputField.DeactivateInputField();
+			if (inputField != null)
+			{
+				inputField.DeactivateInputField();
+			}
 			EventSystem.current.SetSelectedGameObject(null); // Deselect UI element
 			chatSc.canMove = true;
 
