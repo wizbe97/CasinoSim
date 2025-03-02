@@ -38,16 +38,16 @@ public class PlayerInteraction : MonoBehaviour
         _inputHandler = GetComponent<PlayerInputHandler>();
         _reticleUI = GetComponentInChildren<RectTransform>();
         _playerController = GetComponent<PlayerController>();
-
-        if (!PhotonNetwork.IsMasterClient)
-        {
-            this.enabled = false;
-        }
     }
 
     private void OnEnable()
     {
-        _inputHandler.OnPhoneMenu += TogglePhoneMenu;
+		if (!PhotonNetwork.IsMasterClient)
+		{
+            return;
+		}
+
+		_inputHandler.OnPhoneMenu += TogglePhoneMenu;
         _inputHandler.OnRotatePreviewOrOpenBox += HandleRotateOrOpenBox;
         _inputHandler.OnPickupOrPlace += HandlePickupOrPlace;
         _inputHandler.OnBoxOrSell += HandleBoxOrSell;
@@ -56,7 +56,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnDisable()
     {
-        _inputHandler.OnPhoneMenu -= TogglePhoneMenu;
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		_inputHandler.OnPhoneMenu -= TogglePhoneMenu;
         _inputHandler.OnRotatePreviewOrOpenBox -= HandleRotateOrOpenBox;
         _inputHandler.OnPickupOrPlace -= HandlePickupOrPlace;
         _inputHandler.OnBoxOrSell -= HandleBoxOrSell;
@@ -65,7 +70,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
-        if (_isPlacing && _currentPreview != null)
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (_isPlacing && _currentPreview != null)
         {
             UpdatePreviewPosition();
         }
@@ -73,7 +83,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void TogglePhoneMenu()
     {
-        if (_playerUI.IsPhonePanelActive())
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (_playerUI.IsPhonePanelActive())
         {
             _playerUI.ResetPanelStates();
         }
@@ -86,7 +101,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleRotateOrOpenBox()
     {
-        if (_isPlacing && _heldBox == null)
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (_isPlacing && _heldBox == null)
         {
             RotatePreview();
         }
@@ -98,7 +118,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandlePickupOrPlace()
     {
-        if (_heldBox != null)
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (_heldBox != null)
         {
             // Drop the box in the environment
             BoxPickup box = _heldBox.GetComponent<BoxPickup>();
@@ -124,7 +149,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleBoxOrSell()
     {
-        if (_heldBox != null)
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (_heldBox != null)
         {
             SellItem();
         }
@@ -136,7 +166,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleCancelPlacement()
     {
-        if (_heldBox != null)
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (_heldBox != null)
         {
             // Drop the box
             BoxPickup box = _heldBox.GetComponent<BoxPickup>();
@@ -156,7 +191,12 @@ public class PlayerInteraction : MonoBehaviour
 
     public void StartPlacement(PlaceableItemSO item)
     {
-        if (item == null) return;
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (item == null) return;
 
         _currentItem = item;
         _isPlacing = true;
@@ -175,7 +215,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void TryPickUpObject()
     {
-        Ray ray = PlayerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		Ray ray = PlayerCamera.ScreenPointToRay(RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position));
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _placedObjectLayerMask))
         {
@@ -199,7 +244,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void UpdatePreviewPosition()
     {
-        Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position);
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		Vector2 screenPosition = RectTransformUtility.WorldToScreenPoint(null, _reticleUI.position);
         Ray ray = PlayerCamera.ScreenPointToRay(screenPosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, _placementLayerMask))
@@ -243,7 +293,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void UpdatePreviewMaterial(bool isValid)
     {
-        if (_currentPreview != null)
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (_currentPreview != null)
         {
             Renderer[] renderers = _currentPreview.GetComponentsInChildren<Renderer>();
             Color color = isValid ? new Color(0, 1, 0, 0.5f) : new Color(1, 0, 0, 0.5f);
@@ -256,7 +311,12 @@ public class PlayerInteraction : MonoBehaviour
 
     public void RotatePreview()
     {
-        if (_currentPreview != null)
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (_currentPreview != null)
         {
             _currentPreview.transform.Rotate(0, 22.5f, 0);
         }
@@ -264,7 +324,12 @@ public class PlayerInteraction : MonoBehaviour
 
     public void PlaceObject()
     {
-        if (!_canPlace || _currentItem == null) return;
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (!_canPlace || _currentItem == null) return;
 
         GameObject placedObject = PhotonNetwork.Instantiate(_currentItem.GetPlacedPrefab().name, _currentPreview.transform.position, _currentPreview.transform.rotation);
 
@@ -277,7 +342,12 @@ public class PlayerInteraction : MonoBehaviour
 
     public void CancelPlacement()
     {
-        if (_currentPreview != null)
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (_currentPreview != null)
         {
             Destroy(_currentPreview);
         }
@@ -286,7 +356,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void BoxCurrentPreview()
     {
-        if (_currentPreview != null && _currentItem != null)
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (_currentPreview != null && _currentItem != null)
         {
             GameObject box = PhotonNetwork.Instantiate(_currentItem.GetCardboardBoxPrefab().name, _currentPreview.transform.position, _currentPreview.transform.rotation);
 
@@ -324,7 +399,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OpenHeldBox()
     {
-        if (_heldBox != null && _heldBox.TryGetComponent(out BoxPickup box))
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (_heldBox != null && _heldBox.TryGetComponent(out BoxPickup box))
         {
             PlaceableItemSO itemInside = box.GetContainedItem();
             if (itemInside != null)
@@ -338,7 +418,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void SellItem()
     {
-        if (_heldBox == null) return;
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (_heldBox == null) return;
 
         if (_heldBox.TryGetComponent(out BoxPickup box))
         {
@@ -369,7 +454,12 @@ public class PlayerInteraction : MonoBehaviour
 
     private void InteractWithBox()
     {
-        if (_heldBox == null)
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		if (_heldBox == null)
         {
             Ray ray = PlayerCamera.ScreenPointToRay(_reticleUI.position);
 
@@ -418,7 +508,12 @@ public class PlayerInteraction : MonoBehaviour
 
     public void BuyItem(PlaceableItemSO item)
     {
-        var balanceManager = _gameManager.playerBalanceManager;
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return;
+		}
+
+		var balanceManager = _gameManager.playerBalanceManager;
 
         if (balanceManager.CanAfford(item.Price))
         {
