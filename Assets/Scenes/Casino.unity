@@ -616,6 +616,9 @@ MonoBehaviour:
   _field: {fileID: 8890370516623569242}
   _header: {fileID: 2029954046810990768}
   connected_players: {fileID: 472757085}
+  Kickbutton: {fileID: 0}
+  eventSystem: {fileID: 737091000}
+  graphicRaycaster: {fileID: 1197504176}
 --- !u!1 &287481051
 GameObject:
   m_ObjectHideFlags: 0

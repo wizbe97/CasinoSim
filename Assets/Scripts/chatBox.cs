@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ChatBox : MonoBehaviour
@@ -15,4 +16,7 @@ public class ChatBox : MonoBehaviour
 	public Text _header;
 
 	public GameObject connected_players;
+
+	public EventSystem eventSystem;
+	public GraphicRaycaster graphicRaycaster;
 }
