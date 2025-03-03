@@ -13,6 +13,7 @@ public class Chatsystem : MonoBehaviour
 	public GameObject _card;
 
 	public TMP_InputField _field = null;
+	public GameObject Kickbutton;
 
 	public bool canMove = false;
 
@@ -98,7 +99,7 @@ public class Chatsystem : MonoBehaviour
 			}
 		}
 
-		if (EventSystem.current.currentSelectedGameObject != _field.gameObject)
+		if (EventSystem.current.currentSelectedGameObject != _field.gameObject && EventSystem.current.currentSelectedGameObject != Kickbutton.gameObject)
 		{
 			connected_players.SetActive(false);
 		}

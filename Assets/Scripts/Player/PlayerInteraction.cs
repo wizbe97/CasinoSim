@@ -522,7 +522,17 @@ public class PlayerInteraction : MonoBehaviour
 
     private bool IsLookingAtBox()
     {
-        Ray ray = PlayerCamera.ScreenPointToRay(_reticleUI.position);
+		if (FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return false;
+		}
+
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			return false;
+		}
+
+		Ray ray = PlayerCamera.ScreenPointToRay(_reticleUI.position);
 
         if (Physics.Raycast(ray, out RaycastHit hit, _interactionDistance, _interactableLayerMask))
         {
