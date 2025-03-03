@@ -4,6 +4,7 @@ using TMPro;
 using Steamworks;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Collections;
 
 public class Chatsystem : MonoBehaviour
 {
@@ -40,53 +41,60 @@ public class Chatsystem : MonoBehaviour
 
 	private void Update()
 	{
-		// Local Check
-		if (!GetComponent<PhotonView>().IsMine) {
+		// Local Check: Only handle input for the local player
+		if (!GetComponent<PhotonView>().IsMine)
+		{
 			return;
 		}
 
-		isTyping = !canMove;
+		isTyping = EventSystem.current.currentSelectedGameObject == _field.gameObject;
 
-		// Check if the active UI element is an InputField
 		if (EventSystem.current.currentSelectedGameObject != null)
 		{
 			TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
-			canMove = inputField == null; // Disable movement if an InputField is selected
+			canMove = inputField == null; 
 		}
 		else
 		{
 			canMove = true;
 		}
 
-		if (Input.GetKeyDown(KeyCode.Escape) && EventSystem.current.currentSelectedGameObject != null)
+		if (Input.GetKeyDown(KeyCode.Escape) && isTyping)
 		{
-			// Deselect the input field when Enter is pressed
-			TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
-			inputField.DeactivateInputField();
-			EventSystem.current.SetSelectedGameObject(null); // Deselect UI element
+			_field.DeactivateInputField();
+			EventSystem.current.SetSelectedGameObject(null); 
 			canMove = true;
-
 			connected_players.SetActive(false);
-			EventSystem.current.SetSelectedGameObject(null); // Deselect any UI element
-			_field.DeactivateInputField(); // Stop editing
 		}
 
-		if (Input.GetKeyDown(KeyCode.Return) /*&&  _field.text.Length == 0*/)
+		if (Input.GetKeyDown(KeyCode.Return))
 		{
-			if (!isTyping)
+			if (isTyping)
 			{
-				_field.text = null;
-			}
-
-			if (connected_players.activeSelf)
-			{
-				connected_players.SetActive(false);
+				if (_field.text.Length > 0)
+				{
+					SendMessage();
+				}
 			}
 			else
 			{
-				connected_players.SetActive(true);
-				EventSystem.current.SetSelectedGameObject(_field.gameObject);
-				_field.ActivateInputField(); // Makes it ready for typing
+				if (_field.text.Length > 0)
+				{
+					connected_players.SetActive(true);
+					EventSystem.current.SetSelectedGameObject(_field.gameObject);
+					_field.ActivateInputField();
+
+					StartCoroutine(SetCaretToEnd());
+				}
+				else
+				{
+					connected_players.SetActive(!connected_players.activeSelf);
+					if (connected_players.activeSelf)
+					{
+						EventSystem.current.SetSelectedGameObject(_field.gameObject);
+						_field.ActivateInputField();
+					}
+				}
 			}
 		}
 
@@ -94,19 +102,14 @@ public class Chatsystem : MonoBehaviour
 		{
 			connected_players.SetActive(false);
 		}
-
-		if (!_box.activeSelf) {
-			return;
-		}
-
-		if (_field.text.Length > 0)
-		{
-			if (Input.GetKeyDown(KeyCode.Return))
-			{
-				SendMessage();
-			}
-		}
 	}
+
+	private IEnumerator SetCaretToEnd()
+	{
+		yield return new WaitForEndOfFrame();
+		_field.caretPosition = _field.text.Length; 
+	}
+
 
 	private void SendMessage()
 	{
