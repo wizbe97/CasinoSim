@@ -46,6 +46,7 @@ public class Chatsystem : MonoBehaviour
 		}
 
 		isTyping = !canMove;
+		FindObjectOfType<PlayerInteraction>().enabled = !isTyping;
 
 		// Check if the active UI element is an InputField
 		if (EventSystem.current.currentSelectedGameObject != null)
