@@ -5,6 +5,8 @@ using Steamworks;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class Chatsystem : MonoBehaviour
 {
@@ -25,6 +27,9 @@ public class Chatsystem : MonoBehaviour
 
 	public bool isTyping = false;
 
+	public EventSystem eventSystem;
+	public GraphicRaycaster graphicRaycaster;
+
 
 	private void Awake()
 	{
@@ -33,6 +38,8 @@ public class Chatsystem : MonoBehaviour
 		container = FindFirstObjectByType<ChatBox>().container;
 		_field = FindFirstObjectByType<ChatBox>()._field;
 		connected_players = FindFirstObjectByType<ChatBox>().connected_players;
+		eventSystem = FindFirstObjectByType<ChatBox>().eventSystem;
+		graphicRaycaster = FindFirstObjectByType<ChatBox>().graphicRaycaster;
 	}
 
 	private void Start()
@@ -99,8 +106,22 @@ public class Chatsystem : MonoBehaviour
 			}
 		}
 
-		if (EventSystem.current.currentSelectedGameObject != _field.gameObject && EventSystem.current.currentSelectedGameObject != Kickbutton.gameObject)
+		if (EventSystem.current.currentSelectedGameObject != _field.gameObject)
 		{
+			PointerEventData pointerEventData = new PointerEventData(eventSystem);
+			pointerEventData.position = Input.mousePosition;
+
+			List<RaycastResult> results = new List<RaycastResult>();
+			graphicRaycaster.Raycast(pointerEventData, results);
+
+			foreach (var result in results)
+			{
+				if (result.gameObject.transform.tag == "KickBtn")
+				{
+					return;
+				}
+			}
+
 			connected_players.SetActive(false);
 		}
 	}

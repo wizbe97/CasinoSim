@@ -190,7 +190,7 @@ GameObject:
   - component: {fileID: 8397004346497040278}
   m_Layer: 5
   m_Name: Kick
-  m_TagString: Untagged
+  m_TagString: KickBtn
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
