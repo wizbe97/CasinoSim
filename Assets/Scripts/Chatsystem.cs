@@ -58,11 +58,11 @@ public class Chatsystem : MonoBehaviour
 			canMove = true;
 		}
 
-        if (Input.GetKeyDown(KeyCode.Escape) && EventSystem.current.currentSelectedGameObject != null)
-        {
+		if (Input.GetKeyDown(KeyCode.Escape) && EventSystem.current.currentSelectedGameObject != null)
+		{
 			// Deselect the input field when Enter is pressed
 			TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();
-		    inputField.DeactivateInputField();
+			inputField.DeactivateInputField();
 			EventSystem.current.SetSelectedGameObject(null); // Deselect UI element
 			canMove = true;
 
@@ -83,6 +83,11 @@ public class Chatsystem : MonoBehaviour
 				EventSystem.current.SetSelectedGameObject(_field.gameObject);
 				_field.ActivateInputField(); // Makes it ready for typing
 			}
+		}
+
+		if (EventSystem.current.currentSelectedGameObject != _field.gameObject)
+		{
+			connected_players.SetActive(false);
 		}
 
 		if (!_box.activeSelf) {
