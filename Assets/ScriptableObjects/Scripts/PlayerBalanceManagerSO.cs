@@ -32,6 +32,7 @@ public class PlayerBalanceManagerSO : ScriptableObject
 
     public void ClearBalance()
     {
+        Debug.Log("Starting Empty");
         playerBalance.balance = playerBalance.startingBalace;
         if (onBalanceChangedEvent != null)
             onBalanceChangedEvent.Raise();

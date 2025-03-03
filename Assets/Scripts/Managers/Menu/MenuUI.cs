@@ -15,7 +15,6 @@ public class MenuUI : MonoBehaviour
     public Button chooseSlotBackButton;
     public Button[] chooseSlotButtons;
     public TextMeshProUGUI[] chooseSlotLabels;
-    public TextMeshProUGUI autoSaveSlotText;
 
 
     [Header("LOAD GAME ITEMS")]
@@ -24,10 +23,11 @@ public class MenuUI : MonoBehaviour
     public Button[] loadSlotButtons;
     public Button[] removeSlotButtons;
 
+    public TextMeshProUGUI autoSaveSlotText;
+
     public GameManagerSO gameManager;
 
-
-    private void Start()
+    void Start()
     {
         loadGameBackButton.onClick.AddListener(LoadGameBackClick);
         chooseSlotBackButton.onClick.AddListener(ChooseSlotBackClick);
@@ -36,14 +36,14 @@ public class MenuUI : MonoBehaviour
 
         for (int i = 0; i < loadSlotButtons.Length; i++)
         {
-            int slot = i;
+            int slot = i + 1;
             loadSlotButtons[i].onClick.AddListener(() => OnSlotButtonClicked(slot));
             removeSlotButtons[i].onClick.AddListener(() => OnRemoveSlotClicked(slot));
         }
 
         for (int i = 0; i < chooseSlotButtons.Length; i++)
         {
-            int slot = i;
+            int slot = i + 1;
             chooseSlotButtons[i].onClick.AddListener(() => OnChooseSlotClicked(slot));
         }
 
@@ -99,9 +99,7 @@ public class MenuUI : MonoBehaviour
     {
         if (gameManager.saveManager.IsDataSaved(slot))
         {
-            gameManager.saveManager.currentSlot = slot;
-            LoadNewGame();
-
+            Load(slot);
         }
         UpdateSlotButtons();
     }
@@ -117,8 +115,9 @@ public class MenuUI : MonoBehaviour
         UpdateSlotButtons();
     }
 
-    private void LoadNewGame()
+    private void Load(int slot)
     {
+        gameManager.saveManager.currentSlot = slot;
         SceneManager.LoadScene("Casino");
     }
 
