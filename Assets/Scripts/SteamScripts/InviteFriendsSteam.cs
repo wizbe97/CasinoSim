@@ -26,6 +26,10 @@ public class InviteFriendsSteam : MonoBehaviourPunCallbacks
 
 	private void Start()
 	{
+		if (!PhotonNetwork.IsMasterClient)
+		{
+			this.enabled = false;
+		}
 	}
 
 	private void Update()

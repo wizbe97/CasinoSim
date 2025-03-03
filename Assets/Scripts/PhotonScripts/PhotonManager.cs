@@ -14,6 +14,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	private Dictionary<string, RoomInfo> roomList = new Dictionary<string, RoomInfo>();
 
+	public GameObject ConnectionLostScreen;
+
 
 	private void Start()
 	{
@@ -122,5 +124,20 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		// Load a different scene or return to the main menu
 		Debug.Log("Left room, loading main menu...");
 		PhotonNetwork.LoadLevel(0); // Replace 0 with your actual menu scene index
+	}
+
+	public override void OnMasterClientSwitched(Player newMasterClient)
+	{
+		Debug.Log("Master Client disconnected! New Master Client is: " + newMasterClient.NickName);
+
+		// You can perform actions here, such as reassigning roles or handling game logic.
+
+		ConnectionLostScreen.gameObject.SetActive(true);
+	}
+
+	public void ReturnOwnWorld()
+	{
+		PhotonNetwork.LeaveRoom();
+		SceneManager.LoadScene(0);
 	}
 }
