@@ -73,6 +73,11 @@ public class Chatsystem : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.Return) /*&&  _field.text.Length == 0*/)
 		{
+			if (!isTyping)
+			{
+				_field.text = null;
+			}
+
 			if (connected_players.activeSelf)
 			{
 				connected_players.SetActive(false);
