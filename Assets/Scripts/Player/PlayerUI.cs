@@ -20,12 +20,26 @@ public class PlayerUI : MonoBehaviourPunCallbacks
 
 	private bool _isPhonePanelActive = false;
 
+	public GameObject kickedUIScreen = null;
+
+
 	private void Awake()
 	{
 		if (photonView.IsMine)
 		{
 			_balanceText = GameObject.FindGameObjectWithTag("BalanceText").GetComponent<TMP_Text>();
 			UpdateBalanceUI();
+
+			// Kick Message
+			if (PlayerPrefs.GetInt("WasKicked", 0) == 1) // Default is 0 (not kicked)
+			{
+				Debug.Log("Showing kicked UI screen.");
+				kickedUIScreen.SetActive(true); // Show your UI screen
+
+				// Reset the flag so it doesn't appear next time
+				PlayerPrefs.SetInt("WasKicked", 0);
+				PlayerPrefs.Save();
+			}
 		}
 	}
 
