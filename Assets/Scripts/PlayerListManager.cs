@@ -122,6 +122,8 @@ public class PlayerListManager : MonoBehaviourPunCallbacks
 	private void ForceDisconnect()
 	{
 		Debug.Log("I was kicked!");
+		PlayerPrefs.SetInt("WasKicked", 1); // Save kick status
+		PlayerPrefs.Save(); // Ensure it is stored
 		PhotonNetwork.LeaveRoom();
 	}
 
