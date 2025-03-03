@@ -42,6 +42,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnEnable()
     {
+        if (!FindObjectOfType<Chatsystem>().isTyping)
+        {
+            return;
+        }
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
             return;
@@ -56,6 +61,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OnDisable()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -70,6 +80,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -83,6 +98,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void TogglePhoneMenu()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -101,6 +121,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleRotateOrOpenBox()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -118,6 +143,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandlePickupOrPlace()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -149,6 +179,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleBoxOrSell()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -166,6 +201,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleCancelPlacement()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -191,6 +231,11 @@ public class PlayerInteraction : MonoBehaviour
 
     public void StartPlacement(PlaceableItemSO item)
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -215,6 +260,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void TryPickUpObject()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -244,6 +294,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void UpdatePreviewPosition()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -293,6 +348,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void UpdatePreviewMaterial(bool isValid)
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -311,6 +371,11 @@ public class PlayerInteraction : MonoBehaviour
 
     public void RotatePreview()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -324,6 +389,11 @@ public class PlayerInteraction : MonoBehaviour
 
     public void PlaceObject()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -342,6 +412,11 @@ public class PlayerInteraction : MonoBehaviour
 
     public void CancelPlacement()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -356,6 +431,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void BoxCurrentPreview()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -399,6 +479,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OpenHeldBox()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -418,6 +503,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void SellItem()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -454,6 +544,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void InteractWithBox()
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
@@ -508,6 +603,11 @@ public class PlayerInteraction : MonoBehaviour
 
     public void BuyItem(PlaceableItemSO item)
     {
+		if (!FindObjectOfType<Chatsystem>().isTyping)
+		{
+			return;
+		}
+
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			return;
