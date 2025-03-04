@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 8611948256844284786}
   - component: {fileID: -3690610114721082914}
   - component: {fileID: -3078197209593464850}
+  - component: {fileID: -838749773353057726}
   m_Layer: 6
   m_Name: BlackjackTableBox
   m_TagString: PlacedObject
@@ -62,8 +63,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -174,3 +173,17 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &-838749773353057726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6460623043242113392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d20b0129a2ade0641b887cd63c49f686, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: BlackJack_Table_Box
+  instanceID: 

@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 6958838027654845411}
   - component: {fileID: 3997796816334191608}
   - component: {fileID: 2558038510125606759}
+  - component: {fileID: 5016932128954588721}
   m_Layer: 6
   m_Name: RouletteTableBox
   m_TagString: PlacedObject
@@ -62,8 +63,6 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -174,3 +173,17 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+--- !u!114 &5016932128954588721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7289540646007318385}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d20b0129a2ade0641b887cd63c49f686, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: Roulette_Table_Box
+  instanceID: 
