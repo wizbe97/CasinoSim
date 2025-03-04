@@ -119,7 +119,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: Roulette_Table
-  instanceID: 
 --- !u!1 &7725380476463215675
 GameObject:
   m_ObjectHideFlags: 0

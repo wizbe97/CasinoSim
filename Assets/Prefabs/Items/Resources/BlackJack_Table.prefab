@@ -516,7 +516,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: BlackJack_Table
-  instanceID: 
 --- !u!1 &4800540832352149535
 GameObject:
   m_ObjectHideFlags: 0

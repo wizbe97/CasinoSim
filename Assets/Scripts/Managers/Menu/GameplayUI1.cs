@@ -83,7 +83,7 @@ public class GameplayUI : MonoBehaviourPunCallbacks
 
     private void MenuClick()
     {
-        gameManager.saveManager.SaveAllData();
+        gameManager.saveManager.AutoSaveAll();
         if (saveButton.interactable)
         {
             pausePanel.SetActive(false);
