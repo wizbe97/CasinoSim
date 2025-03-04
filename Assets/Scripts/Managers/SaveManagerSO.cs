@@ -194,7 +194,8 @@ public class SaveManagerSO : ScriptableObject
         string[] paths =
         {
 
-        CombinePath(SaveFileBalancePath, slot)
+        CombinePath(SaveFileBalancePath, slot),
+        CombinePath(SaveFileItemsPath, slot)
     };
 
         foreach (string path in paths)

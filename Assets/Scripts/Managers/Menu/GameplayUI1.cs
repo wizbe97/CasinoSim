@@ -61,8 +61,8 @@ public class GameplayUI : MonoBehaviourPunCallbacks
     {
         Time.timeScale = 1;
         pausePanel.SetActive(false);
-       // if (photonView.IsMine)
-       //     playerUI.HideCursor();
+        // if (photonView.IsMine)
+        //     playerUI.HideCursor();
 
     }
 
@@ -72,7 +72,7 @@ public class GameplayUI : MonoBehaviourPunCallbacks
         UpdateSlotButton(false);
         pausePanel.SetActive(true);
         //if (photonView.IsMine)
-         //   playerUI.ShowCursor();
+        //   playerUI.ShowCursor();
     }
 
     private void Save()
@@ -83,6 +83,7 @@ public class GameplayUI : MonoBehaviourPunCallbacks
 
     private void MenuClick()
     {
+        gameManager.saveManager.SaveAllData();
         if (saveButton.interactable)
         {
             pausePanel.SetActive(false);
