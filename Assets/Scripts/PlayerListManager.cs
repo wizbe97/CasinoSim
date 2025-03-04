@@ -4,10 +4,7 @@ using Photon.Realtime;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
-using static UnityEngine.Rendering.DebugUI;
 using TMPro;
-using Unity.VisualScripting;
-using UnityEditor.Networking.PlayerConnection;
 using UnityEngine.EventSystems;
 
 public class PlayerListManager : MonoBehaviourPunCallbacks
