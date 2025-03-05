@@ -97,11 +97,11 @@ public class PlayerListManager : MonoBehaviourPunCallbacks
 		if (PhotonNetwork.IsMasterClient)
 		{
 			Debug.Log($"Sending RPC to kick {playerToKick.NickName}");
-			FindObjectOfType<PlayerLeaveNotifier>().OnPlayerKicked(playerToKick.NickName);
+			FindFirstObjectByType<PlayerLeaveNotifier>().OnPlayerKicked(playerToKick.NickName);
 			photonView.RPC(nameof(ForceDisconnect), playerToKick);
 
 
-			Chatsystem chatSc = FindObjectOfType<Chatsystem>();
+			Chatsystem chatSc = FindFirstObjectByType<Chatsystem>();
 
 			// Deselect the input field when Enter is pressed
 			TMP_InputField inputField = EventSystem.current.currentSelectedGameObject.GetComponent<TMP_InputField>();

@@ -43,7 +43,7 @@ public class GameplayUI : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !FindObjectOfType<Chatsystem>().isTyping)
+        if (Input.GetKeyDown(KeyCode.Escape) && !FindFirstObjectByType<Chatsystem>().isTyping)
         {
             if (pausePanel.activeSelf)
             {

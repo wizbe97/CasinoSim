@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 		}
 	}
 
-	private void OnEnable()
+	public override void OnEnable()
 	{
 		if (photonView.IsMine)
 		{
@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 		}
 	}
 
-	private void OnDisable()
+	public override void OnDisable()
 	{
 		if (photonView.IsMine)
 		{
@@ -86,7 +86,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 		HandleCameraLook();
 		CheckGround();
 
-		if (FindObjectOfType<InviteVan>().InviteObj.activeSelf || FindObjectOfType<Phone>())
+		if (FindFirstObjectByType<InviteVan>().InviteObj.activeSelf || FindFirstObjectByType<Phone>())
 		{
 			UnLockCursor();
 		}
