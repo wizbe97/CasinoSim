@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 public class MenuUI : MonoBehaviour
 {
@@ -130,7 +131,18 @@ public class MenuUI : MonoBehaviour
     {
         gameManager.saveManager.RemoveSlot(slot);
         gameManager.saveManager.currentSlot = slot;
-        SceneManager.LoadScene("Casino");
+        // Disable all menu panels
+        menuPanel.SetActive(false);
+        chooseSlotPanel.SetActive(false);
+        loadGamePanel.SetActive(false);
+        
+        StartCoroutine(LoadSceneAfterDelay("Casino", 1f));
+    }
+
+    private IEnumerator LoadSceneAfterDelay(string sceneName, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SceneManager.LoadScene(sceneName);
     }
 
     private void StartNewGame()
