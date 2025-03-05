@@ -1,5 +1,4 @@
 ﻿using Photon.Pun;
-using UnityEditor.VersionControl;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
