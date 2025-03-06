@@ -131,7 +131,6 @@ public class MenuUI : MonoBehaviour
     {
         gameManager.saveManager.RemoveSlot(slot);
         gameManager.saveManager.currentSlot = slot;
-        // Disable all menu panels
         menuPanel.SetActive(false);
         chooseSlotPanel.SetActive(false);
         loadGamePanel.SetActive(false);
