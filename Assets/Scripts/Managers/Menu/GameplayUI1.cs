@@ -20,7 +20,7 @@ public class GameplayUI : MonoBehaviourPunCallbacks
     public Button menuConfirmButton;
 
     public GameManagerSO gameManager;
-    private PlayerUI playerUI; // Reference to PlayerUI
+    private PlayerUI playerUI;
 
     void Start()
     {
