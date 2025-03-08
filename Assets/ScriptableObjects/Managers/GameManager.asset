@@ -14,3 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerBalanceManager: {fileID: 11400000, guid: bd70294796d30744eab88bc0160d6e6b, type: 2}
   saveManager: {fileID: 11400000, guid: 09fa4dd13a36fd84f957078e1a4084ee, type: 2}
+  itemPrefabs:
+  - itemID: BlackJack_Table
+    prefab: {fileID: 4689101343340229550, guid: 67ccdcf73e49cfa4d998fcae8034e43f, type: 3}
+  - itemID: Roulette_Table
+    prefab: {fileID: 6382555397596164997, guid: 62be9149e4b5b39448f2fa8c958d1191, type: 3}
+  - itemID: Roulette_Table_Box
+    prefab: {fileID: 7289540646007318385, guid: ee499a82c83245e468ff264a65e8b8af, type: 3}
+  - itemID: BlackJack_Table_Box
+    prefab: {fileID: 6460623043242113392, guid: c9f3084ebc5a087419249a03db5d0d5d, type: 3}

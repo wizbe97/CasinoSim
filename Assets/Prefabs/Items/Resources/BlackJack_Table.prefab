@@ -339,6 +339,7 @@ GameObject:
   - component: {fileID: 8316828817563782220}
   - component: {fileID: 3193990342514840014}
   - component: {fileID: 3120158579011387963}
+  - component: {fileID: 8634937989583458587}
   m_Layer: 6
   m_Name: BlackJack_Table
   m_TagString: PlacedObject
@@ -510,6 +511,19 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
+--- !u!114 &8634937989583458587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4689101343340229550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d20b0129a2ade0641b887cd63c49f686, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemID: BlackJack_Table
 --- !u!1 &4800540832352149535
 GameObject:
   m_ObjectHideFlags: 0

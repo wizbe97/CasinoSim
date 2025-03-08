@@ -70,7 +70,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+        if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -88,7 +92,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void TogglePhoneMenu()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -111,7 +119,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleRotateOrOpenBox()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -133,7 +145,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandlePickupOrPlace()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -169,7 +185,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleBoxOrSell()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -191,7 +211,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void HandleCancelPlacement()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -221,7 +245,11 @@ public class PlayerInteraction : MonoBehaviour
 
     public void StartPlacement(PlaceableItemSO item)
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -250,7 +278,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void TryPickUpObject()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -284,7 +316,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void UpdatePreviewPosition()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -338,7 +374,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void UpdatePreviewMaterial(bool isValid)
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -361,7 +401,11 @@ public class PlayerInteraction : MonoBehaviour
 
     public void RotatePreview()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -379,7 +423,11 @@ public class PlayerInteraction : MonoBehaviour
 
     public void PlaceObject()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -402,7 +450,11 @@ public class PlayerInteraction : MonoBehaviour
 
     public void CancelPlacement()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -421,7 +473,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void BoxCurrentPreview()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -469,7 +525,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void OpenHeldBox()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -493,7 +553,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void SellItem()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -522,7 +586,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private bool IsLookingAtBox()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return false;
 		}
@@ -544,7 +612,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void InteractWithBox()
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}
@@ -603,7 +675,11 @@ public class PlayerInteraction : MonoBehaviour
 
     public void BuyItem(PlaceableItemSO item)
     {
+<<<<<<< HEAD
 		if (FindObjectOfType<Chatsystem>().isTyping)
+=======
+		if (FindFirstObjectByType<Chatsystem>().isTyping)
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		{
 			return;
 		}

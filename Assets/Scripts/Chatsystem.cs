@@ -5,8 +5,11 @@ using Steamworks;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections;
+<<<<<<< HEAD
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+=======
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 
 public class Chatsystem : MonoBehaviour
 {
@@ -49,7 +52,10 @@ public class Chatsystem : MonoBehaviour
 
 	private void Update()
 	{
+<<<<<<< HEAD
 		// Local Check: Only handle input for the local player
+=======
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 		if (!GetComponent<PhotonView>().IsMine)
 		{
 			return;
@@ -108,6 +114,7 @@ public class Chatsystem : MonoBehaviour
 
 		if (EventSystem.current.currentSelectedGameObject != _field.gameObject)
 		{
+<<<<<<< HEAD
 			PointerEventData pointerEventData = new PointerEventData(eventSystem);
 			pointerEventData.position = Input.mousePosition;
 
@@ -122,6 +129,8 @@ public class Chatsystem : MonoBehaviour
 				}
 			}
 
+=======
+>>>>>>> ae048306770758776e90ab33b64ba74f8bfb671d
 			connected_players.SetActive(false);
 		}
 	}

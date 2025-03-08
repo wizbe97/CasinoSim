@@ -36,14 +36,14 @@ public class MenuUI : MonoBehaviour
 
         for (int i = 0; i < loadSlotButtons.Length; i++)
         {
-            int slot = i + 1;
+            int slot = i;
             loadSlotButtons[i].onClick.AddListener(() => OnSlotButtonClicked(slot));
             removeSlotButtons[i].onClick.AddListener(() => OnRemoveSlotClicked(slot));
         }
 
         for (int i = 0; i < chooseSlotButtons.Length; i++)
         {
-            int slot = i + 1;
+            int slot = i;
             chooseSlotButtons[i].onClick.AddListener(() => OnChooseSlotClicked(slot));
         }
 
@@ -99,7 +99,12 @@ public class MenuUI : MonoBehaviour
     {
         if (gameManager.saveManager.IsDataSaved(slot))
         {
+            Debug.Log("DATA SAVED");
             Load(slot);
+        }
+        else
+        {
+            Debug.Log("DATA NOT SAVED    " + slot);
         }
         UpdateSlotButtons();
     }

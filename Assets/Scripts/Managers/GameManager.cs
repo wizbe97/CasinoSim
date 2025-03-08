@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -16,17 +17,18 @@ public class GameManager : MonoBehaviourPunCallbacks
 	[Header("Placeable Items")]
 	[SerializeField] private PlaceableItemSO[] _placeableItems;
 
+
 	private void Awake()
 	{
-	/*	if (Instance != null && Instance != this)
-		{
-			Debug.LogWarning($"Duplicate GameManager detected and destroyed on {gameObject.name}");
-			Destroy(gameObject);
-			return;
-		}
+		/*	if (Instance != null && Instance != this)
+			{
+				Debug.LogWarning($"Duplicate GameManager detected and destroyed on {gameObject.name}");
+				Destroy(gameObject);
+				return;
+			}
 
-		Instance = this;
-		DontDestroyOnLoad(gameObject); */
+			Instance = this;
+			DontDestroyOnLoad(gameObject); */
 	}
 
 	private void Start()
@@ -104,4 +106,5 @@ public class GameManager : MonoBehaviourPunCallbacks
 			PhotonNetwork.InstantiateRoomObject(_deliveryVehicleManagerPrefab.name, Vector3.zero, Quaternion.identity);
 		}
 	}
+
 }

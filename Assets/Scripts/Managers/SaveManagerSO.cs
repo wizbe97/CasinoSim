@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SaveManager", menuName = "Game/Managers/SaveManager")]
@@ -10,6 +11,7 @@ public class SaveManagerSO : ScriptableObject
 
 
     private const string SaveFileBalancePath = "Balance";
+    private const string SaveFileItemsPath = "Items";
     private string saveDirectory;
 
     public int currentSlot = 1;
@@ -28,6 +30,30 @@ public class SaveManagerSO : ScriptableObject
         File.WriteAllText(CombinePath(SaveFileBalancePath, isAutoSave ? 0 : currentSlot), json);
     }
 
+    public void SaveItemData(bool isAutoSave = false)
+    {
+        CheckAutoSave();
+
+        Item[] items = FindObjectsByType<Item>(FindObjectsSortMode.None);
+        List<ItemData> itemDataList = new List<ItemData>();
+
+        foreach (Item item in items)
+        {
+            itemDataList.Add(new ItemData
+            {
+                itemID = item.itemID,
+                itemPosition = item.transform.position,
+                itemRotation = item.transform.eulerAngles
+            });
+        }
+
+        string json = JsonUtility.ToJson(new ItemDataWrapper { items = itemDataList });
+        File.WriteAllText(CombinePath(SaveFileItemsPath, isAutoSave ? 0 : currentSlot), json);
+    }
+
+
+
+
     public void LoadBalance()
     {
         Debug.Log("Loading Balance");
@@ -42,6 +68,49 @@ public class SaveManagerSO : ScriptableObject
         else
             StartEmpty();
     }
+
+    public void LoadItemData()
+    {
+        Debug.Log("Loading Item Positions");
+        string path = CombinePath(SaveFileItemsPath, currentSlot);
+
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            ItemDataWrapper itemDataWrapper = JsonUtility.FromJson<ItemDataWrapper>(json);
+
+            List<Item> existingItems = FindObjectsByType<Item>(FindObjectsSortMode.None).ToList();
+
+            foreach (ItemData itemData in itemDataWrapper.items)
+            {
+                // Find an existing item with the same ID
+                Item existingItem = existingItems.FirstOrDefault(i => i.itemID == itemData.itemID);
+
+                if (existingItem != null)
+                {
+                    // Update its position and rotation instead of creating a new one
+                    existingItem.transform.position = itemData.itemPosition;
+                    existingItem.transform.rotation = Quaternion.Euler(itemData.itemRotation);
+
+                    // Remove from the list so we don’t update it again
+                    existingItems.Remove(existingItem);
+                }
+                else
+                {
+                    // If no existing item found, instantiate a new one
+                    GameObject itemPrefab = gameManager.GetItemPrefabByID(itemData.itemID);
+                    if (itemPrefab != null)
+                    {
+                        GameObject newItem = Instantiate(itemPrefab, itemData.itemPosition, Quaternion.Euler(itemData.itemRotation));
+                        Item newItemComponent = newItem.GetComponent<Item>();
+                        newItemComponent.itemID = itemData.itemID;
+                    }
+                }
+            }
+        }
+    }
+
+
 
     private void CheckAutoSave()
     {
@@ -63,6 +132,7 @@ public class SaveManagerSO : ScriptableObject
     {
 
         SaveBalance(isAutoSave: true);
+        SaveItemData(isAutoSave: true);
 
         SaveTimestamp(0); // Slot 0 for autosave
     }
@@ -87,8 +157,8 @@ public class SaveManagerSO : ScriptableObject
 
     public void SaveAllData()
     {
-
         SaveBalance();
+        SaveItemData();
 
         SaveTimestamp(currentSlot);
     }
@@ -104,6 +174,7 @@ public class SaveManagerSO : ScriptableObject
         }
 
         LoadBalance();
+        LoadItemData();
     }
 
 
@@ -123,7 +194,8 @@ public class SaveManagerSO : ScriptableObject
         string[] paths =
         {
 
-        CombinePath(SaveFileBalancePath, slot)
+        CombinePath(SaveFileBalancePath, slot),
+        CombinePath(SaveFileItemsPath, slot)
     };
 
         foreach (string path in paths)
@@ -137,7 +209,7 @@ public class SaveManagerSO : ScriptableObject
 
     private string CombinePath(string path, int slot)
     {
-        return Path.Combine(saveDirectory, $"{path}_{slot}");
+        return Path.Combine(saveDirectory, $"{path}_{slot}.json");
     }
 }
 
@@ -145,5 +217,20 @@ public class SaveManagerSO : ScriptableObject
 public class BalanceData
 {
     public int balance;
+}
+
+[Serializable]
+public class ItemData
+{
+    public string itemID;
+    public Vector3 itemPosition;
+    public Vector3 itemRotation;
+}
+
+
+[Serializable]
+public class ItemDataWrapper
+{
+    public List<ItemData> items;
 }
 

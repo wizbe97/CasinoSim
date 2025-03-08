@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Photon.Pun;
-using UnityEditor.VersionControl;
 
 public class GameplayUI : MonoBehaviourPunCallbacks
 {
@@ -44,7 +43,7 @@ public class GameplayUI : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !FindObjectOfType<Chatsystem>().isTyping)
+        if (Input.GetKeyDown(KeyCode.Escape) && !FindFirstObjectByType<Chatsystem>().isTyping)
         {
             if (pausePanel.activeSelf)
             {
@@ -61,8 +60,8 @@ public class GameplayUI : MonoBehaviourPunCallbacks
     {
         Time.timeScale = 1;
         pausePanel.SetActive(false);
-       // if (photonView.IsMine)
-       //     playerUI.HideCursor();
+        // if (photonView.IsMine)
+        //     playerUI.HideCursor();
 
     }
 
@@ -72,7 +71,7 @@ public class GameplayUI : MonoBehaviourPunCallbacks
         UpdateSlotButton(false);
         pausePanel.SetActive(true);
         //if (photonView.IsMine)
-         //   playerUI.ShowCursor();
+        //   playerUI.ShowCursor();
     }
 
     private void Save()
@@ -83,6 +82,7 @@ public class GameplayUI : MonoBehaviourPunCallbacks
 
     private void MenuClick()
     {
+        gameManager.saveManager.AutoSaveAll();
         if (saveButton.interactable)
         {
             pausePanel.SetActive(false);
