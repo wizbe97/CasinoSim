@@ -16,6 +16,11 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	public GameObject ConnectionLostScreen;
 
+	public GameObject DiscoverWorlds_obj = null;
+	public GameObject Chat = null;
+	public UnityEngine.UI.Image ChatBack = null;
+	public GameObject offline_btn, online_btn;
+
 
 	private void Start()
 	{
@@ -28,6 +33,25 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		{
 			Offline_cam.SetActive(true);
 			PhotonNetwork.ConnectUsingSettings();
+		}
+
+		int offlineMode = PlayerPrefs.GetInt("OfflineMode", 0); // 0 = Online, 1 = Offline
+
+		if (offlineMode == 1) // Offline Mode
+		{
+			Debug.Log("Currently in Offline Mode");
+			DiscoverWorlds_obj.SetActive(false);
+			Chat.SetActive(false);
+			ChatBack.enabled = (false);
+			offline_btn.SetActive(true); online_btn.SetActive(false);
+		}
+		else // Online Mode
+		{
+			Debug.Log("Currently in Online Mode");
+			DiscoverWorlds_obj.SetActive(true);
+			Chat.SetActive(true);
+			ChatBack.enabled = (true);
+			offline_btn.SetActive(false); online_btn.SetActive(true);
 		}
 
 		//PhotonNetwork.IsMessageQueueRunning = false;
@@ -140,4 +164,35 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		PhotonNetwork.LeaveRoom();
 		SceneManager.LoadScene(0);
 	}
+
+	public void OfflineMode()
+	{
+		PlayerPrefs.SetInt("OfflineMode", 1); // Save offline mode
+		PlayerPrefs.Save();
+
+		if (PhotonNetwork.IsConnected)
+		{
+			PhotonNetwork.Disconnect();
+		}
+
+		PhotonNetwork.OfflineMode = true;
+		PhotonNetwork.CreateRoom("OfflineRoom");
+		Debug.Log("Switched to Offline Mode");
+	}
+
+	public void OnlineMode()
+	{
+		PlayerPrefs.SetInt("OfflineMode", 0); // Save online mode
+		PlayerPrefs.Save();
+
+		if (PhotonNetwork.IsConnected)
+		{
+			PhotonNetwork.Disconnect();
+		}
+
+		PhotonNetwork.OfflineMode = false;
+		PhotonNetwork.ConnectUsingSettings();
+		Debug.Log("Switched to Online Mode");
+	}
+
 }

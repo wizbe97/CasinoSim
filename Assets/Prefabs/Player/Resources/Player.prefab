@@ -1846,11 +1846,14 @@ MonoBehaviour:
   container: {fileID: 0}
   _card: {fileID: 8752843096651809418, guid: 0bb810423a1b3f3468eabe5f872a959b, type: 3}
   _field: {fileID: 0}
+  Kickbutton: {fileID: 0}
   canMove: 0
   _header: {fileID: 0}
   maxMessages: 4
   connected_players: {fileID: 0}
   isTyping: 0
+  eventSystem: {fileID: 0}
+  graphicRaycaster: {fileID: 0}
 --- !u!1 &3714815447972551337
 GameObject:
   m_ObjectHideFlags: 0
