@@ -39,6 +39,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 		if (offlineMode == 1) // Offline Mode
 		{
+			Offline_cam.SetActive(false);
+
 			Debug.Log("Currently in Offline Mode");
 			DiscoverWorlds_obj.SetActive(false);
 			Chat.SetActive(false);
