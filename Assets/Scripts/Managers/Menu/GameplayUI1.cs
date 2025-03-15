@@ -91,12 +91,14 @@ public class GameplayUI : MonoBehaviourPunCallbacks
         }
 
         Time.timeScale = 1;
+        PhotonNetwork.Disconnect();
         SceneManager.LoadScene("Menu");
     }
 
     private void MenuConfirmClick()
     {
         Time.timeScale = 1;
+        PhotonNetwork.Disconnect();
         SceneManager.LoadScene("Menu");
     }
 
@@ -110,6 +112,7 @@ public class GameplayUI : MonoBehaviourPunCallbacks
     {
         gameManager.saveManager.SaveAllData();
         Time.timeScale = 1;
+        PhotonNetwork.Disconnect();
         SceneManager.LoadScene("Menu");
     }
 }

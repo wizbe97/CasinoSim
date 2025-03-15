@@ -1,6 +1,8 @@
 using UnityEngine;
+using Photon.Pun;
 
-public class GameInitializer : MonoBehaviour
+
+public class GameInitializer : MonoBehaviourPunCallbacks
 {
     public SaveManagerSO saveManager;
 
@@ -12,6 +14,7 @@ public class GameInitializer : MonoBehaviour
 
     private void OnApplicationQuit()
     {
+        PhotonNetwork.Disconnect();
         saveManager.AutoSaveAll();          //Save All data
     }
 }
