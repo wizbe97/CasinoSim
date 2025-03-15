@@ -135,14 +135,9 @@ public class MenuUI : MonoBehaviour
         chooseSlotPanel.SetActive(false);
         loadGamePanel.SetActive(false);
         
-        StartCoroutine(LoadSceneAfterDelay("Casino", 1f));
+        SceneManager.LoadScene("Casino");
     }
 
-    private IEnumerator LoadSceneAfterDelay(string sceneName, float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        SceneManager.LoadScene(sceneName);
-    }
 
     private void StartNewGame()
     {
