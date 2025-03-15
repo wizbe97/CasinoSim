@@ -41,7 +41,7 @@ public class InviteVan : MonoBehaviourPunCallbacks, IInteractable
 		InviteFriendsP.SetActive(PhotonNetwork.IsMasterClient);
 	}
 
-	private void DisplayFriends()
+	public void DisplayFriends()
 	{
 		// Clear previous buttons
 		foreach (Transform child in friendListContainer)

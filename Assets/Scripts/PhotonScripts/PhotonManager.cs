@@ -58,7 +58,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			Debug.Log("Currently in Offline Mode");
 			DiscoverWorlds_obj.SetActive(false);
 			Chat.SetActive(false);
-			FriendsList.SetActive(false);
+			//FriendsList.SetActive(false);
 			WorldOpend_btn.SetActive(false);
 			WorldClosed_btn.SetActive(false);
 			ChatBack.enabled = (false);
@@ -69,7 +69,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			Debug.Log("Currently in Online Mode");
 			DiscoverWorlds_obj.SetActive(true);
 			Chat.SetActive(true);
-			FriendsList.SetActive(true);
+			//FriendsList.SetActive(true);
 			WorldOpend_btn.SetActive(true);
 			WorldClosed_btn.SetActive(true);
 			ChatBack.enabled = (true);
@@ -214,9 +214,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 		PhotonNetwork.OfflineMode = false;
 		PhotonNetwork.ConnectUsingSettings();
+
 		Debug.Log("Switched to Online Mode");
 	}
-
 
 	// reset Online Mode When Close The Game
 
