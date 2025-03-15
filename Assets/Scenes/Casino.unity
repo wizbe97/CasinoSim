@@ -2177,10 +2177,11 @@ MonoBehaviour:
   ChatBack: {fileID: 5725115346292930252}
   offline_btn: {fileID: 1095663918}
   online_btn: {fileID: 388311316}
-  FriendsList: {fileID: 2232060436364915355}
+  FriendsList: {fileID: 748089581}
   WorldOpend_btn: {fileID: 2232060436364915356}
   WorldClosed_btn: {fileID: 2232060436364915357}
   OnlineModeMessage: {fileID: 2090936857}
+  Online_Mode: 0
 --- !u!4 &1865207139
 Transform:
   m_ObjectHideFlags: 0
@@ -2573,11 +2574,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 192679d850d0e5540be625364f6b4751, type: 3}
---- !u!1 &2232060436364915355 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5034843829714430263, guid: 192679d850d0e5540be625364f6b4751, type: 3}
-  m_PrefabInstance: {fileID: 2232060436364915354}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2232060436364915356 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2870448595081887247, guid: 192679d850d0e5540be625364f6b4751, type: 3}
