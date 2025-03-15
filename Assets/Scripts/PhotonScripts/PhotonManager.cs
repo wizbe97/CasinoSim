@@ -136,7 +136,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			yield return null; // Wait until the player leaves the current room
 		}
 		PhotonNetwork.JoinLobby();
-		SceneManager.LoadScene(1);
+		SceneManager.LoadScene("Lobby");
 	}
 
 	public override void OnPlayerLeftRoom(Player otherPlayer)
