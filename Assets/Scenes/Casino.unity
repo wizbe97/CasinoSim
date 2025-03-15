@@ -2177,6 +2177,10 @@ MonoBehaviour:
   ChatBack: {fileID: 5725115346292930252}
   offline_btn: {fileID: 1095663918}
   online_btn: {fileID: 388311316}
+  FriendsList: {fileID: 2232060436364915355}
+  WorldOpend_btn: {fileID: 2232060436364915356}
+  WorldClosed_btn: {fileID: 2232060436364915357}
+  OnlineModeMessage: {fileID: 2090936857}
 --- !u!4 &1865207139
 Transform:
   m_ObjectHideFlags: 0
@@ -2378,6 +2382,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2066401979}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &2090936857 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8158810715294154588, guid: 192679d850d0e5540be625364f6b4751, type: 3}
+  m_PrefabInstance: {fileID: 2232060436364915354}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &975758531787255164
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2487,14 +2496,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1964602098}
     m_Modifications:
-    - target: {fileID: 132562890387002065, guid: 192679d850d0e5540be625364f6b4751, type: 3}
-      propertyPath: m_Color.g
-      value: 0.34242168
-      objectReference: {fileID: 0}
-    - target: {fileID: 320404845658784568, guid: 192679d850d0e5540be625364f6b4751, type: 3}
-      propertyPath: m_Text
-      value: Go Online
-      objectReference: {fileID: 0}
     - target: {fileID: 1392097475777453542, guid: 192679d850d0e5540be625364f6b4751, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -2539,6 +2540,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1955440570448761932, guid: 192679d850d0e5540be625364f6b4751, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1865207138}
     - target: {fileID: 3067245810888648736, guid: 192679d850d0e5540be625364f6b4751, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -2555,10 +2560,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1865207138}
-    - target: {fileID: 5552737987960629452, guid: 192679d850d0e5540be625364f6b4751, type: 3}
-      propertyPath: m_Text
-      value: Go Offline
-      objectReference: {fileID: 0}
     - target: {fileID: 8256405856291279753, guid: 192679d850d0e5540be625364f6b4751, type: 3}
       propertyPath: m_Name
       value: Van_Camera
@@ -2572,6 +2573,21 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 192679d850d0e5540be625364f6b4751, type: 3}
+--- !u!1 &2232060436364915355 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5034843829714430263, guid: 192679d850d0e5540be625364f6b4751, type: 3}
+  m_PrefabInstance: {fileID: 2232060436364915354}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2232060436364915356 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2870448595081887247, guid: 192679d850d0e5540be625364f6b4751, type: 3}
+  m_PrefabInstance: {fileID: 2232060436364915354}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2232060436364915357 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6274292828558927283, guid: 192679d850d0e5540be625364f6b4751, type: 3}
+  m_PrefabInstance: {fileID: 2232060436364915354}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5605981362414039045
 PrefabInstance:
   m_ObjectHideFlags: 0

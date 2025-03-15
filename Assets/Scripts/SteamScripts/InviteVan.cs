@@ -29,6 +29,10 @@ public class InviteVan : MonoBehaviourPunCallbacks, IInteractable
 
 	public void OnInteract()
 	{
+		if (!FindObjectOfType<PhotonManager>().Online_Mode) {
+			FindObjectOfType<PhotonManager>().OnlineModeMessage.SetActive(true);
+		}
+
 		InviteObj.SetActive(true);
 		DisplayFriends();
 	}

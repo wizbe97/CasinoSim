@@ -6,6 +6,9 @@ using Steamworks;
 using Photon.Realtime;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class PhotonManager : MonoBehaviourPunCallbacks
 {
@@ -20,7 +23,14 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	public GameObject Chat = null;
 	public UnityEngine.UI.Image ChatBack = null;
 	public GameObject offline_btn, online_btn;
+	public GameObject FriendsList = null;
+	public GameObject WorldOpend_btn = null;
+	public GameObject WorldClosed_btn = null;
 
+	[Space(15)]
+	public GameObject OnlineModeMessage = null;
+
+	[HideInInspector] public bool Online_Mode = false;
 
 	private void Start()
 	{
@@ -35,25 +45,35 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			PhotonNetwork.ConnectUsingSettings();
 		}
 
-		int offlineMode = PlayerPrefs.GetInt("OfflineMode", 0); // 0 = Online, 1 = Offline
+		int offlineMode = PlayerPrefs.GetInt("OfflineMode"); // 0 = Online, 1 = Offline
+		Online_Mode = (offlineMode == 0 ? true : false);
+
 
 		if (offlineMode == 1) // Offline Mode
 		{
+			OnlineModeMessage.SetActive(true);
+
 			Offline_cam.SetActive(false);
 
 			Debug.Log("Currently in Offline Mode");
 			DiscoverWorlds_obj.SetActive(false);
 			Chat.SetActive(false);
+			FriendsList.SetActive(false);
+			WorldOpend_btn.SetActive(false);
+			WorldClosed_btn.SetActive(false);
 			ChatBack.enabled = (false);
-			offline_btn.SetActive(true); online_btn.SetActive(false);
+			//offline_btn.SetActive(true); online_btn.SetActive(false);
 		}
 		else // Online Mode
 		{
 			Debug.Log("Currently in Online Mode");
 			DiscoverWorlds_obj.SetActive(true);
 			Chat.SetActive(true);
+			FriendsList.SetActive(true);
+			WorldOpend_btn.SetActive(true);
+			WorldClosed_btn.SetActive(true);
 			ChatBack.enabled = (true);
-			offline_btn.SetActive(false); online_btn.SetActive(true);
+			//offline_btn.SetActive(false); online_btn.SetActive(true);
 		}
 
 		//PhotonNetwork.IsMessageQueueRunning = false;
@@ -197,4 +217,36 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		Debug.Log("Switched to Online Mode");
 	}
 
+
+	// reset Online Mode When Close The Game
+
+	private void OnApplicationQuit()
+	{
+		Debug.Log("Game is quitting (OnApplicationQuit)");
+
+		PlayerPrefs.SetInt("OfflineMode", 1);
+	}
+
+#if UNITY_EDITOR
+	[InitializeOnLoad]
+	public class PlayModeStateHandler
+	{
+		static PlayModeStateHandler()
+		{
+			EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+		}
+
+		private static void OnPlayModeStateChanged(PlayModeStateChange state)
+		{
+			if (state == PlayModeStateChange.ExitingPlayMode)
+			{
+				Debug.Log("Editor play mode is stopping.");
+				// Call your quit logic here
+				// Example: Save progress or cleanup
+
+				PlayerPrefs.SetInt("OfflineMode", 1);
+			}
+		}
+	}
+#endif
 }
