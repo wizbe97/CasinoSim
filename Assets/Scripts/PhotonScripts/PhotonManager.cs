@@ -32,6 +32,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	[HideInInspector] public bool Online_Mode = false;
 
+	[Space(10)]
+	public GameObject Save_btn = null;
+
+
 	private void Start()
 	{
 		if (PhotonNetwork.InRoom)
@@ -74,6 +78,10 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 			WorldClosed_btn.SetActive(true);
 			ChatBack.enabled = (true);
 			//offline_btn.SetActive(false); online_btn.SetActive(true);
+
+			if (!PhotonNetwork.IsMasterClient) {
+				Save_btn.GetComponent<UnityEngine.UI.Button>().interactable = false;
+			}
 		}
 
 		//PhotonNetwork.IsMessageQueueRunning = false;
