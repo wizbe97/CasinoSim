@@ -57,26 +57,26 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 		{
 			OnlineModeMessage.SetActive(true);
 
-			Offline_cam.SetActive(false);
+			//Offline_cam.SetActive(false);
 
 			Debug.Log("Currently in Offline Mode");
 			DiscoverWorlds_obj.SetActive(false);
-			Chat.SetActive(false);
+			 //Chat.SetActive(false);
 			//FriendsList.SetActive(false);
 			WorldOpend_btn.SetActive(false);
 			WorldClosed_btn.SetActive(false);
-			ChatBack.enabled = (false);
+			 //ChatBack.enabled = (false);
 			//offline_btn.SetActive(true); online_btn.SetActive(false);
 		}
 		else // Online Mode
 		{
 			Debug.Log("Currently in Online Mode");
 			DiscoverWorlds_obj.SetActive(true);
-			Chat.SetActive(true);
+			 //Chat.SetActive(true);
 			//FriendsList.SetActive(true);
 			WorldOpend_btn.SetActive(true);
 			WorldClosed_btn.SetActive(true);
-			ChatBack.enabled = (true);
+			 //ChatBack.enabled = (true);
 			//offline_btn.SetActive(false); online_btn.SetActive(true);
 
 			if (!PhotonNetwork.IsMasterClient) {
