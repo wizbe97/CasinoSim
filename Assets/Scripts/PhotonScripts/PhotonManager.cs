@@ -35,6 +35,9 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 	[Space(10)]
 	public GameObject Save_btn = null;
 
+	[Space(5)]
+	public GameObject Loading_Screen = null;
+	 
 
 	private void Start()
 	{
@@ -197,6 +200,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	public void OfflineMode()
 	{
+		Loading_Screen.SetActive(true);
+
 		PlayerPrefs.SetInt("OfflineMode", 1); // Save offline mode
 		PlayerPrefs.Save();
 
@@ -212,6 +217,8 @@ public class PhotonManager : MonoBehaviourPunCallbacks
 
 	public void OnlineMode()
 	{
+		Loading_Screen.SetActive(true);
+
 		PlayerPrefs.SetInt("OfflineMode", 0); // Save online mode
 		PlayerPrefs.Save();
 

@@ -6,6 +6,7 @@ using Photon.Pun;
 using Steamworks;
 using ExitGames.Client.Photon;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class InviteFriendsSteam : MonoBehaviourPunCallbacks
 {
@@ -29,6 +30,11 @@ public class InviteFriendsSteam : MonoBehaviourPunCallbacks
 		if (!PhotonNetwork.IsMasterClient)
 		{
 			this.enabled = false;
+		}
+
+		if (!PhotonNetwork.OfflineMode)
+		{
+			LoadPlayerPosition();
 		}
 	}
 
@@ -76,6 +82,7 @@ public class InviteFriendsSteam : MonoBehaviourPunCallbacks
 			if (interactable != null)
 			{
 				interactable.OnInteract();
+				SavePlayerPosition();
 			}
 			else
 			{
@@ -85,6 +92,28 @@ public class InviteFriendsSteam : MonoBehaviourPunCallbacks
 		else
 		{
 			Debug.Log("No interactable object detected.");
+		}
+	}
+
+	void SavePlayerPosition()
+	{
+		Vector3 position = transform.position;
+		PlayerPrefs.SetFloat("PlayerX", position.x);
+		PlayerPrefs.SetFloat("PlayerY", position.y);
+		PlayerPrefs.SetFloat("PlayerZ", position.z);
+		PlayerPrefs.Save(); // Ensure data is saved
+	}
+
+	void LoadPlayerPosition()
+	{
+		if (PlayerPrefs.HasKey("PlayerX")) // Check if data exists
+		{
+			float x = PlayerPrefs.GetFloat("PlayerX");
+			float y = PlayerPrefs.GetFloat("PlayerY");
+			float z = PlayerPrefs.GetFloat("PlayerZ");
+			transform.position = new Vector3(x, y, z);
+
+			FindObjectOfType<InviteVan>().OnInteract();
 		}
 	}
 
@@ -151,6 +180,39 @@ public class InviteFriendsSteam : MonoBehaviourPunCallbacks
 		}
 		PhotonNetwork.JoinRoom(roomName);
 	}
+
+	public void OnApplicationQuit()
+	{
+		PlayerPrefs.DeleteKey("PlayerX");
+		PlayerPrefs.DeleteKey("PlayerY");
+		PlayerPrefs.DeleteKey("PlayerZ");
+		PlayerPrefs.Save();
+
+		// Optionally, reset the player's position to a default value
+		transform.position = Vector3.zero; // Change this to your default spawn position
+	}
+
+#if UNITY_EDITOR
+	[InitializeOnLoad]
+	public class PlayModeStateHandler
+	{
+		static PlayModeStateHandler()
+		{
+			EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+		}
+
+		private static void OnPlayModeStateChanged(PlayModeStateChange state)
+		{
+			if (state == PlayModeStateChange.ExitingPlayMode)
+			{
+				PlayerPrefs.DeleteKey("PlayerX");
+				PlayerPrefs.DeleteKey("PlayerY");
+				PlayerPrefs.DeleteKey("PlayerZ");
+				PlayerPrefs.Save();
+			}
+		}
+	}
+#endif
 }
 
 public interface IInteractable
