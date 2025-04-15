@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,12 +13,78 @@ public class SaveManagerSO : ScriptableObject
 
     private const string SaveFileBalancePath = "Balance";
     private const string SaveFileItemsPath = "Items";
-    private string saveDirectory;
-
-    public int currentSlot = 1;
+	private string saveDirectory => Path.Combine(Application.persistentDataPath, "Saves");
 
 
-    private void StartEmpty()
+	public int currentSlot = 1;
+
+	public string SaveBalanceToJson()
+	{
+		return JsonUtility.ToJson(new BalanceData { balance = gameManager.playerBalanceManager.playerBalance.balance });
+	}
+
+	public string SaveItemsToJson()
+	{
+		Item[] items = FindObjectsByType<Item>(FindObjectsSortMode.None);
+		List<ItemData> itemDataList = items.Select(item => new ItemData
+		{
+			itemID = item.itemID,
+			itemPosition = item.transform.position,
+			itemRotation = item.transform.eulerAngles
+		}).ToList();
+
+		return JsonUtility.ToJson(new ItemDataWrapper { items = itemDataList });
+	}
+
+	public void LoadBalanceFromJson(string json)
+	{
+		BalanceData data = JsonUtility.FromJson<BalanceData>(json);
+		gameManager.playerBalanceManager.playerBalance.balance = data.balance;
+	}
+
+	public void LoadItemsFromJson(string json)
+	{
+		ItemDataWrapper wrapper = JsonUtility.FromJson<ItemDataWrapper>(json);
+		List<Item> existingItems = FindObjectsByType<Item>(FindObjectsSortMode.None).ToList();
+
+		foreach (var itemData in wrapper.items)
+		{
+			Item existing = existingItems.FirstOrDefault(i => i.itemID == itemData.itemID);
+			if (existing != null)
+			{
+				existing.transform.position = itemData.itemPosition;
+				existing.transform.rotation = Quaternion.Euler(itemData.itemRotation);
+				existingItems.Remove(existing);
+			}
+			else
+			{
+				GameObject prefab = gameManager.GetItemPrefabByID(itemData.itemID);
+				if (prefab != null)
+				{
+					GameObject obj = Instantiate(prefab, itemData.itemPosition, Quaternion.Euler(itemData.itemRotation));
+					obj.GetComponent<Item>().itemID = itemData.itemID;
+				}
+			}
+		}
+	}
+
+	public void SaveToDisk()
+	{
+		if (!Directory.Exists(saveDirectory)) Directory.CreateDirectory(saveDirectory);
+		File.WriteAllText(Path.Combine(saveDirectory, $"Balance_{currentSlot}.json"), SaveBalanceToJson());
+		File.WriteAllText(Path.Combine(saveDirectory, $"Items_{currentSlot}.json"), SaveItemsToJson());
+	}
+
+	public void LoadFromDisk()
+	{
+		string balPath = Path.Combine(saveDirectory, $"Balance_{currentSlot}.json");
+		string itmPath = Path.Combine(saveDirectory, $"Items_{currentSlot}.json");
+
+		if (File.Exists(balPath)) LoadBalanceFromJson(File.ReadAllText(balPath));
+		if (File.Exists(itmPath)) LoadItemsFromJson(File.ReadAllText(itmPath));
+	}
+
+	private void StartEmpty()
     {
         gameManager.playerBalanceManager.ClearBalance();
     }
@@ -165,9 +232,14 @@ public class SaveManagerSO : ScriptableObject
 
     public void LoadAllData()
     {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            return;
+        }
+
         Debug.Log("LoadAllData Called");  // Debugging line to check if it's running
 
-        saveDirectory = Path.Combine(Application.persistentDataPath, "Saves");
+       // saveDirectory = Path.Combine(Application.persistentDataPath, "Saves");
         if (!Directory.Exists(saveDirectory))
         {
             Directory.CreateDirectory(saveDirectory);
@@ -180,7 +252,7 @@ public class SaveManagerSO : ScriptableObject
 
     public bool IsDataSaved(int slot)
     {
-        saveDirectory = Path.Combine(Application.persistentDataPath, "Saves");
+        //saveDirectory = Path.Combine(Application.persistentDataPath, "Saves");
         if (!Directory.Exists(saveDirectory))
         {
             Directory.CreateDirectory(saveDirectory);

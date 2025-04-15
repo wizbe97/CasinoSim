@@ -46,6 +46,8 @@ MonoBehaviour:
   - RPC_UpdatePlayerList
   - ForceDisconnect
   - RPC_ForceLeaveRoom
+  - RPC_ReceiveBalance
+  - RPC_ReceiveItems
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

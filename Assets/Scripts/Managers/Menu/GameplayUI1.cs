@@ -91,14 +91,18 @@ public class GameplayUI : MonoBehaviourPunCallbacks
         }
 
         Time.timeScale = 1;
-        PhotonNetwork.Disconnect();
+		PlayerPrefs.SetInt("OfflineMode", 1); // Save offline mode
+		PlayerPrefs.Save();
+		PhotonNetwork.Disconnect();
         SceneManager.LoadScene("Menu");
     }
 
     private void MenuConfirmClick()
     {
         Time.timeScale = 1;
-        PhotonNetwork.Disconnect();
+		PlayerPrefs.SetInt("OfflineMode", 1); // Save offline mode
+		PlayerPrefs.Save();
+		PhotonNetwork.Disconnect();
         SceneManager.LoadScene("Menu");
     }
 
