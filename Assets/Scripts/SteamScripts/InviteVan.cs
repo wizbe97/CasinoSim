@@ -5,6 +5,7 @@ using Photon.Pun;
 using Steamworks;
 using UnityEngine.UI;
 using Photon.Realtime;
+using UnityEditor.ShaderKeywordFilter;
 
 public class InviteVan : MonoBehaviourPunCallbacks, IInteractable
 {
@@ -29,6 +30,10 @@ public class InviteVan : MonoBehaviourPunCallbacks, IInteractable
 
 	public void OnInteract()
 	{
+		if (!PhotonNetwork.IsMasterClient) {
+			return;
+		}
+
 		InviteObj.SetActive(true);
 
 		if (!FindObjectOfType<PhotonManager>().Online_Mode) {

@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Photon.Pun;
 
 public class DeliveryVehicleManager : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class DeliveryVehicleManager : MonoBehaviour
 
     public void SpawnDeliveryVehicle(GameObject boxPrefab)
     {
-        GameObject deliveryVehicle = Instantiate(_deliveryVehiclePrefab, _startPosition, Quaternion.identity);
+        GameObject deliveryVehicle = PhotonNetwork.Instantiate(_deliveryVehiclePrefab.name, _startPosition, Quaternion.identity);
 
         StartCoroutine(MoveVehicle(deliveryVehicle, boxPrefab));
     }
@@ -69,6 +70,6 @@ public class DeliveryVehicleManager : MonoBehaviour
             halfwayPoint.z
         );
 
-        Instantiate(boxPrefab, boxSpawnPosition, Quaternion.identity);
+        PhotonNetwork.Instantiate(boxPrefab.name, boxSpawnPosition, Quaternion.identity);
     }
 }
