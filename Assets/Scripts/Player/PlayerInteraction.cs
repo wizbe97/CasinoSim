@@ -429,7 +429,7 @@ public class PlayerInteraction : MonoBehaviour
 
 		if (_currentPreview != null)
         {
-            Destroy(_currentPreview);
+           PhotonNetwork.Destroy(_currentPreview);
         }
         ResetPlacementState();
     }
@@ -502,7 +502,7 @@ public class PlayerInteraction : MonoBehaviour
             if (itemInside != null)
             {
                 StartPlacement(itemInside);
-                Destroy(_heldBox);
+                PhotonNetwork.Destroy(_heldBox);
                 _heldBox = null;
             }
         }
@@ -531,7 +531,7 @@ public class PlayerInteraction : MonoBehaviour
             int salePrice = Mathf.FloorToInt(itemInside.Price / 2f);
             _gameManager.playerBalanceManager.AddBalance(salePrice);
 
-            Destroy(_heldBox);
+            PhotonNetwork.Destroy(_heldBox);
             _heldBox = null;
 
             Debug.Log($"Sold {itemInside.name} for ${salePrice}.");

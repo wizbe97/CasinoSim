@@ -87,6 +87,7 @@ public class SaveManagerSO : ScriptableObject
 	private void StartEmpty()
     {
         gameManager.playerBalanceManager.ClearBalance();
+        PlayerPrefs.DeleteAll();
     }
 
     public void SaveBalance(bool isAutoSave = false)
