@@ -4,8 +4,6 @@ using UnityEngine;
 using Photon.Pun;
 using Steamworks;
 using UnityEngine.UI;
-using Photon.Realtime;
-using UnityEditor.ShaderKeywordFilter;
 
 public class InviteVan : MonoBehaviourPunCallbacks, IInteractable
 {
